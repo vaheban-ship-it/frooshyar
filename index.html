@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>فروش‌یار - سیستم حسابداری فروشگاه</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d81b60">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jalaali-js@1.2.7/dist/jalaali.min.js"></script>
+    <style>
+        :root {
+            --primary: #d81b60;
+            --primary-light: #fce4ec;
+            --secondary: #8e24aa;
+            --bg: #f5f5f7;
+            --card: #ffffff;
+            --text: #333333;
+            --text-light: #777777;
+            --border: #e0e0e0;
+            --success: #2e7d32;
+            --danger: #c62828;
+            --warning: #ef6c00;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 70px; -webkit-tap-highlight-color: transparent; }
+        header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        header h1 { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        header .subtitle { font-size: 0.75rem; opacity: 0.9; margin-top: 2px; }
+        .container { padding: 16px; max-width: 600px; margin: 0 auto; }
+        .card { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border); }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+        .stat-card { background: var(--card); border-radius: 14px; padding: 14px; border: 1px solid var(--border); box-shadow: 0 2px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 6px; }
+        .stat-card .title { font-size: 0.8rem; color: var(--text-light); display: flex; align-items: center; gap: 6px; }
+        .stat-card .value { font-size: 1.15rem; font-weight: 700; color: var(--primary); }
+        .btn { background: var(--primary); color: white; border: none; border-radius: 10px; padding: 10px 16px; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; width: 100%; }
+        .btn:active { transform: scale(0.98); }
+        .btn-secondary { background: #f0f0f0; color: var(--text); }
+        .btn-success { background: var(--success); }
+        .btn-danger { background: var(--danger); }
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 8px 4px; border-top: 1px solid var(--border); z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-light); text-decoration: none; font-size: 0.7rem; font-weight: 500; flex: 1; padding: 6px 0; border-radius: 8px; transition: 0.2s; cursor: pointer; }
+        .nav-item i { font-size: 1.2rem; }
+        .nav-item.active { color: var(--primary); background: var(--primary-light); }
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.2s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.85rem; margin-bottom: 6px; color: var(--text); font-weight: 600; }
+        .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem; outline: none; background: #fafafa; transition: border 0.2s; }
+        .form-control:focus { border-color: var(--primary); background: #fff; }
+        .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+        .quick-btn { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 12px 4px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: var(--text); transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .quick-btn i { font-size: 1.3rem; color: var(--primary); }
+        .quick-btn:active { background: var(--primary-light); }
+        .invoice-list { display: flex; flex-direction: column; gap: 8px; }
+        .invoice-row { background: #fafafa; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <h1><i class="fa-solid fa-store"></i> فروش‌یار</h1>
+            <div class="subtitle">سیستم جامع حسابداری و مدیریت فروشگاه</div>
+        </div>
+        <div id="header-date" style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 8px;"></div>
+    </header>
+
+    <div class="container">
+        <div id="view-dashboard" class="view-section active">
+            <div class="quick-actions">
+                <div class="quick-btn" onclick="openSaleModal()"><i class="fa-solid fa-cart-plus"></i>فروش جدید</div>
+                <div class="quick-btn" onclick="openPurchaseModal()"><i class="fa-solid fa-bag-shopping"></i>خرید جدید</div>
+                <div class="quick-btn" onclick="openExpenseModal()"><i class="fa-solid fa-receipt"></i>ثبت هزینه</div>
+                <div class="quick-btn" onclick="switchTab('reports')"><i class="fa-solid fa-chart-pie"></i>گزارشات</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="title"><i class="fa-solid fa-arrow-trend-up" style="color:var(--success)"></i>فروش امروز</div>
+                    <div class="value" id="dash-sales">۰ ریال</div>
+                </div>
+                <div class="stat-card">
+                    <div class="title"><i class="fa-solid fa-coins" style="color:var(--warning)"></i>سود امروز</div>
+                    <div class="value" id="dash-profit">۰ ریال</div>
+                </div>
+                <div class="stat-card">
+                    <div class="title"><i class="fa-solid fa-wallet" style="color:var(--danger)"></i>هزینه امروز</div>
+                    <div class="value" id="dash-expense">۰ ریال</div>
+                </div>
+                <div class="stat-card">
+                    <div class="title"><i class="fa-solid fa-boxes-stacked" style="color:var(--secondary)"></i>موجودی کل انبار</div>
+                    <div class="value" id="dash-stock">۰ عدد</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="font-size: 0.95rem; margin-bottom: 12px; display:flex; align-items:center; gap:6px;"><i class="fa-solid fa-user-clock" style="color:var(--primary)"></i> مشتریان بدهکار</h3>
+                <div id="dash-debtors" class="invoice-list">
+                    <p style="color:#999; font-size:0.85rem;">مشتری بدهکاری نیست</p>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+    <nav class="nav-bar">
+        <div class="nav-item active" onclick="switchTab('dashboard')"><i class="fa-solid fa-house"></i>داشبورد</div>
+        <div class="nav-item" onclick="switchTab('sales')"><i class="fa-solid fa-cash-register"></i>فروش</div>
+        <div class="nav-item" onclick="switchTab('purchases')"><i class="fa-solid fa-truck-ramp-box"></i>خرید</div>
+        <div class="nav-item" onclick="switchTab('products')"><i class="fa-solid fa-shirt"></i>کالاها</div>
+        <div class="nav-item" onclick="switchTab('customers')"><i class="fa-solid fa-users"></i>مشتریان</div>
+        <div class="nav-item" onclick="switchTab('reports')"><i class="fa-solid fa-chart-column"></i>گزارش</div>
+    </nav>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('view-' + tabId)?.classList.add('active');
+            event?.currentTarget?.classList.add('active');
+        }
+        function formatMoney(amount) {
+            return Number(amount).toLocaleString('fa-IR') + ' ریال';
+        }
+    </script>
+</body>
+</html>
