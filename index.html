@@ -890,25 +890,16 @@
     dlAnchor.remove();
   }
 
-  function importBackup(e) {
-    let file = e.target.files[0];
-    if(!file) return;
-     reader.onload = function(evt) {
-      try {
-        db = JSON.parse(evt.target.result);
-        saveDb();
-        alert('اطلاعات با موفقیت بازیابی شد');
-      } catch(e) { alert('فایل نامعتبر است'); }
-    };
-    reader.readAsText(file);
-  }
-
-  renderAll();
-
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
-  }
-</script>
-
-</body>
-</html>
+      function importBackup(e) {
+      let file = e.target.files[0];
+      if(!file) return;
+      let reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          db = JSON.parse(evt.target.result);
+          saveDb();
+          alert('اطلاعات با موفقیت بازیابی شد');
+        } catch(err) { alert('فایل نامعتبر است'); }
+      };
+      reader.readAsText(file);
+    }
