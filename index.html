@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>حساب بانوان پلاس</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#d81b60">
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jalaali-js@1.2.7/dist/jalaali.min.js"></script>
+  <style>
+    :root {
+      --primary: #d81b60;
+      --primary-light: #fce4ec;
+      --secondary: #8e24aa;
+      --bg: #f5f5f5;
+      --surface: #ffffff;
+      --text: #212121;
+      --text-secondary: #757575;
+      --border: #e0e0e0;
+      --success: #2e7d32;
+      --danger: #c62828;
+      --warning: #ef6c00;
+      --info: #0288d1;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+    .app-container { max-width: 600px; margin: 0 auto; background: var(--bg); min-height: 100vh; padding-bottom: 90px; position: relative; }
+
+    /* Header */
+    .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 20px; text-align: center; border-radius: 0 0 24px 24px; box-shadow: 0 4px 20px rgba(216,27,96,0.3); position: sticky; top: 0; z-index: 100; }
+    .header h1 { margin: 0; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .header p { margin: 5px 0 0; opacity: 0.9; font-size: 0.85rem; }
+    .header img { height: 40px; width: 40px; object-fit: cover; border-radius: 8px; background: white; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* Cards & Grids */
+    .card { background: var(--surface); margin: 12px; padding: 16px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--primary); display: flex; align-items: center; justify-content: space-between; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px; }
+    .stat-box { background: var(--surface); padding: 16px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center; }
+    .stat-box i { font-size: 1.5rem; margin-bottom: 8px; display: block; }
+    .stat-box .value { font-size: 1.1rem; font-weight: 700; }
+    .stat-box .label { font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px; }
+    .stat-box.sales i { color: var(--success); }
+    .stat-box.profit i { color: var(--info); }
+    .stat-box.expense i { color: var(--danger); }
+    .stat-box.stock i { color: var(--warning); }
+
+    /* Buttons */
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn { border: none; padding: 12px 14px; border-radius: 12px; font-family: inherit; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; color: white; width: 100%; transition: transform 0.1s; }
+    .btn:active { transform: scale(0.96); }
+    .btn-success { background: var(--success); }
+    .btn-danger { background: var(--danger); }
+    .btn-warning { background: var(--warning); }
+    .btn-primary { background: var(--primary); }
+    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+
+    /* Forms & Inputs */
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary); }
+    .form-input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 0.95rem; background: var(--surface); outline: none; }
+    .form-input:focus { border-color: var(--primary); }
+
+    /* Modal */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--surface); width: 100%; max-width: 450px; padding: 20px; border-radius: 20px; max-height: 90vh; overflow-y: auto; }
+
+    /* List Item */
+    .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .item-info { font-size: 0.9rem; }
+    .item-info small { color: var(--text-secondary); display: block; }
+
+    /* Bottom Navigation (8 Tabs) */
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; background: var(--surface); display: flex; justify-content: space-around; padding: 6px 2px; border-top: 1px solid var(--border); box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 1000; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; font-size: 0.68rem; gap: 2px; flex: 1; cursor: pointer; text-align: center; }
+    .nav-item i { font-size: 1.1rem; }
+    .nav-item.active { color: var(--primary); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>
+      <img id="header-logo" src="" alt="لوگو" style="display:none">
+      <span id="header-title"><i class="fas fa-shopping-bag"></i> حساب بانوان پلاس</span>
+    </h1>
+    <p id="header-subtitle">سیستم جامع حسابداری فروشگاه لباس زنانه</p>
+  </div>
+
+  <!-- 1. DASHBOARD -->
+  <div id="sec-dashboard" class="section active">
+    <div class="stats-grid">
+      <div class="stat-box sales">
+        <i class="fas fa-chart-line"></i>
+        <div class="value" id="dash-sales">۰ تومان</div>
+        <div class="label">فروش امروز</div>
+      </div>
+      <div class="stat-box profit">
+        <i class="fas fa-coins"></i>
+        <div class="value" id="dash-profit">۰ تومان</div>
+        <div class="label">سود امروز</div>
+      </div>
+      <div class="stat-box stock">
+        <i class="fas fa-boxes"></i>
+        <div class="value" id="dash-stock">۷۸ عدد</div>
+        <div class="label">اقلام موجود</div>
+      </div>
+      <div class="stat-box expense">
+        <i class="fas fa-wallet"></i>
+        <div class="value" id="dash-expense">۰ تومان</div>
+        <div class="label">هزینه امروز</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>دسترسی سریع</span><i class="fas fa-bolt"></i></div>
+      <div class="row-2">
+        <button class="btn btn-success" onclick="openModal('modal-sale')"><i class="fas fa-plus"></i> فاکتور فروش</button>
+        <button class="btn btn-danger" onclick="openModal('modal-purchase')"><i class="fas fa-plus"></i> فاکتور خرید</button>
+      </div>
+      <div style="height:10px"></div>
+      <div class="row-2">
+        <button class="btn btn-primary" onclick="openModal('modal-expense')"><i class="fas fa-minus-circle"></i> ثبت هزینه</button>
+        <button class="btn btn-warning" onclick="showSection('sec-reports')"><i class="fas fa-chart-pie"></i> گزارش امروز</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>مشتریان بدهکار</span><i class="fas fa-hand-holding-usd"></i></div>
+      <div id="dash-debtors"></div>
+    </div>
+  </div>
+
+  <!-- 2. PRODUCTS (کالاها) -->
+  <div id="sec-products" class="section">
+    <div class="card">
+      <div class="card-title"><span>مدیریت کالاها</span><button class="btn btn-primary" style="width:auto; padding:6px 12px;" onclick="openModal('modal-product')"><i class="fas fa-plus"></i> کالا جدید</button></div>
+      <div id="products-list"></div>
+    </div>
+  </div>
+
+  <!-- 3. STOCK (انبار) -->
+  <div id="sec-stock" class="section">
+    <div class="card">
+      <div class="card-title"><span>موجودی انبار</span><i class="fas fa-boxes"></i></div>
+      <div id="stock-list"></div>
+    </div>
+  </div>
+
+  <!-- 4. SALES (فروش) -->
+  <div id="sec-sales" class="section">
+    <div class="card">
+      <div class="card-title"><span>فاکتورهای فروش</span><button class="btn btn-success" style="width:auto; padding:6px 12px;" onclick="openModal('modal-sale')"><i class="fas fa-plus"></i> ثبت فروش</button></div>
+      <div id="sales-list"></div>
+    </div>
+  </div>
+
+  <!-- 5. PURCHASES (خرید) -->
+  <div id="sec-purchases" class="section">
+    <div class="card">
+      <div class="card-title"><span>فاکتورهای خرید</span><button class="btn btn-danger" style="width:auto; padding:6px 12px;" onclick="openModal('modal-purchase')"><i class="fas fa-plus"></i> ثبت خرید</button></div>
+      <div id="purchases-list"></div>
+    </div>
+  </div>
+
+  <!-- 6. CUSTOMERS (مشتریان) -->
+  <div id="sec-customers" class="section">
+    <div class="card">
+      <div class="card-title"><span>لیست مشتریان</span><button class="btn btn-primary" style="width:auto; padding:6px 12px;" onclick="openModal('modal-customer')"><i class="fas fa-plus"></i> مشتری جدید</button></div>
+      <div id="customers-list"></div>
+    </div>
+  </div>
+
+  <!-- 7. SUPPLIERS (تأمین کنندگان) -->
+  <div id="sec-suppliers" class="section">
+    <div class="card">
+      <div class="card-title"><span>تأمین کنندگان</span><i class="fas fa-truck"></i></div>
+      <div id="suppliers-list"></div>
+    </div>
+  </div>
+
+  <!-- 8. MORE / SETTINGS (بیشتر / تنظیمات) -->
+  <div id="sec-more" class="section">
+    <div class="card">
+      <div class="card-title"><span>تنظیمات فروشگاه</span><i class="fas fa-cog"></i></div>
+      <div class="form-group">
+        <label class="form-label">نام فروشگاه / عنوان برنامه</label>
+        <input type="text" id="cfg-title" class="form-input" value="حساب بانوان پلاس">
+      </div>
+      <div class="form-group">
+        <label class="form-label">زیرعنوان</label>
+        <input type="text" id="cfg-subtitle" class="form-input" value="سیستم جامع حسابداری فروشگاه لباس زنانه">
+      </div>
+      <div class="form-group">
+        <label class="form-label">آیکون / لوگوی فروشگاه (تصویر)</label>
+        <input type="file" id="cfg-logo-file" accept="image/*" class="form-input" onchange="uploadLogo(event)">
+      </div>
+      <button class="btn btn-primary" onclick="saveSettings()">ذخیره تغییرات نام و لوگو</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>پشتیبان‌گیری و بازیابی اطلاعات</span><i class="fas fa-database"></i></div>
+      <button class="btn btn-warning" onclick="exportBackup()" style="margin-bottom:10px;"><i class="fas fa-download"></i> دانلود فایل بکاپ (Backup)</button>
+      <div class="form-group">
+        <label class="form-label">بازیابی اطلاعات از فایل بکاپ</label>
+        <input type="file" id="import-backup-file" accept=".json" class="form-input" onchange="importBackup(event)">
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORTS (گزارشات) -->
+  <div id="sec-reports" class="section">
+    <div class="card">
+      <div class="card-title"><span>گزارش مالی جامع</span><i class="fas fa-chart-pie"></i></div>
+      <div id="reports-detail"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div id="modal-sale" class="modal">
+  <div class="modal-content">
+    <h3>صدور فاکتور فروش</h3>
+    <div class="form-group"><label class="form-label">عنوان کالا / شرح</label><input type="text" id="sale-item" class="form-input" placeholder="مانتو، پیراهن..."></div>
+    <div class="form-group"><label class="form-label">مبلغ کل (تومان)</label><input type="number" id="sale-price" class="form-input"></div>
+    <div class="form-group"><label class="form-label">سود فروش (تومان)</label><input type="number" id="sale-profit" class="form-input"></div>
+    <div class="form-group"><label class="form-label">نام مشتری (در صورت بدهی)</label><input type="text" id="sale-customer" class="form-input"></div>
+    <button class="btn btn-success" onclick="addSale()">ثبت فاکتور</button>
+    <button class="btn btn-outline" onclick="closeModal('modal-sale')" style="margin-top:8px;">انصراف</button>
+  </div>
+</div>
+
+<div id="modal-purchase" class="modal">
+  <div class="modal-content">
+    <h3>ثبت فاکتور خرید</h3>
+    <div class="form-group"><label class="form-label">شرح خرید عمده</label><input type="text" id="pur-item" class="form-input"></div>
+    <div class="form-group"><label class="form-label">مبلغ خرید (تومان)</label><input type="number" id="pur-price" class="form-input"></div>
+    <button class="btn btn-danger" onclick="addPurchase()">ثبت خرید</button>
+    <button class="btn btn-outline" onclick="closeModal('modal-purchase')" style="margin-top:8px;">انصراف</button>
+  </div>
+</div>
+
+<div id="modal-expense" class="modal">
+  <div class="modal-content">
+    <h3>ثبت هزینه</h3>
+    <div class="form-group"><label class="form-label">عنوان هزینه</label><input type="text" id="exp-title" class="form-input" placeholder="اجاره، برق..."></div>
+    <div class="form-group"><label class="form-label">مبلغ (تومان)</label><input type="number" id="exp-amount" class="form-input"></div>
+    <button class="btn btn-primary" onclick="addExpense()">ثبت هزینه</button>
+    <button class="btn btn-outline" onclick="closeModal('modal-expense')" style="margin-top:8px;">انصراف</button>
+  </div>
+</div>
+
+<div id="modal-product" class="modal">
+  <div class="modal-content">
+    <h3>افزودن کالای جدید</h3>
+    <div class="form-group"><label class="form-label">نام کالا</label><input type="text" id="prod-name" class="form-input"></div>
+    <div class="form-group"><label class="form-label">موجودی اولیه</label><input type="number" id="prod-qty" class="form-input"></div>
+    <button class="btn btn-primary" onclick="addProduct()">افزودن کالا</button>
+    <button class="btn btn-outline" onclick="closeModal('modal-product')" style="margin-top:8px;">انصراف</button>
+  </div>
+</div>
+
+<div id="modal-customer" class="modal">
+  <div class="modal-content">
+    <h3>افزودن مشتری جدید</h3>
+    <div class="form-group"><label class="form-label">نام مشتری</label><input type="text" id="cust-name" class="form-input"></div>
+    <div class="form-group"><label class="form-label">شماره تماس</label><input type="text" id="cust-phone" class="form-input"></div>
+    <button class="btn btn-primary" onclick="addCustomer()">افزودن مشتری</button>
+    <button class="btn btn-outline" onclick="closeModal('modal-customer')" style="margin-top:8px;">انصراف</button>
+  </div>
+</div>
+
+<!-- Bottom Navigation (8 Icons) -->
+<div class="bottom-nav">
+  <a class="nav-item active" onclick="showSection('sec-dashboard', this)"><i class="fas fa-home"></i><span>خانه</span></a>
+  <a class="nav-item" onclick="showSection('sec-products', this)"><i class="fas fa-tshirt"></i><span>کالاها</span></a>
+  <a class="nav-item" onclick="showSection('sec-stock', this)"><i class="fas fa-boxes"></i><span>انبار</span></a>
+  <a class="nav-item" onclick="showSection('sec-sales', this)"><i class="fas fa-receipt"></i><span>فروش</span></a>
+  <a class="nav-item" onclick="showSection('sec-purchases', this)"><i class="fas fa-shopping-bag"></i><span>خرید</span></a>
+  <a class="nav-item" onclick="showSection('sec-customers', this)"><i class="fas fa-users"></i><span>مشتریان</span></a>
+  <a class="nav-item" onclick="showSection('sec-suppliers', this)"><i class="fas fa-truck"></i><span>تأمین</span></a>
+  <a class="nav-item" onclick="showSection('sec-more', this)"><i class="fas fa-ellipsis-h"></i><span>بیشتر</span></a>
+</div>
+
+<script>
+  // Default Database State
+  let defaultDb = {
+    settings: { title: "حساب بانوان پلاس", subtitle: "سیستم جامع حسابداری فروشگاه لباس زنانه", logo: "" },
+    products: [
+      { id: 1, name: "مانتو مجلسی", qty: 25 },
+      { id: 2, name: "شلوار جین زنانه", qty: 30 },
+      { id: 3, name: "شومیز حریر", qty: 23 }
+    ],
+    sales: [
+      { id: 1, item: "شومیز حریر", price: 450000, profit: 120000, customer: "آب مریم", debt: 1900000 }
+    ],
+    purchases: [],
+    expenses: [],
+    customers: [
+      { id: 1, name: "آب مریم", phone: "09140000000", debt: 1900000 }
+    ]
+  };
+
+  let db = JSON.parse(localStorage.getItem('banovan_plus_db')) || defaultDb;
+
+  function saveDb() {
+    localStorage.setItem('banovan_plus_db', JSON.stringify(db));
+    render();
+  }
+
+  function fmt(n) { return Number(n || 0).toLocaleString('fa-IR'); }
+
+  function showSection(id, el) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if(el) {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      el.classList.add('active');
+    }
+  }
+
+  function openModal(id) { document.getElementById(id).classList.add('active'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+  function render() {
+    // Header Render
+    document.getElementById('header-title').innerText = db.settings.title || 'حساب بانوان پلاس';
+    document.getElementById('header-subtitle').innerText = db.settings.subtitle || 'سیستم حسابداری';
+    if(db.settings.logo) {
+      const img = document.getElementById('header-logo');
+      img.src = db.settings.logo;
+      img.style.display = 'inline-block';
+    }
+
+    // Stats Calculations
+    let totSales = db.sales.reduce((a,b)=>a+Number(b.price||0), 0);
+    let totProfit = db.sales.reduce((a,b)=>a+Number(b.profit||0), 0);
+    let totExpense = db.expenses.reduce((a,b)=>a+Number(b.amount||0), 0);
+    let totStock = db.products.reduce((a,b)=>a+Number(b.qty||0), 0);
+
+    document.getElementById('dash-sales').innerText = fmt(totSales) + ' تومان';
+    document.getElementById('dash-profit').innerText = fmt(totProfit) + ' تومان';
+    document.getElementById('dash-expense').innerText = fmt(totExpense) + ' تومان';
+    document.getElementById('dash-stock').innerText = fmt(totStock) + ' عدد';
+
+    // Debtors List
+    let debtorsHtml = '';
+    db.customers.filter(c => c.debt > 0).forEach(c => {
+      debtorsHtml += `<div class="item-row"><span><b>${c.name}</b></span><span style="color:var(--danger); font-weight:800;">${fmt(c.debt)} تومان بدهکار</span></div>`;
+    });
+    document.getElementById('dash-debtors').innerHTML = debtorsHtml || '<div style="text-align:center; color:#888;">مشتری بدهکاری ثبت نشده</div>';
+
+    // Products & Stock Lists
+    let prodHtml = '';
+    db.products.forEach(p => {
+      prodHtml += `<div class="item-row"><span>${p.name}</span><b>موجودی: ${fmt(p.qty)} عدد</b></div>`;
+    });
+    document.getElementById('products-list').innerHTML = prodHtml;
+    document.getElementById('stock-list').innerHTML = prodHtml;
+
+    // Sales List
+    let saleHtml = '';
+    db.sales.forEach(s => {
+      saleHtml += `<div class="item-row"><span>${s.item}</span><b style="color:var(--success)">+ ${fmt(s.price)} تومان</b></div>`;
+    });
+    document.getElementById('sales-list').innerHTML = saleHtml || '<div style="text-align:center; color:#888;">فاکتوری نیست</div>';
+
+    // Customers List
+    let custHtml = '';
+    db.customers.forEach(c => {
+      custHtml += `<div class="item-row"><span><b>${c.name}</b> (${c.phone||'---'})</span><span>بدهی: ${fmt(c.debt||0)} تومان</span></div>`;
+    });
+    document.getElementById('customers-list').innerHTML = custHtml;
+
+    // Reports Detail
+    document.getElementById('reports-detail').innerHTML = `
+      <div class="item-row"><span>کل فروش:</span><b>${fmt(totSales)} تومان</b></div>
+      <div class="item-row"><span>کل سود:</span><b style="color:var(--success);">${fmt(totProfit)} تومان</b></div>
+      <div class="item-row"><span>کل هزینه‌ها:</span><b style="color:var(--danger);">${fmt(totExpense)} تومان</b></div>
+    `;
+  }
+
+  // Modals Operations
+  function addSale() {
+    let item = document.getElementById('sale-item').value;
+    let price = Number(document.getElementById('sale-price').value);
+    let profit = Number(document.getElementById('sale-profit').value);
+    let customer = document.getElementById('sale-customer').value;
+    if(!item || !price) return alert('اطلاعات کامل نیست');
+
+    db.sales.unshift({ id: Date.now(), item, price, profit, customer });
+    if(customer) {
+      let c = db.customers.find(x => x.name === customer);
+      if(c) c.debt = (c.debt || 0) + price;
+      else db.customers.push({ id: Date.now(), name: customer, debt: price, phone: "" });
+    }
+    saveDb();
+    closeModal('modal-sale');
+  }
+
+  function addPurchase() {
+    let item = document.getElementById('pur-item').value;
+    let price = Number(document.getElementById('pur-price').value);
+    if(!item || !price) return alert('اطلاعات کامل نیست');
+    db.purchases.unshift({ id: Date.now(), item, price });
+    saveDb();
+    closeModal('modal-purchase');
+  }
+
+  function addExpense() {
+    let title = document.getElementById('exp-title').value;
+    let amount = Number(document.getElementById('exp-amount').value);
+    if(!title || !amount) return alert('اطلاعات کامل نیست');
+    db.expenses.unshift({ id: Date.now(), title, amount });
+    saveDb();
+    closeModal('modal-expense');
+  }
+
+  function addProduct() {
+    let name = document.getElementById('prod-name').value;
+    let qty = Number(document.getElementById('prod-qty').value);
+    if(!name) return alert('نام کالا الزامی است');
+    db.products.push({ id: Date.now(), name, qty });
+    saveDb();
+    closeModal('modal-product');
+  }
+
+  function addCustomer() {
+    let name = document.getElementById('cust-name').value;
+    let phone = document.getElementById('cust-phone').value;
+    if(!name) return alert('نام الزامی است');
+    db.customers.push({ id: Date.now(), name, phone, debt: 0 });
+    saveDb();
+    closeModal('modal-customer');
+  }
+
+  // Settings & Logo Upload
+  function saveSettings() {
+    db.settings.title = document.getElementById('cfg-title').value;
+    db.settings.subtitle = document.getElementById('cfg-subtitle').value;
+    saveDb();
+    alert('تنظیمات با موفقیت ذخیره شد');
+  }
+
+  function uploadLogo(e) {
+    let file = e.target.files[0];
+    if(!file) return;
+    let reader = new FileReader();
+    reader.onload = function(evt) {
+      db.settings.logo = evt.target.result;
+      saveDb();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Backup & Restore
+  function exportBackup() {
+    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+    let dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", "banovan_plus_backup.json");
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+  }
+
+  function importBackup(e) {
+    let file = e.target.files[0];
+    if(!file) return;
+    let reader = new FileReader();
+    reader.onload = function(evt) {
+      try {
+        db = JSON.parse(evt.target.result);
+        saveDb();
+        alert('اطلاعات بکاپ با موفقیت بازیابی شد');
+      } catch(err) {
+        alert('فایل بکاپ نامعتبر است');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // Init
+  render();
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+  }
+</script>
+
+</body>
+</html>
