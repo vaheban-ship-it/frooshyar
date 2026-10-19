@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>حسابداری فروشگاه</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d81b60">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jalaali-js@1.2.7/dist/jalaali.min.js"></script>
+    <style>
+        :root {
+            --primary: #d81b60;
+            --primary-light: #fce4ec;
+            --secondary: #8e24aa;
+            --bg: #f5f5f5;
+            --surface: #ffffff;
+            --text: #212121;
+            --text-secondary: #757575;
+            --border: #e0e0e0;
+            --success: #43a047;
+            --danger: #e53935;
+            --warning: #fb8c00;
+            --info: #1e88e5;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif;
+            background: var(--bg); color: var(--text); overflow-x: hidden;
+            touch-action: manipulation;
+        }
+        .app-container { max-width: 600px; margin: 0 auto; background: var(--bg); min-height: 100vh; padding-bottom: 90px; position: relative; }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; padding: 20px; text-align: center;
+            border-radius: 0 0 24px 24px; box-shadow: 0 4px 20px rgba(216,27,96,0.3);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .header h1 { margin: 0; font-size: 1.3rem; display:flex; align-items:center; justify-content:center; gap:8px; }
+        .header p { margin: 5px 0 0; opacity: 0.9; font-size: 0.85rem; }
+        .header img { height: 40px; width: 40px; object-fit: cover; border-radius: 8px; background: white; }
+
+        /* Cards */
+        .card {
+            background: var(--surface); margin: 12px; padding: 16px;
+            border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px; }
+        .stat-box {
+            background: var(--surface); padding: 16px; border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center;
+        }
+        .stat-box i { font-size: 1.5rem; margin-bottom: 8px; display: block; }
+        .stat-box .value { font-size: 1.1rem; font-weight: 700; }
+        .stat-box .label { font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px; }
+        .stat-box.sales i { color: var(--success); }
+        .stat-box.profit i { color: var(--info); }
+        .stat-box.expense i { color: var(--danger); }
+        .stat-box.stock i { color: var(--warning); }
+
+        /* Buttons */
+        .btn {
+            border: none; padding: 10px 16px; border-radius: 12px; font-family: inherit;
+            font-size: 0.9rem; cursor: pointer; transition: all 0.2s; display: inline-flex;
+            align-items: center; justify-content: center; gap: 6px; font-weight: 600;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-info { background: var(--info); color: white; }
+        .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+        .btn-block { width: 100%; }
+        .btn:active { transform: scale(0.96); opacity: 0.9; }
+        .btn-sm { padding: 6px 10px; font-size: 0.8rem; border-radius: 8px; }
+
+        /* Form Elements */
+        .form-group { margin-bottom: 14px; }
+        .form-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary); }
+        .form-input, .form-select {
+            width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
+            border-radius: 12px; font-family: inherit; font-size: 0.95rem;
+            background: var(--surface); transition: border 0.2s;
+        }
+        .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary); }
+
+        .jalali-date-wrap { display: flex; gap: 8px; }
+        .jalali-date-wrap .form-select { flex: 1; min-width: 0; padding: 10px 8px; }
+
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th, td { padding: 10px; text-align: right; border-bottom: 1px solid var(--border); }
+        th { background: var(--primary-light); color: var(--primary); font-weight: 700; }
+
+        .list-item {
+            background: var(--surface); padding: 14px; margin: 8px 12px;
+            border-radius: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .list-item-info h4 { margin: 0; font-size: 0.95rem; }
+        .list-item-info p { margin: 4px 0 0; font-size: 0.8rem; color: var(--text-secondary); }
+        .list-item-actions { display: flex; gap: 6px; }
+
+        /* Inventory Striped Rows */
+        .inventory-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 0.85rem;
+        }
+        .inventory-row:nth-child(even) { background-color: #fce4ec; }
+        .inventory-row:hover { background-color: #f8bbd0; }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface);
+            display: flex; justify-content: space-around; padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); border-radius: 20px 20px 0 0;
+            z-index: 100; max-width: 600px; margin: 0 auto;
+        }
+        .nav-item {
+            flex: 1; text-align: center; padding: 6px; cursor: pointer;
+            color: var(--text-secondary); font-size: 0.60rem; transition: color 0.2s;
+            background: none; border: none; font-family: inherit;
+        }
+        .nav-item i { font-size: 1.1rem; display: block; margin-bottom: 4px; }
+        .nav-item.active { color: var(--primary); }
+
+        .section { display: none; animation: fadeIn 0.3s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--surface); border-radius: 20px; width: 100%; max-width: 500px;
+            max-height: 90vh; overflow-y: auto; padding: 20px;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .modal-header h3 { margin: 0; color: var(--primary); }
+        .close-btn { background: none; border: none; font-size: 1.3rem; color: var(--text-secondary); cursor: pointer; }
+
+        .invoice-box {
+            background: white; border: 2px dashed var(--border); padding: 20px;
+            border-radius: 12px; margin-top: 12px;
+        }
+        .invoice-box h4 { text-align: center; margin: 0 0 12px; color: var(--primary); }
+        .invoice-logo { text-align: center; margin-bottom: 10px; }
+        .invoice-logo img { max-height: 60px; max-width: 100px; }
+        .invoice-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dotted var(--border); font-size: 0.9rem; }
+        .invoice-total { font-weight: 700; color: var(--primary); font-size: 1.1rem; margin-top: 10px; border-top: 2px solid var(--primary); padding-top: 10px; }
+
+        .search-box { position: relative; margin: 12px; }
+        .search-box i { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
+        .search-box input { padding-right: 40px; }
+
+        .toast {
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #333; color: white; padding: 12px 24px; border-radius: 12px;
+            font-size: 0.9rem; z-index: 300; opacity: 0; transition: all 0.3s; white-space: nowrap;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        .auto-save-indicator {
+            position: fixed; top: 10px; left: 10px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem;
+            z-index: 400; opacity: 0; transition: opacity 0.5s; pointer-events: none;
+        }
+        .auto-save-indicator.show { opacity: 1; }
+
+        .badge { padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .badge-success { background: #e8f5e9; color: var(--success); }
+        .badge-danger { background: #ffebee; color: var(--danger); }
+        .badge-warning { background: #fff3e0; color: var(--warning); }
+
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
+        .empty-state i { font-size: 3rem; margin-bottom: 12px; opacity: 0.3; }
+
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="header">
+        <h1><img id="header-logo" src="" alt="" style="display:none"><span id="header-title"><i class="fas fa-shopping-bag"></i> حساب فروشگاه</span></h1>
+        <p id="header-subtitle">سیستم جامع حسابداری فروشگاهی</p>
+    </div>
+
+    <div class="auto-save-indicator" id="auto-save-indicator">ذخیره خودکار...</div>
+
+    <!-- DASHBOARD -->
+    <div id="sec-dashboard" class="section active">
+        <div class="stats-grid">
+            <div class="stat-box sales"><i class="fas fa-chart-line"></i><div class="value" id="dash-sales">0</div><div class="label">فروش امروز</div></div>
+            <div class="stat-box profit"><i class="fas fa-coins"></i><div class="value" id="dash-profit">0</div><div class="label">سود امروز</div></div>
+            <div class="stat-box expense"><i class="fas fa-wallet"></i><div class="value" id="dash-expense">0</div><div class="label">هزینه امروز</div></div>
+            <div class="stat-box stock"><i class="fas fa-boxes"></i><div class="value" id="dash-stock">0</div><div class="label">اقلام موجود</div></div>
+        </div>
+        <div class="card">
+            <div class="card-title"><i class="fas fa-bolt"></i> دسترسی سریع</div>
+            <div class="row-2">
+                <button class="btn btn-success btn-block" onclick="openSaleModal()"><i class="fas fa-plus"></i> فاکتور فروش</button>
+                <button class="btn btn-danger btn-block" onclick="openPurchaseModal()"><i class="fas fa-plus"></i> فاکتور خرید</button>
+            </div>
+            <div style="height:10px"></div>
+            <div class="row-2">
+                <button class="btn btn-primary btn-block" onclick="openExpenseModal()"><i class="fas fa-minus-circle"></i> ثبت هزینه</button>
+                <button class="btn btn-warning btn-block" onclick="openQuickReportModal()"><i class="fas fa-chart-pie"></i> خلاصه گزارش امروز</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title"><i class="fas fa-hand-holding-usd"></i> مشتریان بدهکار</div>
+            <div id="dash-debtors"></div>
+        </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div id="sec-products" class="section">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" class="form-input" id="prod-search" placeholder="جستجوی کالا..." oninput="renderProducts()">
+        </div>
+        <div style="margin:12px">
+            <button class="btn btn-primary btn-block" onclick="openProductModal()"><i class="fas fa-plus"></i> افزودن کالای جدید</button>
+        </div>
+        <div id="products-list"></div>
+    </div>
+
+    <!-- INVENTORY -->
+    <div id="sec-inventory" class="section">
+        <div class="stats-grid">
+            <div class="stat-box stock"><i class="fas fa-boxes"></i><div class="value" id="inv-total-count">0</div><div class="label">تعداد کل اقلام</div></div>
+            <div class="stat-box profit"><i class="fas fa-money-bill-alt"></i><div class="value" id="inv-total-value">0</div><div class="label">ارزش سرمایه انبار</div></div>
+        </div>
+        <div class="card">
+            <div class="card-title"><i class="fas fa-exclamation-triangle"></i> کالاهای رو به اتمام (موجودی کم)</div>
+            <div id="inv-low-stock-list"></div>
+        </div>
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <div class="card-title" style="padding: 16px 16px 0 16px;"><i class="fas fa-clipboard-list"></i> وضعیت کامل موجودی انبار</div>
+            <div id="inv-full-list"></div>
+        </div>
+    </div>
+
+    <!-- CUSTOMERS -->
+    <div id="sec-customers" class="section">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" class="form-input" id="cust-search" placeholder="جستجوی مشتری..." oninput="renderCustomers()">
+        </div>
+        <div style="margin:12px">
+            <button class="btn btn-primary btn-block" onclick="openCustomerModal()"><i class="fas fa-plus"></i> افزودن مشتری</button>
+        </div>
+        <div id="customers-list"></div>
+    </div>
+
+    <!-- SALES -->
+    <div id="sec-sales" class="section">
+        <div style="margin:12px">
+            <button class="btn btn-success btn-block" onclick="openSaleModal()"><i class="fas fa-plus"></i> صدور فاکتور فروش</button>
+        </div>
+        <div id="sales-list"></div>
+    </div>
+
+    <!-- PURCHASES -->
+    <div id="sec-purchases" class="section">
+        <div style="margin:12px">
+            <button class="btn btn-danger btn-block" onclick="openPurchaseModal()"><i class="fas fa-plus"></i> ثبت فاکتور خرید جدید</button>
+        </div>
+        <div id="purchases-list"></div>
+    </div>
+
+    <!-- SUPPLIERS -->
+    <div id="sec-suppliers" class="section">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" class="form-input" id="supp-search" placeholder="جستجوی تأمین‌کننده..." oninput="renderSuppliers()">
+        </div>
+        <div style="margin:12px">
+            <button class="btn btn-primary btn-block" onclick="openSupplierModal()"><i class="fas fa-plus"></i> افزودن تأمین‌کننده جدید</button>
+        </div>
+        <div id="suppliers-list"></div>
+    </div>
+
+    <!-- REPORTS & SETTINGS (MORE) -->
+    <div id="sec-reports" class="section">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-filter"></i> فیلتر گزارش دوره‌ای</div>
+            <div class="row-2">
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">از تاریخ</label>
+                    <div class="jalali-date-wrap" id="report-from-wrap"></div>
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">تا تاریخ</label>
+                    <div class="jalali-date-wrap" id="report-to-wrap"></div>
+                </div>
+            </div>
+            <div style="height:10px"></div>
+            <button class="btn btn-primary btn-block" onclick="generateReport()"><i class="fas fa-eye"></i> مشاهده گزارش</button>
+        </div>
+        <div id="report-result"></div>
+
+        <div class="card">
+            <div class="card-title"><i class="fas fa-cogs"></i> تنظیمات فروشگاه</div>
+            <div class="form-group">
+                <label class="form-label">نام فروشگاه</label>
+                <input type="text" class="form-input" id="set-shop-name" placeholder="مثال: بوتیک شیک">
+            </div>
+            <div class="form-group">
+                <label class="form-label">شعار یا زیرنویس</label>
+                <input type="text" class="form-input" id="set-subtitle" placeholder="مثال: عرضه کننده انواع پوشاک">
+            </div>
+            <div class="form-group">
+                <label class="form-label">شماره کارت / حساب بانکی جهت درج در فاکتور</label>
+                <input type="text" class="form-input" id="set-bank-card" placeholder="مثال: ۶۲۳۴-۵۶۷۸-۹۰۱۲-۳۴۵۶">
+            </div>
+            <div class="form-group">
+                <label class="form-label">لوگوی فروشگاه (تصویر)</label>
+                <input type="file" class="form-input" id="set-logo" accept="image/*" onchange="handleLogoSelect(this)">
+                <div id="logo-preview" style="margin-top:8px;text-align:center"></div>
+            </div>
+            <button class="btn btn-primary btn-block" onclick="saveSettings()"><i class="fas fa-save"></i> ذخیره تنظیمات</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><i class="fas fa-database"></i> پشتیبان‌گیری و بازیابی</div>
+            <button class="btn btn-success btn-block" onclick="backupData()" style="margin-bottom:8px"><i class="fas fa-download"></i> دانلود فایل پشتیبان</button>
+            <label class="btn btn-outline btn-block" style="cursor:pointer">
+                <i class="fas fa-upload"></i> بازیابی اطلاعات از فایل
+                <input type="file" id="restore-file" accept=".json" style="display:none" onchange="restoreData(this)">
+            </label>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="showSection('sec-dashboard')">
+            <i class="fas fa-home"></i> خانه
+        </button>
+        <button class="nav-item" onclick="showSection('sec-products')">
+            <i class="fas fa-tshirt"></i> کالاها
+        </button>
+        <button class="nav-item" onclick="showSection('sec-inventory')">
+            <i class="fas fa-boxes"></i> انبار
+        </button>
+        <button class="nav-item" onclick="showSection('sec-sales')">
+            <i class="fas fa-file-invoice-dollar"></i> فروش
+        </button>
+        <button class="nav-item" onclick="showSection('sec-purchases')">
+            <i class="fas fa-file-invoice"></i> خرید
+        </button>
+        <button class="nav-item" onclick="showSection('sec-customers')">
+            <i class="fas fa-users"></i> مشتریان
+        </button>
+        <button class="nav-item" onclick="showSection('sec-suppliers')">
+            <i class="fas fa-truck-loading"></i> تأمین
+        </button>
+        <button class="nav-item" onclick="showSection('sec-reports')">
+            <i class="fas fa-chart-bar"></i> بیشتر
+        </button>
+    </div>
+</div>
+
+<!-- MODAL: Quick Report -->
+<div class="modal" id="modal-quick-report">
+    <div class="modal-content">
+        <div class="modal-header"><h3>گزارش و خلاصه عملکرد امروز</h3><button class="close-btn" onclick="closeModal('modal-quick-report')"><i class="fas fa-times"></i></button></div>
+        <div id="quick-report-body"></div>
+        <div style="height: 12px;"></div>
+        <button class="btn btn-primary btn-block" onclick="closeModal('modal-quick-report')">بستن</button>
+    </div>
+</div>
+
+<!-- MODAL: Product -->
+<div class="modal" id="modal-product">
+    <div class="modal-content">
+        <div class="modal-header"><h3>افزودن / ویرایش کالا</h3><button class="close-btn" onclick="closeModal('modal-product')"><i class="fas fa-times"></i></button></div>
+        <div class="form-group"><label class="form-label">نام کالا *</label><input type="text" class="form-input" id="p-name"></div>
+        <div class="form-group"><label class="form-label">دسته‌بندی</label><input type="text" class="form-input" id="p-cat" placeholder="مثال: مانتو، شلوار، شومیز..."></div>
+        <div class="row-2">
+            <div class="form-group"><label class="form-label">قیمت خرید *</label><input type="number" class="form-input" id="p-buy"></div>
+            <div class="form-group"><label class="form-label">قیمت فروش *</label><input type="number" class="form-input" id="p-sell"></div>
+        </div>
+        <div class="form-group"><label class="form-label">موجودی انبار</label><input type="number" class="form-input" id="p-stock" value="0"></div>
+        <button class="btn btn-primary btn-block" onclick="saveProduct()"><i class="fas fa-save"></i> ذخیره کالا</button>
+    </div>
+</div>
+
+<!-- MODAL: Customer -->
+<div class="modal" id="modal-customer">
+    <div class="modal-content">
+        <div class="modal-header"><h3>ثبت / ویرایش مشتری</h3><button class="close-btn" onclick="closeModal('modal-customer')"><i class="fas fa-times"></i></button></div>
+        <div style="margin-bottom:12px">
+            <button class="btn btn-info btn-sm btn-block" onclick="pickContactForCustomer()" type="button">
+                <i class="fas fa-address-book"></i> انتخاب نام و شماره از مخاطبین گوشی
+            </button>
+        </div>
+        <div class="form-group"><label class="form-label">نام مشتری *</label><input type="text" class="form-input" id="c-name"></div>
+        <div class="form-group"><label class="form-label">شماره تماس</label><input type="tel" class="form-input" id="c-phone"></div>
+        <div class="form-group"><label class="form-label">آدرس</label><input type="text" class="form-input" id="c-addr"></div>
+        <button class="btn btn-primary btn-block" onclick="saveCustomer()"><i class="fas fa-save"></i> ذخیره مشتری</button>
+    </div>
+</div>
+
+<!-- MODAL: Supplier -->
+<div class="modal" id="modal-supplier">
+    <div class="modal-content">
+        <div class="modal-header"><h3>ثبت / ویرایش تأمین‌کننده</h3><button class="close-btn" onclick="closeModal('modal-supplier')"><i class="fas fa-times"></i></button></div>
+        <div style="margin-bottom:12px">
+            <button class="btn btn-info btn-sm btn-block" onclick="pickContactForSupplier()" type="button">
+                <i class="fas fa-address-book"></i> انتخاب نام و شماره از مخاطبین گوشی
+            </button>
+        </div>
+        <div class="form-group"><label class="form-label">نام تأمین‌کننده / تولیدی *</label><input type="text" class="form-input" id="supp-modal-name"></div>
+        <div class="form-group"><label class="form-label">شماره تماس</label><input type="tel" class="form-input" id="supp-modal-phone"></div>
+        <div class="form-group"><label class="form-label">آدرس / شهر</label><input type="text" class="form-input" id="supp-modal-addr"></div>
+        <button class="btn btn-primary btn-block" onclick="saveSupplier()"><i class="fas fa-save"></i> ذخیره تأمین‌کننده</button>
+    </div>
+</div>
+
+<!-- MODAL: Customer Ledger -->
+<div class="modal" id="modal-customer-ledger">
+    <div class="modal-content">
+        <div class="modal-header"><h3 id="ledger-cust-title">دفتر حساب مشتری</h3><button class="close-btn" onclick="closeModal('modal-customer-ledger')"><i class="fas fa-times"></i></button></div>
+        <div class="invoice-box" style="margin-top:0">
+            <div class="invoice-row"><span>وضعیت حساب:</span><span id="ledger-cust-balance" style="font-weight:700">0</span></div>
+        </div>
+        <div class="card" style="margin:12px 0">
+            <div class="card-title"><i class="fas fa-hand-holding-usd"></i> ثبت دریافت وجه (کسر از بدهی)</div>
+            <div class="form-group"><label class="form-label">مبلغ دریافتی (تومان)</label><input type="number" class="form-input" id="ledger-payment-amount"></div>
+            <div class="form-group"><label class="form-label">توضیحات</label><input type="text" class="form-input" id="ledger-payment-desc" value="تسویه حساب / وصولی"></div>
+            <button class="btn btn-success btn-block" onclick="saveCustomerPayment()"><i class="fas fa-check"></i> ثبت و کسر از بدهی</button>
+        </div>
+        <div id="ledger-cust-history"></div>
+    </div>
+</div>
+
+<!-- MODAL: Supplier Ledger -->
+<div class="modal" id="modal-supplier-ledger">
+    <div class="modal-content">
+        <div class="modal-header"><h3 id="ledger-supp-title">دفتر حساب تأمین‌کننده</h3><button class="close-btn" onclick="closeModal('modal-supplier-ledger')"><i class="fas fa-times"></i></button></div>
+        <div class="invoice-box" style="margin-top:0">
+            <div class="invoice-row"><span>مانده بدهی ما به تأمین‌کننده:</span><span id="ledger-supp-balance" style="font-weight:700">0</span></div>
+        </div>
+        <div class="card" style="margin:12px 0">
+            <div class="card-title"><i class="fas fa-money-bill-wave"></i> ثبت پرداخت وجه به تأمین‌کننده</div>
+            <div class="form-group"><label class="form-label">مبلغ پرداختی (تومان)</label><input type="number" class="form-input" id="supp-payment-amount"></div>
+            <div class="form-group"><label class="form-label">توضیحات</label><input type="text" class="form-input" id="supp-payment-desc" value="پرداخت بابت فاکتور خرید"></div>
+            <button class="btn btn-success btn-block" onclick="saveSupplierPayment()"><i class="fas fa-check"></i> ثبت پرداخت</button>
+        </div>
+        <div id="ledger-supp-history"></div>
+    </div>
+</div>
+
+<!-- MODAL: Sale Invoice -->
+<div class="modal" id="modal-sale">
+    <div class="modal-content" style="max-width:600px">
+        <div class="modal-header"><h3 id="sale-modal-title">فاکتور فروش جدید</h3><button class="close-btn" onclick="closeModal('modal-sale')"><i class="fas fa-times"></i></button></div>
+        <div class="form-group">
+            <label class="form-label">مشتری (اختیاری)</label>
+            <select class="form-select" id="s-customer"><option value="">فروش عادی (بدون مشتری)</option></select>
+        </div>
+        <div class="row-2">
+            <div class="form-group"><label class="form-label">تاریخ</label><div class="jalali-date-wrap" id="s-date-wrap"></div></div>
+            <div class="form-group"><label class="form-label">تخفیف کل</label><input type="number" class="form-input" id="s-discount" value="0" oninput="calcSaleTotal()"></div>
+        </div>
+        <div class="card" style="margin:0 0 12px">
+            <div class="card-title"><i class="fas fa-cart-plus"></i> افزودن کالا به فاکتور</div>
+            <div class="form-group">
+                <select class="form-select" id="s-product" onchange="fillSalePrice()"><option value="">انتخاب کالا...</option></select>
+            </div>
+            <div class="row-2">
+                <div class="form-group"><label class="form-label">تعداد</label><input type="number" class="form-input" id="s-qty" value="1" min="1"></div>
+                <div class="form-group"><label class="form-label">قیمت واحد</label><input type="number" class="form-input" id="s-price"></div>
+            </div>
+            <button class="btn btn-success btn-block" onclick="addSaleItem()"><i class="fas fa-plus"></i> اضافه به فاکتور</button>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>کالا</th><th>تعداد</th><th>قیمت</th><th>جمع</th><th></th></tr></thead>
+                <tbody id="sale-items-body"></tbody>
+            </table>
+        </div>
+        <div class="invoice-box">
+            <div class="invoice-row"><span>جمع کل:</span><span id="sale-total">0</span></div>
+            <div class="invoice-row"><span>تخفیف:</span><span id="sale-discount-show">0</span></div>
+            <div class="invoice-row"><span>قابل پرداخت:</span><span id="sale-final">0</span></div>
+        </div>
+        <div class="row-2" style="margin-top:12px">
+            <div class="form-group"><label class="form-label">مبلغ دریافتی نقد/کارت</label><input type="number" class="form-input" id="s-paid" value="0" oninput="calcSaleRemain()"></div>
+            <div class="form-group"><label class="form-label">باقیمانده (نسیه/بدهی)</label><input type="number" class="form-input" id="s-remain" value="0" readonly style="background:#f5f5f5"></div>
+        </div>
+        <div style="height:12px"></div>
+        <button class="btn btn-primary btn-block" onclick="saveSaleInvoice()"><i class="fas fa-save"></i> ثبت و صدور نهایی فاکتور</button>
+    </div>
+</div>
+
+<!-- MODAL: Purchase Invoice -->
+<div class="modal" id="modal-purchase">
+    <div class="modal-content" style="max-width:600px">
+        <div class="modal-header"><h3 id="purchase-modal-title">ثبت فاکتور خرید (تأمین‌کننده)</h3><button class="close-btn" onclick="closeModal('modal-purchase')"><i class="fas fa-times"></i></button></div>
+        <div class="form-group">
+            <label class="form-label">تأمین‌کننده *</label>
+            <select class="form-select" id="p-supplier"><option value="">انتخاب تأمین‌کننده...</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">تاریخ</label><div class="jalali-date-wrap" id="p-date-wrap"></div></div>
+        <div class="card" style="margin:0 0 12px">
+            <div class="card-title"><i class="fas fa-cart-plus"></i> افزودن کالا به خرید</div>
+            <div class="form-group">
+                <select class="form-select" id="p-product" onchange="fillPurchasePrice()"><option value="">انتخاب کالا...</option></select>
+            </div>
+            <div class="row-2">
+                <div class="form-group"><label class="form-label">تعداد</label><input type="number" class="form-input" id="p-qty" value="1" min="1"></div>
+                <div class="form-group"><label class="form-label">قیمت خرید واحد</label><input type="number" class="form-input" id="p-price"></div>
+            </div>
+            <button class="btn btn-success btn-block" onclick="addPurchaseItem()"><i class="fas fa-plus"></i> اضافه به فاکتور خرید</button>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>کالا</th><th>تعداد</th><th>قیمت خرید</th><th>جمع</th><th></th></tr></thead>
+                <tbody id="purchase-items-body"></tbody>
+            </table>
+        </div>
+        <div class="invoice-box">
+            <div class="invoice-row"><span>جمع کل خرید:</span><span id="purchase-total">0</span></div>
+        </div>
+        <div class="row-2" style="margin-top:12px">
+            <div class="form-group"><label class="form-label">مبلغ پرداختی به تأمین‌کننده</label><input type="number" class="form-input" id="p-paid" value="0" oninput="calcPurchaseRemain()"></div>
+            <div class="form-group"><label class="form-label">باقیمانده بدهی ما</label><input type="number" class="form-input" id="p-remain" value="0" readonly style="background:#f5f5f5"></div>
+        </div>
+        <div style="height:12px"></div>
+        <button class="btn btn-primary btn-block" onclick="savePurchaseInvoice()"><i class="fas fa-save"></i> ثبت فاکتور خرید</button>
+    </div>
+</div>
+
+<!-- MODAL: Expense -->
+<div class="modal" id="modal-expense">
+    <div class="modal-content">
+        <div class="modal-header"><h3>ثبت هزینه جدید</h3><button class="close-btn" onclick="closeModal('modal-expense')"><i class="fas fa-times"></i></button></div>
+        <div class="form-group"><label class="form-label">عنوان هزینه *</label><input type="text" class="form-input" id="e-title" placeholder="مثال: اجاره مغازه، قبض برق، بسته بندی..."></div>
+        <div class="row-2">
+            <div class="form-group"><label class="form-label">مبلغ *</label><input type="number" class="form-input" id="e-amount"></div>
+            <div class="form-group"><label class="form-label">تاریخ *</label><div class="jalali-date-wrap" id="e-date-wrap"></div></div>
+        </div>
+        <div class="form-group"><label class="form-label">توضیحات</label><input type="text" class="form-input" id="e-desc"></div>
+        <button class="btn btn-primary btn-block" onclick="saveExpense()"><i class="fas fa-save"></i> ذخیره هزینه</button>
+    </div>
+</div>
+
+<!-- MODAL: Invoice View & Share -->
+<div class="modal" id="modal-invoice-view">
+    <div class="modal-content" style="max-width:500px">
+        <div class="modal-header"><h3>مشاهده فاکتور</h3><button class="close-btn" onclick="closeModal('modal-invoice-view')"><i class="fas fa-times"></i></button></div>
+        <div id="invoice-view-content"></div>
+        <div style="height:12px"></div>
+        <div class="row-2">
+            <button class="btn btn-primary btn-block" onclick="window.print()"><i class="fas fa-print"></i> پرینت</button>
+            <button class="btn btn-success btn-block" onclick="saveInvoiceAsImage()"><i class="fas fa-image"></i> ذخیره تصویر</button>
+        </div>
+        <div style="height:8px"></div>
+        <button class="btn btn-info btn-block" onclick="shareInvoice()"><i class="fas fa-share-alt"></i> اشتراک‌گذاری در تلگرام / واتساپ</button>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ================= DATA STORE =================
+let db = { products: [], customers: [], suppliers: [], sales: [], purchases: [], expenses: [], payments: [], supplierPayments: [], settings: {} };
+let tempSaleItems = [];
+let tempPurchaseItems = [];
+let editingId = null;
+let editingSaleId = null;
+let editingPurchaseId = null;
+let currentLedgerCustId = null;
+let currentLedgerSuppId = null;
+let dirty = false;
+
+// Default Settings
+const defaultSettings = {
+    shopName: 'حساب فروشگاه',
+    subtitle: 'سیستم جامع حسابداری فروشگاهی',
+    bankCard: '',
+    logoBase64: ''
+};
+
+// لیست کامل پیش‌فرض انواع پوشاک با قیمت و موجودی صفر
+const defaultProducts = [
+    { id: 1, name: 'مانتو کتان بلند اسپرت', category: 'مانتو', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 2, name: 'مانتو مجلسی کارشده سنگ‌دوزی', category: 'مانتو', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 3, name: 'مانتو عبایی حریر مشکی', category: 'مانتو', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 4, name: 'مانتو کتی کوتاه لینن', category: 'مانتو', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 5, name: 'شومیز مجلسی حریر پفی', category: 'شومیز', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 6, name: 'شومیز نخی تابستانی طرح‌دار', category: 'شومیز', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 7, name: 'شومیز ساتن ابریشم مجلسی', category: 'شومیز', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 8, name: 'شلوار جین جذب سنگ‌شور', category: 'شلوار', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 9, name: 'شلوار پارچه‌ای مام‌استایل', category: 'شلوار', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 10, name: 'شلوار بگ لینن خنک', category: 'شلوار', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 11, name: 'تونیک نخی راحتی خانگی', category: 'تونیک', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 12, name: 'روسری ابریشم قواره بزرگ', category: 'روسری و شال', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 13, name: 'شال نخی منگوله‌دار بهاره', category: 'روسری و شال', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 14, name: 'پالتو فوتر بلند زمستانه', category: 'پالتو و کاپشن', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 15, name: 'کاپشن بادی کوتاه کلاه‌دار', category: 'پالتو و کاپشن', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 16, name: 'هودی دورس توتکد لش', category: 'هودی و بافت', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 17, name: 'ست لباس زیر نخی فانتزی', category: 'لباس زیر', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 18, name: 'لباس خواب ساتن ابریشم کوتاه', category: 'لباس خواب', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 19, name: 'تونیک بافتنی پاییزه', category: 'بافت و پلیور', buyPrice: 0, sellPrice: 0, stock: 0 },
+    { id: 20, name: 'دامن بلند نخی چین‌دار', category: 'دامن', buyPrice: 0, sellPrice: 0, stock: 0 }
+];
+
+// ================= DATE UTILS (Jalali) =================
+function gregorianToJalaliStr(dateStr) {
+    if (!dateStr) return '';
+    const [y, m, d] = dateStr.split('-').map(Number);
+    try {
+        const j = jalaali.toJalaali(y, m, d);
+        return `${j.jy}/${String(j.jm).padStart(2, '0')}/${String(j.jd).padStart(2, '0')}`;
+    } catch (e) { return dateStr; }
+}
+function jalaliStrToGregorian(jStr) {
+    if (!jStr) return '';
+    const [jy, jm, jd] = jStr.split('/').map(Number);
+    try {
+        const g = jalaali.toGregorian(jy, jm, jd);
+        return `${g.gy}-${String(g.gm).padStart(2, '0')}-${String(g.gd).padStart(2, '0')}`;
+    } catch (e) { return jStr; }
+}
+function todayGregorian() { return new Date().toISOString().split('T')[0]; }
+
+function renderJalaliInput(containerId, initialGregorian, onChange) {
+    const wrap = document.getElementById(containerId);
+    if (!wrap) return;
+    let jDate = gregorianToJalaliStr(initialGregorian || todayGregorian()).split('/');
+    const [jy, jm, jd] = jDate.map(Number);
+    const years = Array.from({length: 21}, (_, i) => 1395 + i);
+    const months = Array.from({length: 12}, (_, i) => i + 1);
+    const days = Array.from({length: 31}, (_, i) => i + 1);
+    wrap.innerHTML = `
+        <select class="form-select jy-${containerId}">${years.map(y => `<option value="${y}" ${y===jy?'selected':''}>${y}</option>`).join('')}</select>
+        <select class="form-select jm-${containerId}">${months.map(m => `<option value="${m}" ${m===jm?'selected':''}>${m}</option>`).join('')}</select>
+        <select class="form-select jd-${containerId}">${days.map(d => `<option value="${d}" ${d===jd?'selected':''}>${d}</option>`).join('')}</select>
+    `;
+    if (onChange) {
+        wrap.querySelectorAll('select').forEach(s => s.addEventListener('change', onChange));
+    }
+}
+function getJalaliInputValue(containerId) {
+    const wrap = document.getElementById(containerId);
+    if (!wrap) return todayGregorian();
+    const y = wrap.querySelector(`[class*="jy-${containerId}"]`).value;
+    const m = wrap.querySelector(`[class*="jm-${containerId}"]`).value;
+    const d = wrap.querySelector(`[class*="jd-${containerId}"]`).value;
+    return jalaliStrToGregorian(`${y}/${m}/${d}`);
+}
+
+// ================= INIT =================
+function initDB() {
+    const saved = localStorage.getItem('shop_accounting_db');
+    if (saved) {
+        db = JSON.parse(saved);
+        if (!db.settings) db.settings = {};
+        if (!db.payments) db.payments = [];
+        if (!db.supplierPayments) db.supplierPayments = [];
+        if (!db.suppliers) db.suppliers = [];
+        if (!db.products || db.products.length === 0) db.products = defaultProducts;
+        if (!db.purchases) db.purchases = [];
+    } else {
+        db.products = defaultProducts;
+        db.settings = defaultSettings;
+        db.customers = [];
+        db.suppliers = [];
+        db.sales = [];
+        db.purchases = [];
+        db.expenses = [];
+        db.payments = [];
+        db.supplierPayments = [];
+    }
+    db.settings = { ...defaultSettings, ...db.settings };
+    applySettings();
+    refreshAll();
+    setupAutoSave();
+}
+
+function saveDB() {
+    localStorage.setItem('shop_accounting_db', JSON.stringify(db));
+    dirty = false;
+    showAutoSave();
+}
+
+let autoSaveInterval;
+function setupAutoSave() {
+    if (autoSaveInterval) clearInterval(autoSaveInterval);
+    autoSaveInterval = setInterval(() => { if (dirty) saveDB(); }, 3000);
+}
+function markDirty() { dirty = true; }
+
+function showAutoSave() {
+    const el = document.getElementById('auto-save-indicator');
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 1500);
+}
+
+function formatMoney(n) { return Number(n || 0).toLocaleString('fa-IR') + ' تومان'; }
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ================= SETTINGS =================
+function applySettings() {
+    const s = db.settings || defaultSettings;
+    document.getElementById('header-title').innerHTML = s.logoBase64 ? `<img id="header-logo" src="${s.logoBase64}" style="display:inline-block"> ${s.shopName}` : `<i class="fas fa-shopping-bag"></i> ${s.shopName}`;
+    document.getElementById('header-subtitle').textContent = s.subtitle || defaultSettings.subtitle;
+    document.getElementById('set-shop-name').value = s.shopName || '';
+    document.getElementById('set-subtitle').value = s.subtitle || '';
+    document.getElementById('set-bank-card').value = s.bankCard || '';
+    document.getElementById('logo-preview').innerHTML = s.logoBase64 ? `<img src="${s.logoBase64}" style="max-height:80px;border-radius:8px;border:1px solid #ddd">` : '';
+}
+function handleLogoSelect(input) {
+    const file = input.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => { db.settings.logoBase64 = e.target.result; applySettings(); markDirty(); };
+    reader.readAsDataURL(file);
+}
+function saveSettings() {
+    db.settings.shopName = document.getElementById('set-shop-name').value.trim() || defaultSettings.shopName;
+    db.settings.subtitle = document.getElementById('set-subtitle').value.trim() || defaultSettings.subtitle;
+    db.settings.bankCard = document.getElementById('set-bank-card').value.trim();
+    saveDB();
+    applySettings();
+    showToast('تنظیمات فروشگاه ذخیره شد');
+}
+
+// ================= NAVIGATION =================
+function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const map = {'sec-dashboard':0, 'sec-products':1, 'sec-inventory':2, 'sec-sales':3, 'sec-purchases':4, 'sec-customers':5, 'sec-suppliers':6, 'sec-reports':7};
+    if (map[id] !== undefined) document.querySelectorAll('.nav-item')[map[id]].classList.add('active');
+    if (id === 'sec-products') renderProducts();
+    if (id === 'sec-inventory') renderInventory();
+    if (id === 'sec-customers') renderCustomers();
+    if (id === 'sec-sales') renderSales();
+    if (id === 'sec-purchases') renderPurchases();
+    if (id === 'sec-suppliers') renderSuppliers();
+    if (id === 'sec-reports') { generateReport(); applySettings(); }
+}
+
+// ================= PRODUCTS =================
+function renderProducts() {
+    const q = document.getElementById('prod-search').value.trim().toLowerCase();
+    const list = document.getElementById('products-list');
+    const items = db.products.filter(p => p.name.toLowerCase().includes(q) || (p.category || '').toLowerCase().includes(q));
+    if (!items.length) { list.innerHTML = '<div class="empty-state"><i class="fas fa-box-open"></i><p>کالایی یافت نشد</p></div>'; return; }
+    list.innerHTML = items.map(p => `
+        <div class="list-item">
+            <div class="list-item-info">
+                <h4>${p.name} <span class="badge badge-success">${p.stock} عدد</span></h4>
+                <p>${p.category || 'بدون دسته'} | خرید: ${formatMoney(p.buyPrice)} | فروش: ${formatMoney(p.sellPrice)}</p>
+            </div>
+            <div class="list-item-actions">
+                <button class="btn btn-sm btn-primary" onclick="editProduct(${p.id})"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
+function openProductModal() {
+    editingId = null;
+    document.getElementById('p-name').value = ''; document.getElementById('p-cat').value = '';
+    document.getElementById('p-buy').value = ''; document.getElementById('p-sell').value = '';
+    document.getElementById('p-stock').value = '0';
+    document.getElementById('modal-product').classList.add('active');
+}
+function editProduct(id) {
+    const p = db.products.find(x => x.id === id); if (!p) return;
+    editingId = id;
+    document.getElementById('p-name').value = p.name; document.getElementById('p-cat').value = p.category || '';
+    document.getElementById('p-buy').value = p.buyPrice; document.getElementById('p-sell').value = p.sellPrice;
+    document.getElementById('p-stock').value = p.stock;
+    document.getElementById('modal-product').classList.add('active');
+}
+function saveProduct() {
+    const name = document.getElementById('p-name').value.trim();
+    const buy = parseFloat(document.getElementById('p-buy').value) || 0;
+    const sell = parseFloat(document.getElementById('p-sell').value) || 0;
+    if (!name) { showToast('نام کالا الزامی است'); return; }
+    if (editingId) {
+        const p = db.products.find(x => x.id === editingId);
+        Object.assign(p, { name, category: document.getElementById('p-cat').value.trim(), buyPrice: buy, sellPrice: sell, stock: parseInt(document.getElementById('p-stock').value) || 0 });
+    } else {
+        const newId = db.products.length ? Math.max(...db.products.map(x => x.id)) + 1 : 1;
+        db.products.push({ id: newId, name, category: document.getElementById('p-cat').value.trim(), buyPrice: buy, sellPrice: sell, stock: parseInt(document.getElementById('p-stock').value) || 0 });
+    }
+    saveDB(); closeModal('modal-product'); renderProducts(); refreshAll(); showToast('کالا ذخیره شد');
+}
+function deleteProduct(id) {
+    if (!confirm('آیا از حذف این کالا اطمینان دارید؟')) return;
+    db.products = db.products.filter(x => x.id !== id); saveDB(); renderProducts(); refreshAll(); showToast('کالا حذف شد');
+}
+
+// ================= INVENTORY =================
+function renderInventory() {
+    const totalCount = db.products.reduce((s, p) => s + p.stock, 0);
+    const totalVal = db.products.reduce((s, p) => s + (p.stock * p.buyPrice), 0);
+    
+    document.getElementById('inv-total-count').textContent = totalCount.toLocaleString('fa-IR') + ' عدد';
+    document.getElementById('inv-total-value').textContent = formatMoney(totalVal);
+    
+    const lowStock = db.products.filter(p => p.stock <= 5);
+    const lowDiv = document.getElementById('inv-low-stock-list');
+    if (!lowStock.length) {
+        lowDiv.innerHTML = '<p style="color:#999;font-size:0.85rem">هیچ کالایی در حد هشدار و اتمام نیست</p>';
+    } else {
+        lowDiv.innerHTML = lowStock.map(p => `
+            <div class="invoice-row">
+                <span>${p.name}</span>
+                <span class="badge badge-danger">موجودی: ${p.stock} عدد</span>
+            </div>
+        `).join('');
+    }
+    
+    const fullDiv = document.getElementById('inv-full-list');
+    if (!db.products.length) {
+        fullDiv.innerHTML = '<p style="color:#999;font-size:0.85rem;padding:16px;">کالایی ثبت نشده است</p>';
+    } else {
+        fullDiv.innerHTML = db.products.map(p => `
+            <div class="inventory-row">
+                <span><b>${p.name}</b> <small style="color:#757575">(${p.category || 'متفرقه'})</small></span>
+                <span>موجودی: <b>${p.stock}</b> | خرید: ${formatMoney(p.buyPrice)}</span>
+            </div>
+        `).join('');
+    }
+}
+
+// ================= CUSTOMERS & LEDGER =================
+function renderCustomers() {
+    const q = document.getElementById('cust-search').value.trim().toLowerCase();
+    const list = document.getElementById('customers-list');
+    const items = db.customers.filter(c => c.name.toLowerCase().includes(q) || (c.phone || '').includes(q));
+    if (!items.length) { list.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>مشتری یافت نشد</p></div>'; return; }
+    list.innerHTML = items.map(c => `
+        <div class="list-item">
+            <div class="list-item-info" onclick="openCustomerLedger(${c.id})" style="cursor:pointer; flex:1;">
+                <h4>${c.name}</h4>
+                <p>${c.phone || 'بدون شماره'} | ${c.address || 'بدون آدرس'}</p>
+            </div>
+            <div style="text-align:left">
+                <div onclick="openCustomerLedger(${c.id})" style="font-weight:700;color:${c.balance < 0 ? 'var(--danger)' : 'var(--success)'};font-size:0.95rem;cursor:pointer">
+                    ${formatMoney(Math.abs(c.balance))} ${c.balance < 0 ? 'بدهکار' : 'تسویه'}
+                </div>
+                <div class="list-item-actions" style="margin-top:6px;justify-content:flex-end">
+                    <button class="btn btn-sm btn-success" onclick="openCustomerLedger(${c.id})" title="دفتر حساب و وصولی"><i class="fas fa-wallet"></i></button>
+                    <button class="btn btn-sm btn-primary" onclick="editCustomer(${c.id})"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteCustomer(${c.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+function openCustomerModal() {
+    editingId = null;
+    document.getElementById('c-name').value = ''; document.getElementById('c-phone').value = '';
+    document.getElementById('c-addr').value = '';
+    document.getElementById('modal-customer').classList.add('active');
+}
+function editCustomer(id) {
+    const c = db.customers.find(x => x.id === id); if (!c) return;
+    editingId = id;
+    document.getElementById('c-name').value = c.name; document.getElementById('c-phone').value = c.phone || '';
+    document.getElementById('c-addr').value = c.address || '';
+    document.getElementById('modal-customer').classList.add('active');
+}
+function saveCustomer() {
+    const name = document.getElementById('c-name').value.trim();
+    if (!name) { showToast('نام مشتری الزامی است'); return; }
+    if (editingId) {
+        const c = db.customers.find(x => x.id === editingId);
+        Object.assign(c, { name, phone: document.getElementById('c-phone').value.trim(), address: document.getElementById('c-addr').value.trim() });
+    } else {
+        const newId = db.customers.length ? Math.max(...db.customers.map(x => x.id)) + 1 : 1;
+        db.customers.push({ id: newId, name, phone: document.getElementById('c-phone').value.trim(), address: document.getElementById('c-addr').value.trim(), balance: 0 });
+    }
+    saveDB(); closeModal('modal-customer'); renderCustomers(); refreshAll(); showToast('مشتری ذخیره شد');
+}
+function deleteCustomer(id) {
+    if (!confirm('آیا از حذف این مشتری اطمینان دارید؟')) return;
+    db.customers = db.customers.filter(x => x.id !== id); saveDB(); renderCustomers(); refreshAll(); showToast('مشتری حذف شد');
+}
+async function pickContactForCustomer() {
+    try {
+        if (!('contacts' in navigator && 'select' in navigator.contacts)) {
+            showToast('مرورگر شما از انتخاب مستقیم مخاطبین پشتیبانی نمی‌کند');
+            return;
+        }
+        const contacts = await navigator.contacts.select(['name', 'tel'], { multiple: false });
+        if (contacts && contacts.length) {
+            const contact = contacts[0];
+            if (contact.name && contact.name[0]) document.getElementById('c-name').value = contact.name[0];
+            if (contact.tel && contact.tel[0]) document.getElementById('c-phone').value = contact.tel[0];
+        }
+    } catch (err) { showToast('خطا در دسترسی به مخاطبین گوشی'); }
+}
+
+function openCustomerLedger(custId) {
+    const c = db.customers.find(x => x.id === custId);
+    if (!c) return;
+    currentLedgerCustId = custId;
+    document.getElementById('ledger-cust-title').textContent = `دفتر حساب: ${c.name}`;
+    document.getElementById('ledger-cust-balance').textContent = formatMoney(Math.abs(c.balance)) + (c.balance < 0 ? ' (بدهکار)' : ' (تسویه)');
+    document.getElementById('ledger-payment-amount').value = '';
+    
+    const custSales = db.sales.filter(s => s.customerId === custId);
+    const custPayments = (db.payments || []).filter(p => p.customerId === custId);
+    
+    let historyHtml = '<div style="font-weight:700;margin-bottom:8px;font-size:0.9rem">تاریخچه فاکتورها و دریافتی‌ها:</div>';
+    
+    if (!custSales.length && !custPayments.length) {
+        historyHtml += '<p style="color:#999;font-size:0.85rem">تراکنشی ثبت نشده است</p>';
+    } else {
+        let combined = [
+            ...custSales.map(s => ({ type: 'sale', date: s.date, title: `فاکتور فروش #${s.id}`, amount: s.finalAmount })),
+            ...custPayments.map(p => ({ type: 'payment', date: p.date, title: p.description, amount: p.amount }))
+        ].sort((a,b) => new Date(b.date) - new Date(a.date));
+
+        historyHtml += combined.map(item => `
+            <div class="invoice-row">
+                <span>${gregorianToJalaliStr(item.date)} - ${item.title}</span>
+                <span style="color:${item.type === 'payment' ? 'var(--success)' : 'var(--text)'}">${item.type === 'payment' ? '-' : ''}${formatMoney(item.amount)}</span>
+            </div>
+        `).join('');
+    }
+    document.getElementById('ledger-cust-history').innerHTML = historyHtml;
+    document.getElementById('modal-customer-ledger').classList.add('active');
+}
+function saveCustomerPayment() {
+    const amt = parseFloat(document.getElementById('ledger-payment-amount').value) || 0;
+    const desc = document.getElementById('ledger-payment-desc').value.trim() || 'دریافت وجه / وصولی';
+    if (amt <= 0) { showToast('مبلغ معتبر وارد کنید'); return; }
+    
+    const c = db.customers.find(x => x.id === currentLedgerCustId);
+    if (!c) return;
+    
+    c.balance += amt;
+    if (!db.payments) db.payments = [];
+    db.payments.push({ id: Date.now(), customerId: c.id, amount: amt, description: desc, date: todayGregorian() });
+    
+    saveDB();
+    openCustomerLedger(c.id);
+    renderCustomers();
+    showToast('دریافت وجه ثبت و از بدهی کسر شد');
+}
+
+// ================= SUPPLIERS & LEDGER =================
+function renderSuppliers() {
+    const q = document.getElementById('supp-search').value.trim().toLowerCase();
+    const list = document.getElementById('suppliers-list');
+    
+    if (!db.suppliers) db.suppliers = [];
+    const items = db.suppliers.filter(s => s.name.toLowerCase().includes(q) || (s.phone || '').includes(q));
+    
+    if (!items.length) {
+        list.innerHTML = '<div class="empty-state"><i class="fas fa-truck"></i><p>تأمین‌کننده‌ای یافت نشد</p></div>';
+        return;
+    }
+    
+    list.innerHTML = items.map(s => {
+        const suppPurchases = (db.purchases || []).filter(p => p.supplierId === s.id);
+        const totalDebt = suppPurchases.reduce((sum, p) => sum + p.remainingAmount, 0);
+        
+        return `
+            <div class="list-item">
+                <div class="list-item-info" onclick="openSupplierLedger(${s.id})" style="cursor:pointer; flex:1;">
+                    <h4>${s.name}</h4>
+                    <p>${s.phone || 'بدون شماره'} | ${s.address || 'بدون آدرس'}</p>
+                </div>
+                <div style="text-align:left">
+                    <div onclick="openSupplierLedger(${s.id})" style="font-weight:700;color:var(--danger);font-size:0.95rem;cursor:pointer">
+                        ${formatMoney(totalDebt)} بدهی ما
+                    </div>
+                    <div class="list-item-actions" style="margin-top:6px;justify-content:flex-end">
+                        <button class="btn btn-sm btn-success" onclick="openSupplierLedger(${s.id})" title="دفتر حساب"><i class="fas fa-wallet"></i></button>
+                        <button class="btn btn-sm btn-primary" onclick="editSupplier(${s.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteSupplier(${s.id})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+function openSupplierModal() {
+    editingId = null;
+    document.getElementById('supp-modal-name').value = '';
+    document.getElementById('supp-modal-phone').value = '';
+    document.getElementById('supp-modal-addr').value = '';
+    document.getElementById('modal-supplier').classList.add('active');
+}
+function editSupplier(id) {
+    const s = db.suppliers.find(x => x.id === id); if (!s) return;
+    editingId = id;
+    document.getElementById('supp-modal-name').value = s.name;
+    document.getElementById('supp-modal-phone').value = s.phone || '';
+    document.getElementById('supp-modal-addr').value = s.address || '';
+    document.getElementById('modal-supplier').classList.add('active');
+}
+function saveSupplier() {
+    const name = document.getElementById('supp-modal-name').value.trim();
+    if (!name) { showToast('نام تأمین‌کننده الزامی است'); return; }
+    if (!db.suppliers) db.suppliers = [];
+    
+    if (editingId) {
+        const s = db.suppliers.find(x => x.id === editingId);
+        Object.assign(s, { name, phone: document.getElementById('supp-modal-phone').value.trim(), address: document.getElementById('supp-modal-addr').value.trim() });
+    } else {
+        const newId = db.suppliers.length ? Math.max(...db.suppliers.map(x => x.id)) + 1 : 1;
+        db.suppliers.push({ id: newId, name, phone: document.getElementById('supp-modal-phone').value.trim(), address: document.getElementById('supp-modal-addr').value.trim() });
+    }
+    saveDB(); closeModal('modal-supplier'); renderSuppliers(); refreshAll(); showToast('تأمین‌کننده ذخیره شد');
+}
+function deleteSupplier(id) {
+    if (!confirm('آیا از حذف این تأمین‌کننده اطمینان دارید؟')) return;
+    db.suppliers = db.suppliers.filter(x => x.id !== id); saveDB(); renderSuppliers(); refreshAll(); showToast('تأمین‌کننده حذف شد');
+}
+async function pickContactForSupplier() {
+    try {
+        if (!('contacts' in navigator && 'select' in navigator.contacts)) {
+            showToast('مرورگر شما از انتخاب مستقیم مخاطبین پشتیبانی نمی‌کند');
+            return;
+        }
+        const contacts = await navigator.contacts.select(['name', 'tel'], { multiple: false });
+        if (contacts && contacts.length) {
+            const contact = contacts[0];
+            if (contact.name && contact.name[0]) document.getElementById('supp-modal-name').value = contact.name[0];
+            if (contact.tel && contact.tel[0]) document.getElementById('supp-modal-phone').value = contact.tel[0];
+        }
+    } catch (err) { showToast('خطا در دسترسی به مخاطبین گوشی'); }
+}
+
+function openSupplierLedger(suppId) {
+    const s = db.suppliers.find(x => x.id === suppId);
+    if (!s) return;
+    currentLedgerSuppId = suppId;
+    document.getElementById('ledger-supp-title').textContent = `دفتر حساب تأمین‌کننده: ${s.name}`;
+    
+    const suppPurchases = (db.purchases || []).filter(p => p.supplierId === suppId);
+    const totalDebt = suppPurchases.reduce((sum, p) => sum + p.remainingAmount, 0);
+    
+    document.getElementById('ledger-supp-balance').textContent = formatMoney(totalDebt);
+    document.getElementById('supp-payment-amount').value = '';
+    
+    let historyHtml = '<div style="font-weight:700;margin-bottom:8px;font-size:0.9rem">فاکتورهای خرید از این تأمین‌کننده:</div>';
+    if (!suppPurchases.length) {
+        historyHtml += '<p style="color:#999;font-size:0.85rem">فاکتور خریدی ثبت نشده است</p>';
+    } else {
+        historyHtml += suppPurchases.map(p => `
+            <div class="invoice-row">
+                <span>${gregorianToJalaliStr(p.date)} - فاکتور خرید #${p.id}</span>
+                <span style="color:var(--danger)">${formatMoney(p.totalAmount)} (مانده: ${formatMoney(p.remainingAmount)})</span>
+            </div>
+        `).join('');
+    }
+    
+    document.getElementById('ledger-supp-history').innerHTML = historyHtml;
+    document.getElementById('modal-supplier-ledger').classList.add('active');
+}
+function saveSupplierPayment() {
+    const amt = parseFloat(document.getElementById('supp-payment-amount').value) || 0;
+    if (amt <= 0) { showToast('مبلغ معتبر وارد کنید'); return; }
+    
+    let remainingPayment = amt;
+    (db.purchases || []).forEach(p => {
+        if (p.supplierId === currentLedgerSuppId && p.remainingAmount > 0) {
+            if (remainingPayment >= p.remainingAmount) {
+                remainingPayment -= p.remainingAmount;
+                p.remainingAmount = 0;
+            } else {
+                p.remainingAmount -= remainingPayment;
+                remainingPayment = 0;
+            }
+        }
+    });
+    
+    saveDB();
+    openSupplierLedger(currentLedgerSuppId);
+    renderPurchases();
+    showToast('پرداخت وجه ثبت و از بدهی کسر شد');
+}
+
+// ================= SALES =================
+function openSaleModal(saleId = null) {
+    tempSaleItems = [];
+    editingSaleId = saleId;
+    document.getElementById('sale-modal-title').textContent = saleId ? `ویرایش فاکتور فروش #${saleId}` : 'فاکتور فروش جدید';
+    document.getElementById('s-customer').innerHTML = '<option value="">فروش عادی (بدون مشتری)</option>' + db.customers.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    const sel = document.getElementById('s-product'); 
+    sel.innerHTML = '<option value="">انتخاب کالا...</option>' + db.products.map(p => `<option value="${p.id}">${p.name} (موجود: ${p.stock})</option>`).join('');
+    
+    if (saleId) {
+        const inv = db.sales.find(x => x.id === saleId);
+        if (inv) {
+            document.getElementById('s-customer').value = inv.customerId || '';
+            document.getElementById('s-discount').value = inv.discount || 0;
+            document.getElementById('s-paid').value = inv.paidAmount || 0;
+            tempSaleItems = JSON.parse(JSON.stringify(inv.items));
+            renderJalaliInput('s-date-wrap', inv.date);
+        }
+    } else {
+        document.getElementById('s-discount').value = 0; 
+        document.getElementById('s-paid').value = 0; 
+        document.getElementById('s-remain').value = 0;
+        renderJalaliInput('s-date-wrap', todayGregorian());
+    }
+    
+    renderSaleItems(); 
+    calcSaleTotal();
+    document.getElementById('modal-sale').classList.add('active');
+}
+function fillSalePrice() {
+    const id = parseInt(document.getElementById('s-product').value);
+    const p = db.products.find(x => x.id === id);
+    document.getElementById('s-price').value = p ? p.sellPrice : '';
+}
+function addSaleItem() {
+    const pid = parseInt(document.getElementById('s-product').value);
+    const qty = parseInt(document.getElementById('s-qty').value) || 1;
+    const price = parseFloat(document.getElementById('s-price').value) || 0;
+    if (!pid) { showToast('کالا را انتخاب کنید'); return; }
+    const p = db.products.find(x => x.id === pid);
+    
+    let currentStock = p.stock;
+    if (editingSaleId) {
+        const oldInv = db.sales.find(x => x.id === editingSaleId);
+        if (oldInv) {
+            const oldItem = oldInv.items.find(x => x.productId === pid);
+            if (oldItem) currentStock += oldItem.quantity;
+        }
+    }
+    if (qty > currentStock) { showToast('موجودی کافی نیست! موجودی قابل استفاده: ' + currentStock); return; }
+    
+    const existing = tempSaleItems.find(x => x.productId === pid);
+    if (existing) { existing.quantity += qty; existing.totalPrice = existing.quantity * existing.unitPrice; }
+    else { tempSaleItems.push({ productId: pid, productName: p.name, quantity: qty, unitPrice: price, totalPrice: qty * price }); }
+    renderSaleItems(); calcSaleTotal();
+}
+function renderSaleItems() {
+    const tbody = document.getElementById('sale-items-body');
+    if (!tempSaleItems.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999">کالایی اضافه نشده</td></tr>'; return; }
+    tbody.innerHTML = tempSaleItems.map((item, i) => `
+        <tr><td>${item.productName}</td><td>${item.quantity}</td><td>${formatMoney(item.unitPrice)}</td><td>${formatMoney(item.totalPrice)}</td>
+        <td><button class="btn btn-sm btn-danger" onclick="removeSaleItem(${i})"><i class="fas fa-trash"></i></button></td></tr>
+    `).join('');
+}
+function removeSaleItem(idx) { tempSaleItems.splice(idx, 1); renderSaleItems(); calcSaleTotal(); }
+function calcSaleTotal() {
+    const total = tempSaleItems.reduce((s, x) => s + x.totalPrice, 0);
+    const disc = parseFloat(document.getElementById('s-discount').value) || 0;
+    const final = Math.max(0, total - disc);
+    document.getElementById('sale-total').textContent = formatMoney(total);
+    document.getElementById('sale-discount-show').textContent = formatMoney(disc);
+    document.getElementById('sale-final').textContent = formatMoney(final);
+    calcSaleRemain();
+}
+function calcSaleRemain() {
+    const final = parseFloat(document.getElementById('sale-final').textContent.replace(/[^0-9.-]+/g, "")) || 0;
+    const paid = parseFloat(document.getElementById('s-paid').value) || 0;
+    document.getElementById('s-remain').value = Math.max(0, final - paid);
+}
+function saveSaleInvoice() {
+    if (!tempSaleItems.length) { showToast('حداقل یک کالا اضافه کنید'); return; }
+    const total = tempSaleItems.reduce((s, x) => s + x.totalPrice, 0);
+    const disc = parseFloat(document.getElementById('s-discount').value) || 0;
+    const final = Math.max(0, total - disc);
+    const paid = parseFloat(document.getElementById('s-paid').value) || 0;
+    const remain = Math.max(0, final - paid);
+    const customerId = document.getElementById('s-customer').value;
+    const customerName = customerId ? (db.customers.find(x => x.id == customerId)?.name || '') : '';
+    const date = getJalaliInputValue('s-date-wrap');
+    
+    if (editingSaleId) {
+        const oldInv = db.sales.find(x => x.id === editingSaleId);
+        if (oldInv) {
+            oldInv.items.forEach(it => {
+                const p = db.products.find(x => x.id === it.productId);
+                if (p) p.stock += it.quantity;
+            });
+            if (oldInv.customerId) {
+                const c = db.customers.find(x => x.id === oldInv.customerId);
+                if (c) c.balance += oldInv.remainingAmount;
+            }
+        }
+        
+        const inv = db.sales.find(x => x.id === editingSaleId);
+        if (inv) {
+            inv.customerId = customerId ? parseInt(customerId) : null;
+            inv.customerName = customerName;
+            inv.items = [...tempSaleItems];
+            inv.totalAmount = total;
+            inv.discount = disc;
+            inv.finalAmount = final;
+            inv.paidAmount = paid;
+            inv.remainingAmount = remain;
+            inv.date = date;
+        }
+        
+        tempSaleItems.forEach(it => {
+            const p = db.products.find(x => x.id === it.productId);
+            if (p) p.stock -= it.quantity;
+        });
+        if (customerId) {
+            const c = db.customers.find(x => x.id == customerId);
+            if (c) c.balance -= remain;
+        }
+        
+        editingSaleId = null;
+        saveDB(); closeModal('modal-sale'); renderSales(); refreshAll(); showToast('فاکتور فروش ویرایش شد');
+    } else {
+        const newId = db.sales.length ? Math.max(...db.sales.map(x => x.id)) + 1 : 1;
+        db.sales.push({ id: newId, customerId: customerId ? parseInt(customerId) : null, customerName, items: [...tempSaleItems], totalAmount: total, discount: disc, finalAmount: final, paidAmount: paid, remainingAmount: remain, date });
+        tempSaleItems.forEach(it => { const p = db.products.find(x => x.id === it.productId); if (p) p.stock -= it.quantity; });
+        if (customerId) { const c = db.customers.find(x => x.id == customerId); if (c) c.balance -= remain; }
+        
+        saveDB(); closeModal('modal-sale'); renderSales(); refreshAll(); showToast('فاکتور فروش ثبت شد');
+    }
+}
+function editSaleInvoice(id) {
+    openSaleModal(id);
+}
+function deleteSaleInvoice(id) {
+    if (!confirm('آیا از حذف این فاکتور فروش اطمینان دارید؟ موجودی انبار و حساب مشتری به حالت قبل بازخواهد گشت.')) return;
+    const idx = db.sales.findIndex(x => x.id === id);
+    if (idx === -1) return;
+    const inv = db.sales[idx];
+    
+    inv.items.forEach(it => {
+        const p = db.products.find(x => x.id === it.productId);
+        if (p) p.stock += it.quantity;
+    });
+    
+    if (inv.customerId) {
+        const c = db.customers.find(x => x.id === inv.customerId);
+        if (c) {
+            c.balance += inv.remainingAmount;
+        }
+    }
+    
+    db.sales.splice(idx, 1);
+    saveDB();
+    renderSales();
+    refreshAll();
+    showToast('فاکتور فروش حذف شد');
+}
+function renderSales() {
+    const list = document.getElementById('sales-list');
+    if (!db.sales || !db.sales.length) { list.innerHTML = '<div class="empty-state"><i class="fas fa-file-invoice"></i><p>فاکتور فروشی ثبت نشده</p></div>'; return; }
+    list.innerHTML = db.sales.slice().reverse().map(s => `
+        <div class="list-item">
+            <div class="list-item-info" onclick="viewInvoice(${s.id},'sale')" style="cursor:pointer; flex:1;">
+                <h4>فاکتور فروش #${s.id} <span class="badge ${s.remainingAmount > 0 ? 'badge-danger' : 'badge-success'}">${s.remainingAmount > 0 ? 'بدهکار' : 'تسویه'}</span></h4>
+                <p>${s.customerName || 'فروش عادی'} | ${gregorianToJalaliStr(s.date)}</p>
+            </div>
+            <div style="text-align:left">
+                <div onclick="viewInvoice(${s.id},'sale')" style="font-weight:700;color:var(--primary);cursor:pointer">${formatMoney(s.finalAmount)}</div>
+                <div class="list-item-actions" style="margin-top:6px;justify-content:flex-end">
+                    <button class="btn btn-sm btn-success" onclick="viewInvoice(${s.id},'sale')" title="مشاهده فاکتور"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-sm btn-primary" onclick="editSaleInvoice(${s.id})" title="ویرایش فاکتور"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteSaleInvoice(${s.id})" title="حذف فاکتور"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ================= PURCHASE INVOICE =================
+function openPurchaseModal(purchaseId = null) {
+    tempPurchaseItems = [];
+    editingPurchaseId = purchaseId;
+    document.getElementById('purchase-modal-title').textContent = purchaseId ? `ویرایش فاکتور خرید #${purchaseId}` : 'ثبت فاکتور خرید (تأمین‌کننده)';
+    
+    if (!db.suppliers) db.suppliers = [];
+    document.getElementById('p-supplier').innerHTML = '<option value="">انتخاب تأمین‌کننده...</option>' + db.suppliers.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+    const sel = document.getElementById('p-product'); 
+    sel.innerHTML = '<option value="">انتخاب کالا...</option>' + db.products.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+    
+    if (purchaseId) {
+        const inv = (db.purchases || []).find(x => x.id === purchaseId);
+        if (inv) {
+            document.getElementById('p-supplier').value = inv.supplierId || '';
+            document.getElementById('p-paid').value = inv.paidAmount || 0;
+            tempPurchaseItems = JSON.parse(JSON.stringify(inv.items));
+            renderJalaliInput('p-date-wrap', inv.date);
+        }
+    } else {
+        document.getElementById('p-paid').value = 0; 
+        document.getElementById('p-remain').value = 0;
+        renderJalaliInput('p-date-wrap', todayGregorian());
+    }
+    
+    renderPurchaseItems(); 
+    calcPurchaseTotal();
+    document.getElementById('modal-purchase').classList.add('active');
+}
+function fillPurchasePrice() {
+    const id = parseInt(document.getElementById('p-product').value);
+    const p = db.products.find(x => x.id === id);
+    if (p) document.getElementById('p-price').value = p.buyPrice;
+}
+function addPurchaseItem() {
+    const pid = parseInt(document.getElementById('p-product').value);
+    const qty = parseInt(document.getElementById('p-qty').value) || 1;
+    const price = parseFloat(document.getElementById('p-price').value) || 0;
+    if (!pid) { showToast('کالا را انتخاب کنید'); return; }
+    const p = db.products.find(x => x.id === pid);
+    const existing = tempPurchaseItems.find(x => x.productId === pid);
+    if (existing) { existing.quantity += qty; existing.totalPrice = existing.quantity * existing.unitPrice; }
+    else { tempPurchaseItems.push({ productId: pid, productName: p.name, quantity: qty, unitPrice: price, totalPrice: qty * price }); }
+    renderPurchaseItems(); calcPurchaseTotal();
+}
+function renderPurchaseItems() {
+    const tbody = document.getElementById('purchase-items-body');
+    if (!tempPurchaseItems.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999">کالایی اضافه نشده</td></tr>'; return; }
+    tbody.innerHTML = tempPurchaseItems.map((item, i) => `
+        <tr><td>${item.productName}</td><td>${item.quantity}</td><td>${formatMoney(item.unitPrice)}</td><td>${formatMoney(item.totalPrice)}</td>
+        <td><button class="btn btn-sm btn-danger" onclick="removePurchaseItem(${i})"><i class="fas fa-trash"></i></button></td></tr>
+    `).join('');
+}
+function removePurchaseItem(idx) { tempPurchaseItems.splice(idx, 1); renderPurchaseItems(); calcPurchaseTotal(); }
+function calcPurchaseTotal() {
+    const total = tempPurchaseItems.reduce((s, x) => s + x.totalPrice, 0);
+    document.getElementById('purchase-total').textContent = formatMoney(total);
+    calcPurchaseRemain();
+}
+function calcPurchaseRemain() {
+    const total = parseFloat(document.getElementById('purchase-total').textContent.replace(/[^0-9.-]+/g, "")) || 0;
+    const paid = parseFloat(document.getElementById('p-paid').value) || 0;
+    document.getElementById('p-remain').value = Math.max(0, total - paid);
+}
+function savePurchaseInvoice() {
+    if (!tempPurchaseItems.length) { showToast('حداقل یک کالا اضافه کنید'); return; }
+    const suppId = parseInt(document.getElementById('p-supplier').value);
+    if (!suppId) { showToast('تأمین‌کننده را انتخاب کنید'); return; }
+    const supp = db.suppliers.find(s => s.id === suppId);
+    const supplierName = supp ? supp.name : 'تأمین‌کننده';
+    
+    const total = tempPurchaseItems.reduce((s, x) => s + x.totalPrice, 0);
+    const paid = parseFloat(document.getElementById('p-paid').value) || 0;
+    const remain = Math.max(0, total - paid);
+    const date = getJalaliInputValue('p-date-wrap');
+    
+    if (!db.purchases) db.purchases = [];
+
+    if (editingPurchaseId) {
+        const oldInv = db.purchases.find(x => x.id === editingPurchaseId);
+        if (oldInv) {
+            oldInv.items.forEach(it => {
+                const p = db.products.find(x => x.id === it.productId);
+                if (p) p.stock -= it.quantity;
+            });
+        }
+        
+        const inv = db.purchases.find(x => x.id === editingPurchaseId);
+        if (inv) {
+            inv.supplierId = suppId;
+            inv.supplierName = supplierName;
+            inv.items = [...tempPurchaseItems];
+            inv.totalAmount = total;
+            inv.paidAmount = paid;
+            inv.remainingAmount = remain;
+            inv.date = date;
+        }
+        
+        tempPurchaseItems.forEach(it => {
+            const p = db.products.find(x => x.id === it.productId);
+            if (p) p.stock += it.quantity;
+        });
+        
+        editingPurchaseId = null;
+        saveDB(); closeModal('modal-purchase'); renderPurchases(); renderSuppliers(); refreshAll(); showToast('فاکتور خرید ویرایش شد');
+    } else {
+        const newId = db.purchases.length ? Math.max(...db.purchases.map(x => x.id)) + 1 : 1;
+        db.purchases.push({ id: newId, supplierId: suppId, supplierName, items: [...tempPurchaseItems], totalAmount: total, paidAmount: paid, remainingAmount: remain, date });
+        tempPurchaseItems.forEach(it => { const p = db.products.find(x => x.id === it.productId); if (p) p.stock += it.quantity; });
+        
+        saveDB(); closeModal('modal-purchase'); renderPurchases(); renderSuppliers(); refreshAll(); showToast('فاکتور خرید ثبت شد');
+    }
+}
+function editPurchaseInvoice(id) {
+    openPurchaseModal(id);
+}
+function deletePurchaseInvoice(id) {
+    if (!confirm('آیا از حذف این فاکتور خرید اطمینان دارید؟ موجودی انبار به حالت قبل بازخواهد گشت.')) return;
+    if (!db.purchases) return;
+    const idx = db.purchases.findIndex(x => x.id === id);
+    if (idx === -1) return;
+    const inv = db.purchases[idx];
+    
+    inv.items.forEach(it => {
+        const p = db.products.find(x => x.id === it.productId);
+        if (p) p.stock -= it.quantity;
+    });
+    
+    db.purchases.splice(idx, 1);
+    saveDB();
+    renderPurchases();
+    renderSuppliers();
+    refreshAll();
+    showToast('فاکتور خرید حذف شد');
+}
+function renderPurchases() {
+    const list = document.getElementById('purchases-list');
+    if (!db.purchases || !db.purchases.length) { list.innerHTML = '<div class="empty-state"><i class="fas fa-file-invoice-dollar"></i><p>فاکتور خریدی ثبت نشده</p></div>'; return; }
+    list.innerHTML = db.purchases.slice().reverse().map(p => `
+        <div class="list-item">
+            <div class="list-item-info" onclick="viewInvoice(${p.id},'purchase')" style="cursor:pointer; flex:1;">
+                <h4>فاکتور خرید #${p.id} <span class="badge ${p.remainingAmount > 0 ? 'badge-warning' : 'badge-success'}">${p.remainingAmount > 0 ? 'بدهکاریم' : 'تسویه'}</span></h4>
+                <p>${p.supplierName || 'تأمین‌کننده'} | ${gregorianToJalaliStr(p.date)}</p>
+            </div>
+            <div style="text-align:left">
+                <div onclick="viewInvoice(${p.id},'purchase')" style="font-weight:700;color:var(--danger);cursor:pointer">${formatMoney(p.totalAmount)}</div>
+                <div class="list-item-actions" style="margin-top:6px;justify-content:flex-end">
+                    <button class="btn btn-sm btn-success" onclick="viewInvoice(${p.id},'purchase')" title="مشاهده فاکتور"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-sm btn-primary" onclick="editPurchaseInvoice(${p.id})" title="ویرایش فاکتور"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePurchaseInvoice(${p.id})" title="حذف فاکتور"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ================= EXPENSES =================
+function openExpenseModal() {
+    document.getElementById('e-title').value = ''; document.getElementById('e-amount').value = '';
+    document.getElementById('e-desc').value = '';
+    renderJalaliInput('e-date-wrap', todayGregorian());
+    document.getElementById('modal-expense').classList.add('active');
+}
+function saveExpense() {
+    const title = document.getElementById('e-title').value.trim();
+    const amount = parseFloat(document.getElementById('e-amount').value) || 0;
+    const date = getJalaliInputValue('e-date-wrap');
+    if (!title) { showToast('عنوان هزینه الزامی است'); return; }
+    if (amount <= 0) { showToast('مبلغ معتبر وارد کنید'); return; }
+    const newId = db.expenses.length ? Math.max(...db.expenses.map(x => x.id)) + 1 : 1;
+    db.expenses.push({ id: newId, title, amount, date, description: document.getElementById('e-desc').value.trim() });
+    saveDB(); closeModal('modal-expense'); refreshAll(); showToast('هزینه ثبت شد');
+}
+
+// ================= QUICK REPORT MODAL =================
+function openQuickReportModal() {
+    const today = todayGregorian();
+    const todaySales = db.sales.filter(x => x.date === today);
+    const todayExpenses = db.expenses.filter(x => x.date === today);
+    const salesAmt = todaySales.reduce((s, x) => s + x.finalAmount, 0);
+    const costAmt = todaySales.reduce((s, inv) => s + inv.items.reduce((a, it) => { const p = db.products.find(pr => pr.id === it.productId); return a + (p ? p.buyPrice * it.quantity : 0); }, 0), 0);
+    const profitAmt = salesAmt - costAmt;
+    const expenseAmt = todayExpenses.reduce((s, x) => s + x.amount, 0);
+    const net = profitAmt - expenseAmt;
+
+    document.getElementById('quick-report-body').innerHTML = `
+        <div style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:12px; text-align:center;">
+            گزارش روز: <b>${gregorianToJalaliStr(today)}</b>
+        </div>
+        <div class="invoice-row"><span>کل فروش امروز:</span><span style="color:var(--success);font-weight:700">${formatMoney(salesAmt)}</span></div>
+        <div class="invoice-row"><span>سود ناخالص امروز:</span><span style="color:var(--info);font-weight:700">${formatMoney(profitAmt)}</span></div>
+        <div class="invoice-row"><span>کل هزینه‌های امروز:</span><span style="color:var(--danger);font-weight:700">${formatMoney(expenseAmt)}</span></div>
+        <div class="invoice-row invoice-total"><span>سود خالص امروز:</span><span style="color:${net >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatMoney(net)}</span></div>
+    `;
+    document.getElementById('modal-quick-report').classList.add('active');
+}
+
+// ================= INVOICE VIEW, IMAGE & SHARE =================
+function viewInvoice(id, type) {
+    let inv = type === 'sale' ? db.sales.find(x => x.id === id) : (db.purchases || []).find(x => x.id === id);
+    if (!inv) return;
+    const s = db.settings || defaultSettings;
+    const itemsHtml = inv.items.map(it => `<div class="invoice-row"><span>${it.productName} × ${it.quantity}</span><span>${formatMoney(it.totalPrice)}</span></div>`).join('');
+    const extra = type === 'sale' ? `
+        <div class="invoice-row"><span>تخفیف:</span><span>${formatMoney(inv.discount || 0)}</span></div>
+        <div class="invoice-row"><span>قابل پرداخت:</span><span>${formatMoney(inv.finalAmount)}</span></div>
+        <div class="invoice-row"><span>دریافتی:</span><span>${formatMoney(inv.paidAmount)}</span></div>
+        <div class="invoice-row"><span>باقیمانده:</span><span style="color:var(--danger)">${formatMoney(inv.remainingAmount)}</span></div>
+        ${s.bankCard ? `<div class="invoice-row" style="border-top:1px dashed var(--border);margin-top:6px;padding-top:6px"><span>شماره کارت:</span><span style="direction:ltr;text-align:left">${s.bankCard}</span></div>` : ''}
+    ` : `
+        <div class="invoice-row"><span>پرداختی:</span><span>${formatMoney(inv.paidAmount)}</span></div>
+        <div class="invoice-row"><span>باقیمانده:</span><span style="color:var(--warning)">${formatMoney(inv.remainingAmount)}</span></div>
+    `;
+    document.getElementById('invoice-view-content').innerHTML = `
+        <div class="invoice-box" id="invoice-print-box">
+            ${s.logoBase64 ? `<div class="invoice-logo"><img src="${s.logoBase64}" alt="logo"></div>` : ''}
+            <h4>${s.shopName || 'فروشگاه'}</h4>
+            <div style="text-align:center;font-size:0.8rem;color:#666;margin-bottom:8px">${s.subtitle || ''}</div>
+            <div class="invoice-row"><span>نوع:</span><span>${type === 'sale' ? 'فاکتور فروش' : 'فاکتور خرید'} #${inv.id}</span></div>
+            <div class="invoice-row"><span>تاریخ:</span><span>${gregorianToJalaliStr(inv.date)}</span></div>
+            ${inv.customerName ? `<div class="invoice-row"><span>مشتری:</span><span>${inv.customerName}</span></div>` : ''}
+            ${inv.supplierName ? `<div class="invoice-row"><span>تأمین‌کننده:</span><span>${inv.supplierName}</span></div>` : ''}
+            <hr style="border:0;border-top:1px dashed #ddd;margin:10px 0">
+            ${itemsHtml}
+            <hr style="border:0;border-top:1px dashed #ddd;margin:10px 0">
+            <div class="invoice-row invoice-total"><span>جمع کل:</span><span>${formatMoney(inv.totalAmount)}</span></div>
+            ${extra}
+        </div>
+    `;
+    document.getElementById('modal-invoice-view').classList.add('active');
+}
+function saveInvoiceAsImage() {
+    const el = document.getElementById('invoice-print-box');
+    if (!el) return;
+    html2canvas(el, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'invoice-' + Date.now() + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showToast('تصویر فاکتور ذخیره شد');
+    }).catch(() => showToast('خطا در ذخیره تصویر'));
+}
+async function shareInvoice() {
+    const el = document.getElementById('invoice-print-box');
+    if (!el) return;
+    try {
+        const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff' });
+        canvas.toBlob(async blob => {
+            const file = new File([blob], 'invoice.png', { type: 'image/png' });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    title: 'فاکتور فروش',
+                    text: 'جزئیات فاکتور فروشگاه',
+                    files: [file]
+                });
+            } else {
+                saveInvoiceAsImage();
+                showToast('مرورگر از اشتراک‌گذاری مستقیم فایل پشتیبانی نکرد، تصویر دانلود شد');
+            }
+        });
+    } catch (err) { showToast('اشتراک‌گذاری انجام نشد'); }
+}
+
+// ================= REPORTS =================
+function generateReport() {
+    const from = getJalaliInputValue('report-from-wrap');
+    const to = getJalaliInputValue('report-to-wrap');
+    const sales = db.sales.filter(x => x.date >= from && x.date <= to);
+    const purchases = (db.purchases || []).filter(x => x.date >= from && x.date <= to);
+    const expenses = db.expenses.filter(x => x.date >= from && x.date <= to);
+    const totalSales = sales.reduce((s, x) => s + x.finalAmount, 0);
+    const totalCost = sales.reduce((s, inv) => s + inv.items.reduce((a, it) => { const p = db.products.find(pr => pr.id === it.productId); return a + (p ? p.buyPrice * it.quantity : 0); }, 0), 0);
+    const totalProfit = totalSales - totalCost;
+    const totalPurchase = purchases.reduce((s, x) => s + x.totalAmount, 0);
+    const totalExpense = expenses.reduce((s, x) => s + x.amount, 0);
+    const net = totalProfit - totalExpense;
+    
+    document.getElementById('report-result').innerHTML = `
+        <div class="card">
+            <div class="card-title"><i class="fas fa-chart-pie"></i> گزارش از ${gregorianToJalaliStr(from)} تا ${gregorianToJalaliStr(to)}</div>
+            <div class="invoice-row"><span>کل فروش:</span><span style="color:var(--success);font-weight:700">${formatMoney(totalSales)}</span></div>
+            <div class="invoice-row"><span>کل خرید:</span><span style="color:var(--danger);font-weight:700">${formatMoney(totalPurchase)}</span></div>
+            <div class="invoice-row"><span>سود ناخالص:</span><span style="color:var(--info);font-weight:700">${formatMoney(totalProfit)}</span></div>
+            <div class="invoice-row"><span>کل هزینه‌ها:</span><span style="color:var(--danger);font-weight:700">${formatMoney(totalExpense)}</span></div>
+            <div class="invoice-row invoice-total"><span>سود خالص:</span><span style="color:${net >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatMoney(net)}</span></div>
+        </div>
+    `;
+}
+
+// ================= BACKUP & RESTORE =================
+function backupData() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+    const a = document.createElement('a'); 
+    a.setAttribute('href', dataStr); 
+    a.setAttribute('download', 'backup-shop-' + todayGregorian() + '.json'); 
+    document.body.appendChild(a); 
+    a.click(); 
+    a.remove();
+    showToast('فایل پشتیبان دانلود شد');
+}
+function restoreData(input) {
+    const file = input.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (data.products && data.sales) {
+                db = data; if (!db.settings) db.settings = {}; applySettings(); saveDB(); refreshAll(); showToast('اطلاعات بازیابی شد');
+            } else { showToast('فایل نامعتبر است'); }
+        } catch (err) { showToast('خطا در خواندن فایل'); }
+    };
+    reader.readAsText(file); input.value = '';
+}
+
+// ================= DASHBOARD & REFRESH =================
+function refreshAll() {
+    const today = todayGregorian();
+    const todaySales = db.sales.filter(x => x.date === today);
+    const todayExpenses = db.expenses.filter(x => x.date === today);
+    const salesAmt = todaySales.reduce((s, x) => s + x.finalAmount, 0);
+    const costAmt = todaySales.reduce((s, inv) => s + inv.items.reduce((a, it) => { const p = db.products.find(pr => pr.id === it.productId); return a + (p ? p.buyPrice * it.quantity : 0); }, 0), 0);
+    const profitAmt = salesAmt - costAmt;
+    const expenseAmt = todayExpenses.reduce((s, x) => s + x.amount, 0);
+    const stockAmt = db.products.reduce((s, x) => s + x.stock, 0);
+    
+    document.getElementById('dash-sales').textContent = formatMoney(salesAmt);
+    document.getElementById('dash-profit').textContent = formatMoney(profitAmt);
+    document.getElementById('dash-expense').textContent = formatMoney(expenseAmt);
+    document.getElementById('dash-stock').textContent = stockAmt.toLocaleString('fa-IR') + ' عدد';
+    
+    const debtors = db.customers.filter(c => c.balance < 0);
+    const debtDiv = document.getElementById('dash-debtors');
+    if (!debtors.length) { debtDiv.innerHTML = '<p style="color:#999;font-size:0.85rem">مشتری بدهکاری نیست</p>'; }
+    else { debtDiv.innerHTML = debtors.map(c => `<div class="invoice-row" onclick="openCustomerLedger(${c.id})" style="cursor:pointer"><span>${c.name}</span><span style="color:var(--danger);font-weight:700">${formatMoney(Math.abs(c.balance))} بدهکار</span></div>`).join(''); }
+    
+    renderProducts(); renderCustomers(); renderSuppliers(); renderSales(); renderPurchases(); renderInventory();
+    renderJalaliInput('report-from-wrap', today);
+    renderJalaliInput('report-to-wrap', today);
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+window.onload = initDB;
+</script>
+</body>
+</html>
