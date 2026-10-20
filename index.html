@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>فروش‌یار</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#d81b60">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jalaali-js@1.2.7/dist/jalaali.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --primary: #d81b60;
+      --primary-light: #fce4ec;
+      --secondary: #8e24aa;
+      --bg: #f4f5f9;
+      --surface: #ffffff;
+      --text: #212121;
+      --text-secondary: #757575;
+      --border: #e0e0e0;
+      --success: #2e7d32;
+      --danger: #c62828;
+      --warning: #ef6c00;
+      --info: #0288d1;
+      --table-row-alt: #f8f9fa;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+    .app-container { max-width: 600px; margin: 0 auto; background: var(--bg); min-height: 100vh; padding-bottom: 90px; position: relative; }
+
+    /* Header */
+    .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 20px; text-align: center; border-radius: 0 0 24px 24px; box-shadow: 0 4px 20px rgba(216,27,96,0.3); position: sticky; top: 0; z-index: 100; }
+    .header h1 { margin: 0; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .header p { margin: 5px 0 0; opacity: 0.9; font-size: 0.85rem; }
+    .header img { height: 42px; width: 42px; object-fit: cover; border-radius: 50%; background: white; border: 2px solid #fff; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* Cards & Grids */
+    .card { background: var(--surface); margin: 12px; padding: 16px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--primary); display: flex; align-items: center; justify-content: space-between; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px; }
+    .stat-box { background: var(--surface); padding: 16px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center; }
+    .stat-box i { font-size: 1.5rem; margin-bottom: 8px; display: block; }
+    .stat-box .value { font-size: 1.1rem; font-weight: 700; }
+    .stat-box .label { font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px; }
+    .stat-box.sales i { color: var(--success); }
+    .stat-box.profit i { color: var(--info); }
+    .stat-box.expense i { color: var(--danger); }
+    .stat-box.stock i { color: var(--warning); }
+
+    /* Buttons */
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .btn { border: none; padding: 10px 14px; border-radius: 12px; font-family: inherit; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; color: white; width: 100%; transition: transform 0.1s; }
+    .btn:active { transform: scale(0.96); }
+    .btn-success { background: var(--success); }
+    .btn-danger { background: var(--danger); }
+    .btn-warning { background: var(--warning); }
+    .btn-primary { background: var(--primary); }
+    .btn-info { background: var(--info); }
+    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+    .btn-sm { padding: 5px 8px; font-size: 0.78rem; width: auto; border-radius: 8px; }
+
+    /* Inputs */
+    .search-box { margin-bottom: 12px; position: relative; }
+    .search-box i { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
+    .search-input { width: 100%; padding: 10px 14px 10px 40px; border: 1.5px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; background: var(--surface); }
+    .search-input:focus { border-color: var(--primary); }
+
+    .form-group { margin-bottom: 12px; }
+    .form-label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; color: var(--text-secondary); }
+    .form-input, .form-select { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 0.9rem; background: var(--surface); outline: none; }
+    .form-input:focus, .form-select:focus { border-color: var(--primary); }
+
+    /* 3-BLOCK SALE INVOICE DESIGN */
+    .sale-block { background: var(--surface); border-radius: 16px; padding: 14px; margin: 12px; border: 1px solid var(--border); box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+    .sale-block-title { font-size: 0.9rem; font-weight: 800; color: var(--secondary); margin-bottom: 10px; border-bottom: 1px solid #f0f0f0; padding-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+
+    .sale-items-list { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+    .sale-item-card { background: #fafafa; border: 1px solid var(--border); border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .sale-item-info { font-size: 0.85rem; }
+    .sale-item-actions { display: flex; gap: 4px; }
+
+    /* Lists */
+    .list-container { max-height: 420px; overflow-y: auto; border-radius: 12px; border: 1px solid var(--border); }
+    .list-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 0.88rem; background: var(--surface); }
+    .list-row:nth-child(even) { background: #f2f4f8; }
+    .list-row:last-child { border-bottom: none; }
+
+    /* Badges */
+    .badge { padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: bold; }
+    .badge-success { background: #e8f5e9; color: var(--success); }
+    .badge-danger { background: #ffebee; color: var(--danger); }
+
+    /* Modal */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--surface); width: 100%; max-width: 500px; padding: 20px; border-radius: 20px; max-height: 90vh; overflow-y: auto; }
+
+    /* Invoice & Statement Preview Cards */
+    .invoice-box { background: #fff; color: #212121; padding: 22px; border-radius: 16px; border: 2px dashed #d81b60; font-size: 0.9rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    .invoice-header { text-align: center; border-bottom: 2px dashed #d81b60; padding-bottom: 12px; margin-bottom: 12px; }
+    .invoice-logo { height: 60px; width: 60px; object-fit: cover; border-radius: 50%; margin-bottom: 6px; border: 2px solid var(--primary); }
+    .invoice-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 0.5px dashed #eee; font-size: 0.88rem; }
+
+    /* Bottom Navigation */
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; background: var(--surface); display: flex; justify-content: space-around; padding: 6px 2px; border-top: 1px solid var(--border); box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 1000; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; font-size: 0.68rem; gap: 2px; flex: 1; cursor: pointer; text-align: center; }
+    .nav-item i { font-size: 1.1rem; }
+    .nav-item.active { color: var(--primary); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>
+      <img id="header-logo" src="" alt="لوگو" style="display:none">
+      <span id="header-title"><i class="fas fa-shopping-bag"></i> فروش‌یار</span>
+    </h1>
+    <p id="header-subtitle">سیستم جامع حسابداری فروشگاه</p>
+  </div>
+
+  <!-- 1. DASHBOARD -->
+  <div id="sec-dashboard" class="section active">
+    <div class="stats-grid">
+      <div class="stat-box sales">
+        <i class="fas fa-chart-line"></i>
+        <div class="value" id="dash-sales">۰ تومان</div>
+        <div class="label">فروش کل (محاسبه‌شده)</div>
+      </div>
+      <div class="stat-box profit">
+        <i class="fas fa-coins"></i>
+        <div class="value" id="dash-profit">۰ تومان</div>
+        <div class="label">سود کل</div>
+      </div>
+      <div class="stat-box stock">
+        <i class="fas fa-boxes"></i>
+        <div class="value" id="dash-stock">۰ عدد</div>
+        <div class="label">موجودی اقلام انبار</div>
+      </div>
+      <div class="stat-box expense">
+        <i class="fas fa-wallet"></i>
+        <div class="value" id="dash-expense">۰ تومان</div>
+        <div class="label">مجموع هزینه‌ها</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>دسترسی سریع</span><i class="fas fa-bolt"></i></div>
+      <div class="row-2">
+        <button class="btn btn-success" onclick="showSection('sec-sales', document.querySelectorAll('.nav-item')[3])"><i class="fas fa-plus"></i> فاکتور فروش</button>
+        <button class="btn btn-danger" onclick="openPurchaseModal()"><i class="fas fa-plus"></i> فاکتور خرید</button>
+      </div>
+      <div style="height:10px"></div>
+      <div class="row-2">
+        <button class="btn btn-primary" onclick="openModal('modal-expense')"><i class="fas fa-minus-circle"></i> ثبت هزینه</button>
+        <button class="btn btn-warning" onclick="showSection('sec-reports', document.querySelectorAll('.nav-item')[7])"><i class="fas fa-chart-pie"></i> گزارشات جامع</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>مشتریان بدهکار</span><i class="fas fa-hand-holding-usd"></i></div>
+      <div id="dash-debtors" class="list-container"></div>
+    </div>
+  </div>
+
+  <!-- 2. PRODUCTS -->
+  <div id="sec-products" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span>مدیریت کالاها و انبار</span>
+        <button class="btn btn-primary btn-sm" onclick="openProductModal()"><i class="fas fa-plus"></i> کالا جدید</button>
+      </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-product" class="search-input" placeholder="جستجوی نام کالا..." oninput="renderProducts()">
+      </div>
+      <div id="products-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <!-- 3. STOCK -->
+  <div id="sec-stock" class="section">
+    <div class="card">
+      <div class="card-title"><span>موجودی انبار و کاردکس</span><i class="fas fa-boxes"></i></div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-stock" class="search-input" placeholder="جستجو در انبار..." oninput="renderStock()">
+      </div>
+      <div id="stock-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <!-- 4. SALES (فاکتور ۳ بلوکی جدید) -->
+  <div id="sec-sales" class="section">
+    
+    <!-- بلوک اول: تنظیمات و ورود کالا (با ۴ ردیف دقیق) -->
+    <div class="sale-block">
+      <div class="sale-block-title"><i class="fas fa-edit"></i> <span>بلوک بالا: اطلاعات و اقلام فاکتور</span></div>
+      
+      <!-- ردیف اول: مشتری و تخفیف -->
+      <div class="row-2">
+        <div class="form-group">
+          <label class="form-label">مشتری</label>
+          <select id="sale-customer" class="form-select"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">تخفیف کل (تومان)</label>
+          <input type="number" id="sale-discount" class="form-input" value="0" oninput="calcTotals()">
+        </div>
+      </div>
+
+      <!-- ردیف دوم: کالا و تعداد -->
+      <div class="row-2">
+        <div class="form-group">
+          <label class="form-label">کالا</label>
+          <select id="sale-product-select" class="form-select" onchange="onProductSelectChange()"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">تعداد</label>
+          <input type="number" id="sale-qty-input" class="form-input" value="1" min="1">
+        </div>
+      </div>
+
+      <!-- ردیف سوم: قیمت واحد، جمع و دریافتی -->
+      <div class="row-3">
+        <div class="form-group">
+          <label class="form-label">قیمت واحد</label>
+          <input type="number" id="sale-price-input" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">جمع کالا</label>
+          <input type="number" id="sale-item-total" class="form-input" readonly style="background:#f5f5f5;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">دریافتی کل</label>
+          <input type="number" id="sale-received" class="form-input" placeholder="0" oninput="calcTotals()">
+        </div>
+      </div>
+
+      <!-- ردیف چهارم: کادر درج کالا و دسته‌بندی -->
+      <div class="row-2" style="margin-top: 4px;">
+        <div class="form-group">
+          <label class="form-label">دسته‌بندی کالا</label>
+          <input type="text" id="sale-category-input" class="form-input" placeholder="مثلاً: پوشاک">
+        </div>
+        <div class="form-group" style="display:flex; align-items:flex-end;">
+          <button class="btn btn-primary" onclick="addItemToInvoice()" style="height:38px;"><i class="fas fa-plus"></i> درج یا ثبت کالا</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- بلوک میانی: لیست اقلام ثبت‌شده پویا همراه با دکمه‌های ویرایش و حذف -->
+    <div class="sale-block">
+      <div class="sale-block-title"><i class="fas fa-list-ol"></i> <span>بلوک میانی: لیست اقلام ثبت‌شده</span></div>
+      <div id="sale-items-list" class="sale-items-list">
+        <div style="text-align:center; color:#999; padding:15px; font-size:0.85rem;">هنوز کالایی ثبت نشده است</div>
+      </div>
+      <div style="margin-top:10px; background:#f9f9f9; padding:8px 12px; border-radius:8px; font-size:0.85rem;">
+        <div class="invoice-row"><span>جمع کل نهایی:</span><b id="lbl-total-sum">۰ تومان</b></div>
+        <div class="invoice-row" style="color:var(--danger);"><span>مانده حساب / بدهی:</span><b id="lbl-remaining">۰ تومان</b></div>
+      </div>
+    </div>
+
+    <!-- بلوک پایینی: اشتراک‌گذاری و ذخیره‌سازی نامحدود تصویر و متن -->
+    <div class="sale-block">
+      <div class="sale-block-title"><i class="fas fa-share-alt"></i> <span>بلوک پایینی: خروجی، اشتراک و ذخیره</span></div>
+      <div class="row-2" style="margin-bottom:8px;">
+        <button class="btn btn-success" onclick="shareAsImage()"><i class="fas fa-image"></i> اشتراک‌گذاری تصویر</button>
+        <button class="btn btn-info" onclick="shareAsText()"><i class="fas fa-file-alt"></i> اشتراک‌گذاری متن</button>
+      </div>
+      <div class="row-2">
+        <button class="btn btn-warning" onclick="saveAsImage()"><i class="fas fa-download"></i> ذخیره تصویر</button>
+        <button class="btn btn-outline" onclick="saveAsText()"><i class="fas fa-save"></i> ذخیره متن</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 5. PURCHASES -->
+  <div id="sec-purchases" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span>فاکتورهای خرید</span>
+        <button class="btn btn-danger btn-sm" onclick="openPurchaseModal()"><i class="fas fa-plus"></i> فاکتور خرید جدید</button>
+      </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-purchase" class="search-input" placeholder="جستجوی فاکتور خرید..." oninput="renderPurchases()">
+      </div>
+      <div id="purchases-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <!-- 6. CUSTOMERS -->
+  <div id="sec-customers" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span>مشتریان</span>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-warning btn-sm" onclick="pickContact('customer')"><i class="fas fa-address-book"></i> مخاطبین</button>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-customer')"><i class="fas fa-plus"></i> جدید</button>
+        </div>
+      </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-customer" class="search-input" placeholder="جستجوی مشتری..." oninput="renderCustomers()">
+      </div>
+      <div id="customers-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <!-- 7. SUPPLIERS -->
+  <div id="sec-suppliers" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span>تأمین‌کنندگان</span>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-warning btn-sm" onclick="pickContact('supplier')"><i class="fas fa-address-book"></i> مخاطبین</button>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-supplier')"><i class="fas fa-plus"></i> جدید</button>
+        </div>
+      </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-supplier" class="search-input" placeholder="جستجوی تأمین‌کننده..." oninput="renderSuppliers()">
+      </div>
+      <div id="suppliers-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <!-- 8. MORE / SETTINGS -->
+  <div id="sec-more" class="section">
+    <div class="card">
+      <div class="card-title"><span>تنظیمات فروشگاه و فاکتور</span><i class="fas fa-cog"></i></div>
+      <div class="form-group"><label class="form-label">نام فروشگاه / عنوان</label><input type="text" id="cfg-title" class="form-input"></div>
+      <div class="form-group"><label class="form-label">زیرعنوان</label><input type="text" id="cfg-subtitle" class="form-input"></div>
+      <div class="form-group"><label class="form-label">شماره کارت / شبا</label><input type="text" id="cfg-bank" class="form-input" placeholder=""></div>
+      <div class="form-group"><label class="form-label">آدرس کیف پول رمزارز (Crypto Wallet)</label><input type="text" id="cfg-crypto" class="form-input" placeholder=""></div>
+      <div class="form-group"><label class="form-label">لوگوی فروشگاه</label><input type="file" id="cfg-logo-file" accept="image/*" class="form-input" onchange="uploadLogo(event)"></div>
+      <button class="btn btn-primary" onclick="saveSettings()">ذخیره تنظیمات</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>پشتیبان‌گیری و بازیابی</span><i class="fas fa-database"></i></div>
+      <button class="btn btn-warning" onclick="exportBackup()" style="margin-bottom:10px;"><i class="fas fa-download"></i> دانلود فایل بکاپ</button>
+      <div class="form-group"><label class="form-label">بازیابی اطلاعات</label><input type="file" accept=".json" class="form-input" onchange="importBackup(event)"></div>
+    </div>
+  </div>
+
+  <!-- REPORTS -->
+  <div id="sec-reports" class="section">
+    <div class="card">
+      <div class="card-title"><span>گزارش جامع مالی و عملکرد</span><i class="fas fa-chart-pie"></i></div>
+      <div class="form-group">
+        <label class="form-label">تعیین بازه زمانی جهت گزارش‌گیری</label>
+        <select id="report-period" class="form-select" onchange="renderReports()">
+          <option value="today">امروز</option>
+          <option value="7days">۷ روز اخیر</option>
+          <option value="30days">۳۰ روز اخیر</option>
+          <option value="all" selected>کل دوره‌ها (همه‌زمان)</option>
+        </select>
+      </div>
+      <div id="reports-detail" class="list-container" style="padding: 10px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+
+<!-- Purchase Modal -->
+<div id="modal-purchase" class="modal">
+  <div class="modal-content">
+    <div class="card-title"><span id="pur-modal-title">ثبت فاکتور خرید</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-purchase')"></i></div>
+    <input type="hidden" id="pur-edit-id">
+    <div class="form-group"><label class="form-label">تأمین‌کننده</label><select id="pur-supplier" class="form-select"></select></div>
+
+    <div class="card" style="margin:0 0 12px 0; padding:10px; background:#fafafa;">
+      <div class="card-title" style="font-size:0.85rem; margin-bottom:8px;"><span>اقلام فاکتور خرید</span><button class="btn btn-danger btn-sm" onclick="addPurItemRow()"><i class="fas fa-plus"></i> افزودن قلم</button></div>
+      <div id="pur-items-container"></div>
+    </div>
+
+    <div class="form-group"><label class="form-label">تخفیف کل (تومان)</label><input type="number" id="pur-discount" class="form-input" value="0" oninput="calcPurTotals()"></div>
+    <div class="form-group"><label class="form-label">مبلغ خرید کل (تومان)</label><input type="number" id="pur-total" class="form-input" readonly style="background:#f5f5f5; font-weight:bold;"></div>
+    <div class="form-group"><label class="form-label">مبلغ پرداختی (تومان)</label><input type="number" id="pur-paid" class="form-input" oninput="calcPurTotals()"></div>
+    <div class="form-group"><label class="form-label">مانده بدهی ما (تومان)</label><input type="number" id="pur-remaining" class="form-input" readonly style="background:#ffebee; font-weight:bold;"></div>
+    <div class="row-2">
+      <button class="btn btn-danger" onclick="savePurchase()">ثبت خرید</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-purchase')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Expense Modal -->
+<div id="modal-expense" class="modal">
+  <div class="modal-content">
+    <div class="card-title"><span>ثبت هزینه</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-expense')"></i></div>
+    <div class="form-group"><label class="form-label">دسته‌بندی / بابت</label>
+      <select id="exp-category" class="form-select">
+        <option value="اجاره">اجاره مغازه</option>
+        <option value="قبوض">قبوض (برق، آب، گاز، تلفن)</option>
+        <option value="حقوق">حقوق و دستمزد</option>
+        <option value="ایاب و ذهاب">ایاب و ذهاب و باربری</option>
+        <option value="متفرقه">متفرقه</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">جزئیات و شرح هزینه</label><input type="text" id="exp-title" class="form-input" placeholder="مثلا خرید ملزومات"></div>
+    <div class="form-group"><label class="form-label">تاریخ ثبت</label><input type="text" id="exp-date" class="form-input"></div>
+    <div class="form-group"><label class="form-label">مبلغ (تومان)</label><input type="number" id="exp-amount" class="form-input"></div>
+    <div class="row-2">
+      <button class="btn btn-primary" onclick="addExpense()">ثبت هزینه</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-expense')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Product Modal -->
+<div id="modal-product" class="modal">
+  <div class="modal-content">
+    <div class="card-title"><span id="prod-modal-title">افزودن / ویرایش کالا</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-product')"></i></div>
+    <input type="hidden" id="prod-edit-id">
+    <div class="form-group"><label class="form-label">نام کالا</label><input type="text" id="prod-name" class="form-input"></div>
+    <div class="form-group"><label class="form-label">موجودی انبار</label><input type="number" id="prod-qty" class="form-input" placeholder=""></div>
+    <div class="form-group"><label class="form-label">قیمت خرید (تومان)</label><input type="number" id="prod-buy-price" class="form-input"></div>
+    <div class="form-group"><label class="form-label">قیمت فروش (تومان)</label><input type="number" id="prod-price" class="form-input"></div>
+    <div class="row-2">
+      <button class="btn btn-primary" onclick="saveProduct()">ذخیره کالا</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-product')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Customer Modal -->
+<div id="modal-customer" class="modal">
+  <div class="modal-content">
+    <div class="card-title"><span id="cust-modal-title">مشتری جدید</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-customer')"></i></div>
+    <input type="hidden" id="cust-edit-id">
+    <div class="form-group"><label class="form-label">نام مشتری</label><input type="text" id="cust-name" class="form-input"></div>
+    <div class="form-group"><label class="form-label">شماره تماس</label><input type="text" id="cust-phone" class="form-input"></div>
+    <div class="row-2">
+      <button class="btn btn-primary" onclick="saveCustomerModal()">ذخیره</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-customer')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Supplier Modal -->
+<div id="modal-supplier" class="modal">
+  <div class="modal-content">
+    <div class="card-title"><span id="supp-modal-title">تأمین‌کننده جدید</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-supplier')"></i></div>
+    <input type="hidden" id="supp-edit-id">
+    <div class="form-group"><label class="form-label">نام تأمین‌کننده</label><input type="text" id="supp-name" class="form-input"></div>
+    <div class="form-group"><label class="form-label">شماره تماس</label><input type="text" id="supp-phone" class="form-input"></div>
+    <div class="row-2">
+      <button class="btn btn-primary" onclick="saveSupplierModal()">ذخیره</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-supplier')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Ledger Modal -->
+<div id="modal-ledger" class="modal">
+  <div class="modal-content" style="max-width:460px;">
+    <div class="card-title"><span id="ledger-title">دفتر حساب</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-ledger')"></i></div>
+    <div id="ledger-print-area" class="invoice-box"></div>
+    <div style="height: 12px;"></div>
+    <div class="row-2">
+      <button class="btn btn-success" onclick="shareLedgerAsImage()"><i class="fas fa-image"></i> ارسال تصویر صورتحساب</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-ledger')">بستن</button>
+    </div>
+  </div>
+</div>
+
+<!-- Invoice Print/Share Modal -->
+<div id="modal-invoice-preview" class="modal">
+  <div class="modal-content" style="max-width:440px;">
+    <div class="card-title"><span>پیش‌نمایش فاکتور رسمی</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-invoice-preview')"></i></div>
+    <div id="invoice-print-area" class="invoice-box"></div>
+    <div style="height:12px;"></div>
+    <div class="row-2">
+      <button class="btn btn-success" onclick="shareInvoiceAsImage()"><i class="fas fa-image"></i> ارسال تصویر فاکتور</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-invoice-preview')">بستن</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Navigation (منوی کامل پایین صفحه) -->
+<div class="bottom-nav">
+  <a class="nav-item active" onclick="showSection('sec-dashboard', this)"><i class="fas fa-home"></i><span>خانه</span></a>
+  <a class="nav-item" onclick="showSection('sec-products', this)"><i class="fas fa-tshirt"></i><span>کالاها</span></a>
+  <a class="nav-item" onclick="showSection('sec-stock', this)"><i class="fas fa-boxes"></i><span>انبار</span></a>
+  <a class="nav-item" onclick="showSection('sec-sales', this)"><i class="fas fa-receipt"></i><span>فروش</span></a>
+  <a class="nav-item" onclick="showSection('sec-purchases', this)"><i class="fas fa-shopping-bag"></i><span>خرید</span></a>
+  <a class="nav-item" onclick="showSection('sec-customers', this)"><i class="fas fa-users"></i><span>مشتریان</span></a>
+  <a class="nav-item" onclick="showSection('sec-suppliers', this)"><i class="fas fa-truck"></i><span>تأمین</span></a>
+  <a class="nav-item" onclick="showSection('sec-more', this)"><i class="fas fa-ellipsis-h"></i><span>بیشتر</span></a>
+</div>
+
+<!-- المان پنهان برای رندر تصویر فاکتور -->
+<div id="invoice-render-area" style="position:absolute; left:-9999px; top:-9999px; width:450px;"></div>
+
+<script>
+  let defaultDb = {
+    settings: { title: "فروشگاه گوزل لر", subtitle: "سیستم جامع حسابداری فروشگاهی", bank: "1234563287453698", crypto: "", logo: "" },
+    products: [
+      { id: 1, name: "مانتو کتان بلند اسپرت", qty: 25, buyPrice: 400000, price: 550000, category: "پوشاک" },
+      { id: 2, name: "شلوار جین زنانه", qty: 30, buyPrice: 300000, price: 450000, category: "پوشاک" },
+      { id: 3, name: "شومیز حریر", qty: 23, buyPrice: 240000, price: 350000, category: "پوشاک" }
+    ],
+    sales: [],
+    purchases: [],
+    expenses: [],
+    customers: [{ id: 1, name: "آب.سمیه", phone: "09141111111", debt: 430000 }],
+    suppliers: [{ id: 1, name: "تولیدی تهران‌پوشاک", phone: "09122222222", debt: 0 }]
+  };
+
+  let db = JSON.parse(localStorage.getItem('forooshyar_db_v6')) || defaultDb;
+  let currentItems = [];
+  let editingIndex = null;
+
+  function saveDb() {
+    localStorage.setItem('forooshyar_db_v6', JSON.stringify(db));
+    renderAll();
+  }
+
+  function fmt(n) { return Number(n || 0).toLocaleString('fa-IR'); }
+
+  function showSection(id, el) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    let sec = document.getElementById(id);
+    if(sec) sec.classList.add('active');
+    if(el) {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      el.classList.add('active');
+    }
+    renderAll();
+  }
+
+  function openModal(id) { document.getElementById(id).classList.add('active'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+  function renderAll() {
+    let titleEl = document.getElementById('header-title');
+    let subEl = document.getElementById('header-subtitle');
+    let cfgTitle = document.getElementById('cfg-title');
+    let cfgSub = document.getElementById('cfg-subtitle');
+    let cfgBank = document.getElementById('cfg-bank');
+    let cfgCrypto = document.getElementById('cfg-crypto');
+
+    if(titleEl) titleEl.innerText = db.settings.title || 'فروش‌یار';
+    if(subEl) subEl.innerText = db.settings.subtitle || 'سیستم جامع حسابداری فروشگاه';
+    if(cfgTitle) cfgTitle.value = db.settings.title || '';
+    if(cfgSub) cfgSub.value = db.settings.subtitle || '';
+    if(cfgBank) cfgBank.value = db.settings.bank || '';
+    if(cfgCrypto) cfgCrypto.value = db.settings.crypto || '';
+
+    let img = document.getElementById('header-logo');
+    if(db.settings.logo && img) {
+      img.src = db.settings.logo;
+      img.style.display = 'inline-block';
+    } else if(img) {
+      img.style.display = 'none';
+    }
+
+    let period = document.getElementById('report-period')?.value || 'all';
+    let filteredSales = db.sales;
+    let filteredExpenses = db.expenses;
+
+    if(period === 'today') {
+      let todayStr = new Date().toLocaleDateString('fa-IR');
+      filteredSales = db.sales.filter(s => s.date === todayStr);
+      filteredExpenses = db.expenses.filter(e => e.date === todayStr);
+    }
+
+    let totSales = filteredSales.reduce((a,b)=>a+Number(b.total||b.price||0), 0);
+    let totProfit = filteredSales.reduce((a,b)=>a+Number(b.profit||0), 0);
+    let totExpense = filteredExpenses.reduce((a,b)=>a+Number(b.amount||0), 0);
+    let totStock = db.products.reduce((a,b)=>a+Number(b.qty||0), 0);
+
+    let dSales = document.getElementById('dash-sales');
+    let dProfit = document.getElementById('dash-profit');
+    let dExpense = document.getElementById('dash-expense');
+    let dStock = document.getElementById('dash-stock');
+
+    if(dSales) dSales.innerText = fmt(totSales) + ' تومان';
+    if(dProfit) dProfit.innerText = fmt(totProfit) + ' تومان';
+    if(dExpense) dExpense.innerText = fmt(totExpense) + ' تومان';
+    if(dStock) dStock.innerText = fmt(totStock) + ' عدد';
+
+    renderDashDebtors();
+    renderProducts();
+    renderStock();
+    renderPurchases();
+    renderCustomers();
+    renderSuppliers();
+    renderReports();
+    populateSelects();
+
+    let expDate = document.getElementById('exp-date');
+    if(expDate) expDate.value = new Date().toLocaleDateString('fa-IR');
+  }
+
+  function populateSelects() {
+    let custSelect = document.getElementById('sale-customer');
+    if(custSelect) custSelect.innerHTML = db.customers.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+
+    let prodSelect = document.getElementById('sale-product-select');
+    if(prodSelect) prodSelect.innerHTML = db.products.map(p => `<option value="${p.id}" data-price="${p.price}" data-cat="${p.category || 'پوشاک'}">${p.name}</option>`).join('');
+
+    let suppSelect = document.getElementById('pur-supplier');
+    if(suppSelect) suppSelect.innerHTML = db.suppliers.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+    
+    onProductSelectChange();
+  }
+
+  function onProductSelectChange() {
+    let select = document.getElementById('sale-product-select');
+    if(!select) return;
+    let opt = select.options[select.selectedIndex];
+    if(opt) {
+      document.getElementById('sale-price-input').value = opt.getAttribute('data-price') || 0;
+      document.getElementById('sale-category-input').value = opt.getAttribute('data-cat') || '';
+      calcItemTotal();
+    }
+  }
+
+  function calcItemTotal() {
+    let qty = Number(document.getElementById('sale-qty-input').value) || 1;
+    let price = Number(document.getElementById('sale-price-input').value) || 0;
+    let itemTotal = document.getElementById('sale-item-total');
+    if(itemTotal) itemTotal.value = qty * price;
+  }
+
+  let qtyInput = document.getElementById('sale-qty-input');
+  if(qtyInput) qtyInput.addEventListener('input', calcItemTotal);
+  let priceInput = document.getElementById('sale-price-input');
+  if(priceInput) priceInput.addEventListener('input', calcItemTotal);
+
+  function addItemToInvoice() {
+    let select = document.getElementById('sale-product-select');
+    if(!select || select.options.length === 0) return alert('ابتدا کالا تعریف کنید');
+    let prodId = select.value;
+    let prodName = select.options[select.selectedIndex].text;
+    let qty = Number(document.getElementById('sale-qty-input').value) || 1;
+    let price = Number(document.getElementById('sale-price-input').value) || 0;
+    let category = document.getElementById('sale-category-input').value || '-';
+    let prod = db.products.find(x => x.id == prodId);
+    let buyPrice = prod ? (prod.buyPrice || 0) : 0;
+
+    if(editingIndex !== null) {
+      currentItems[editingIndex] = { id: currentItems[editingIndex].id, productId: prodId, name: prodName, qty, unitPrice: price, buyPrice, category, total: qty * price };
+      editingIndex = null;
+    } else {
+      currentItems.push({ id: Date.now(), productId: prodId, name: prodName, qty, unitPrice: price, buyPrice, category, total: qty * price });
+    }
+    renderItemsList();
+    calcTotals();
+  }
+
+  function renderItemsList() {
+    let listEl = document.getElementById('sale-items-list');
+    if(!listEl) return;
+    if(currentItems.length === 0) {
+      listEl.innerHTML = '<div style="text-align:center; color:#999; padding:15px; font-size:0.85rem;">هنوز کالایی به فاکتور اضافه نشده است</div>';
+      return;
+    }
+
+    let html = '';
+    currentItems.forEach((item, index) => {
+      html += `
+        <div class="sale-item-card">
+          <div class="sale-item-info">
+            <b>${index + 1}. ${item.name}</b> <small style="color:#777;">(${item.category})</small><br>
+            <small>${item.qty} عدد × ${fmt(item.unitPrice)} = <b>${fmt(item.total)} تومان</b></small>
+          </div>
+          <div class="sale-item-actions">
+            <button class="btn btn-primary btn-sm" onclick="editItem(${index})"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-danger btn-sm" onclick="removeItem(${index})"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>`;
+    });
+    listEl.innerHTML = html;
+  }
+
+  function editItem(index) {
+    let item = currentItems[index];
+    document.getElementById('sale-qty-input').value = item.qty;
+    document.getElementById('sale-price-input').value = item.unitPrice;
+    document.getElementById('sale-category-input').value = item.category;
+    let prodSelect = document.getElementById('sale-product-select');
+    if(prodSelect && item.productId) prodSelect.value = item.productId;
+    editingIndex = index;
+    calcItemTotal();
+  }
+
+  function removeItem(index) {
+    currentItems.splice(index, 1);
+    renderItemsList();
+    calcTotals();
+  }
+
+  function calcTotals() {
+    let sum = currentItems.reduce((a, b) => a + b.total, 0);
+    let discount = Number(document.getElementById('sale-discount').value) || 0;
+    let received = Number(document.getElementById('sale-received').value) || 0;
+
+    let finalTotal = Math.max(0, sum - discount);
+    let remaining = Math.max(0, finalTotal - received);
+
+    let lblSum = document.getElementById('lbl-total-sum');
+    if(lblSum) lblSum.innerText = fmt(finalTotal) + ' تومان';
+    let lblRem = document.getElementById('lbl-remaining');
+    if(lblRem) lblRem.innerText = fmt(remaining) + ' تومان';
+  }
+
+  function renderDashDebtors() {
+    let html = '';
+    db.customers.filter(c => c.debt > 0).forEach(c => {
+      html += `<div class="list-row"><span><b>${c.name}</b> (${c.phone||''})</span><span style="color:var(--danger); font-weight:800;">${fmt(c.debt)} تومان بدهکار</span></div>`;
+    });
+    let el = document.getElementById('dash-debtors');
+    if(el) el.innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">مشتری بدهکاری وجود ندارد</div>';
+  }
+
+  function renderProducts() {
+    let q = (document.getElementById('search-product')?.value || '').toLowerCase();
+    let html = '';
+    db.products.filter(p => p.name.toLowerCase().includes(q)).forEach(p => {
+      html += `<div class="list-row">
+        <div><b>${p.name}</b><small style="display:block; color:var(--text-secondary);">خرید: ${fmt(p.buyPrice)} | فروش: ${fmt(p.price)} تومان</small></div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span>موجودی: <b>${p.qty}</b></span>
+          <button class="btn btn-primary btn-sm" onclick="editProduct(${p.id})"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>`;
+    });
+    let el = document.getElementById('products-list');
+    if(el) el.innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">کالایی یافت نشد</div>';
+  }
+
+  function openProductModal() {
+    document.getElementById('prod-edit-id').value = '';
+    document.getElementById('prod-name').value = '';
+    document.getElementById('prod-qty').value = '';
+    document.getElementById('prod-buy-price').value = '';
+    document.getElementById('prod-price').value = '';
+    openModal('modal-product');
+  }
+
+  function editProduct(id) {
+    let p = db.products.find(x => x.id === id);
+    if(!p) return;
+    document.getElementById('prod-edit-id').value = p.id;
+    document.getElementById('prod-name').value = p.name;
+    document.getElementById('prod-qty').value = p.qty;
+    document.getElementById('prod-buy-price').value = p.buyPrice || 0;
+    document.getElementById('prod-price').value = p.price;
+    openModal('modal-product');
+  }
+
+  function saveProduct() {
+    let id = document.getElementById('prod-edit-id').value;
+    let name = document.getElementById('prod-name').value;
+    let qty = document.getElementById('prod-qty').value === '' ? 0 : Number(document.getElementById('prod-qty').value);
+    let buyPrice = Number(document.getElementById('prod-buy-price').value);
+    let price = Number(document.getElementById('prod-price').value);
+    if(!name) return alert('نام کالا الزامی است');
+
+    if(id) {
+      let p = db.products.find(x => x.id == id);
+      if(p) { p.name = name; p.qty = qty; p.buyPrice = buyPrice; p.price = price; }
+    } else {
+      db.products.push({ id: Date.now(), name, qty, buyPrice, price, category: "پوشاک" });
+    }
+    saveDb();
+    closeModal('modal-product');
+  }
+
+  function deleteProduct(id) {
+    if(confirm('حذف شود؟')) {
+      db.products = db.products.filter(x => x.id !== id);
+      saveDb();
+    }
+  }
+
+  function renderStock() {
+    let q = (document.getElementById('search-stock')?.value || '').toLowerCase();
+    let html = '';
+    db.products.filter(p => p.name.toLowerCase().includes(q)).forEach(p => {
+      html += `<div class="list-row">
+        <span><b>${p.name}</b></span>
+        <span style="color:${p.qty > 5 ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">موجودی: ${p.qty} عدد</span>
+      </div>`;
+    });
+    let el = document.getElementById('stock-list');
+    if(el) el.innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">موردی یافت نشد</div>';
+  }
+
+  /* --- PURCHASES --- */
+  function addPurItemRow(itemData = null) {
+    let container = document.getElementById('pur-items-container');
+    let div = document.createElement('div');
+    div.className = 'pur-row-item item-card-row';
+    div.innerHTML = `
+      <div class="item-card-header">
+        <label class="form-label" style="margin:0;">شرح کالا</label>
+        <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.parentElement.remove(); calcPurTotals();"><i class="fas fa-trash"></i> حذف</button>
+      </div>
+      <div class="form-group"><input type="text" class="form-input pur-item-name" value="${itemData ? itemData.name : ''}" placeholder="نام کالا" oninput="calcPurTotals()"></div>
+      <div class="row-2">
+        <div><label class="form-label">تعداد</label><input type="number" class="form-input pur-item-qty" value="${itemData ? itemData.qty : 1}" oninput="calcPurTotals()"></div>
+        <div><label class="form-label">قیمت خرید (تومان)</label><input type="number" class="form-input pur-item-price" value="${itemData ? itemData.unitPrice : 0}" oninput="calcPurTotals()"></div>
+      </div>
+    `;
+    container.appendChild(div);
+    calcPurTotals();
+  }
+
+  function calcPurTotals() {
+    let rows = document.querySelectorAll('.pur-row-item');
+    let subtotal = 0;
+    rows.forEach(r => {
+      let qty = Number(r.querySelector('.pur-item-qty').value) || 0;
+      let price = Number(r.querySelector('.pur-item-price').value) || 0;
+      subtotal += (qty * price);
+    });
+    let discount = Number(document.getElementById('pur-discount').value) || 0;
+    let total = Math.max(0, subtotal - discount);
+    document.getElementById('pur-total').value = total;
+    let paid = Number(document.getElementById('pur-paid').value) || 0;
+    let remaining = Math.max(0, total - paid);
+    document.getElementById('pur-remaining').value = remaining;
+  }
+
+  function openPurchaseModal() {
+    document.getElementById('pur-items-container').innerHTML = '';
+    document.getElementById('pur-discount').value = 0;
+    document.getElementById('pur-paid').value = '';
+    addPurItemRow();
+    openModal('modal-purchase');
+  }
+
+  function savePurchase() {
+    let supplier = document.getElementById('pur-supplier').value;
+    let discount = Number(document.getElementById('pur-discount').value) || 0;
+    let total = Number(document.getElementById('pur-total').value) || 0;
+    let paid = Number(document.getElementById('pur-paid').value) || 0;
+    let remaining = Number(document.getElementById('pur-remaining').value) || 0;
+    let rows = document.querySelectorAll('.pur-row-item');
+    if(rows.length === 0) return alert('حداقل یک قلم کالا وارد کنید');
+
+    let items = [];
+    rows.forEach(r => {
+      let name = r.querySelector('.pur-item-name').value || 'کالا';
+      let qty = Number(r.querySelector('.pur-item-qty').value) || 1;
+      let unitPrice = Number(r.querySelector('.pur-item-price').value) || 0;
+      items.push({ name, qty, unitPrice });
+      let prod = db.products.find(x => x.name.toLowerCase() === name.toLowerCase());
+      if(prod) { prod.qty += qty; prod.buyPrice = unitPrice; }
+      else { db.products.push({ id: Date.now(), name, qty, buyPrice: unitPrice, price: Math.round(unitPrice * 1.3), category: "پوشاک" }); }
+    });
+
+    let primaryDesc = items.map(i => `${i.name} × ${i.qty}`).join(', ');
+    db.purchases.unshift({ id: Date.now(), supplier, items, item: primaryDesc, discount, total, price: total, paid, remaining, date: new Date().toLocaleDateString('fa-IR') });
+    let s = db.suppliers.find(x => x.name === supplier);
+    if(s) s.debt = (s.debt || 0) + remaining;
+
+    saveDb();
+    closeModal('modal-purchase');
+  }
+
+  function renderPurchases() {
+    let q = (document.getElementById('search-purchase')?.value || '').toLowerCase();
+    let html = '';
+    db.purchases.filter(p => (p.item && p.item.toLowerCase().includes(q)) || (p.supplier && p.supplier.toLowerCase().includes(q))).forEach((p, idx) => {
+      let isSettled = (p.remaining || 0) <= 0;
+      html += `<div class="list-row">
+        <div>
+          <b>فاکتور خرید #${db.purchases.length - idx}</b> <span class="badge ${isSettled ? 'badge-success':'badge-danger'}">${isSettled ? 'تسویه' : 'بدهکاریم'}</span>
+          <small style="display:block; color:var(--text-secondary);">${p.supplier} | ${p.date} - ${p.item}</small>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <b style="color:var(--danger);">- ${fmt(p.total || p.price)} ت</b>
+          <button class="btn btn-danger btn-sm" onclick="deletePurchase(${p.id})"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>`;
+    });
+    let el = document.getElementById('purchases-list');
+    if(el) el.innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">خریدی ثبت نشده است</div>';
+  }
+
+  function deletePurchase(id) {
+    if(confirm('حذف شود؟')) {
+      db.purchases = db.purchases.filter(x => x.id !== id);
+      saveDb();
+    }
+  }
+
+  /* --- EXPENSES --- */
+  function addExpense() {
+    let category = document.getElementById('exp-category').value;
+    let title = document.getElementById('exp-title').value;
+    let date = document.getElementById('exp-date').value || new Date().toLocaleDateString('fa-IR');
+    let amount = Number(document.getElementById('exp-amount').value);
+    if(!title || amount <= 0) return alert('شرح و مبلغ را وارد کنید');
+    db.expenses.unshift({ id: Date.now(), category, title, amount, date });
+    saveDb();
+    closeModal('modal-expense');
+  }
+
+  /* --- CUSTOMERS & SUPPLIERS --- */
+  function renderCustomers() {
+    let q = (document.getElementById('search-customer')?.value || '').toLowerCase();
+    let html = '';
+    db.customers.filter(c => c.name.toLowerCase().includes(q)).forEach(c => {
+      html += `<div class="list-row">
+        <div><b>${c.name}</b><small style="display:block; color:var(--text-secondary);">${c.phone || 'بدون شماره'}</small></div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="color:var(--danger); font-weight:700;">${fmt(c.debt)} ت</span>
+          <button class="btn btn-warning btn-sm" onclick="openLedger('customer', '${c.name}')"><i class="fas fa-book"></i> دفتر حساب</button>
+        </div>
+      </div>`;
+    });
+    let el = document.getElementById('customers-list');
+    if(el) el.innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">مشتری یافت نشد</div>';
+  }
+
+  function saveCustomerModal() {
+    let name = document.getElementById('cust-name').value;
+    let phone = document.getElementById('cust-phone').value;
+    if(!name) return alert('نام مشتری الزامی است');
+    db.customers.push({ id: Date.now(), name, phone, debt: 0 });
+    saveDb();
+    closeModal('modal-customer');
+  }
+
+  function renderSuppliers() {
+    let q = (document.getElementById('search-supplier')?.value || '').toLowerCase();
+    let html = '';
+    db.suppliers.filter(s => s.name.toLowerCase().includes(q)).forEach(s => {
+      html += `<div class="list-row">
+        <div><b>${s.name}</b><small style="display:block; color:var(--text-secondary);">${s.phone || 'بدون شماره'}</small></div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="color:var(--danger); font-weight:700;">${fmt(s.debt)} ت</span>
+        </div>
+      </div>`;
+    });
+    let el = document.getElementById('suppliers-list');
+    if(el) el.innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">تأمین‌کننده یافت نشد</div>';
+  }
+
+  function saveSupplierModal() {
+    let name = document.getElementById('supp-name').value;
+    let phone = document.getElementById('supp-phone').value;
+    if(!name) return alert('نام تأمین‌کننده الزامی است');
+    db.suppliers.push({ id: Date.now(), name, phone, debt: 0 });
+    saveDb();
+    closeModal('modal-supplier');
+  }
+
+  function openLedger(type, name) {
+    let title = document.getElementById('ledger-title');
+    title.innerText = `دفتر حساب: ${name}`;
+    let records = db.sales.filter(s => s.customer === name);
+    let totalDebtSum = records.reduce((a,b)=>a+Number(b.remaining||0), 0);
+    let itemsHtml = records.length === 0 ? '<div style="padding:15px; text-align:center; color:#888;">هیچ فاکتوری ثبت نشده است.</div>' : records.map((r, i) => `<div class="invoice-row"><span>فاکتور #${i+1} (${r.date})</span><b>${fmt(r.total)} ت</b></div>`).join('');
+
+    document.getElementById('ledger-print-area').innerHTML = `
+      <div class="invoice-header"><h3 style="margin:0; color:var(--primary);">${db.settings.title}</h3><small>صورتحساب - ${name}</small></div>
+      ${itemsHtml}
+      <hr style="border:0.5px dashed #d81b60; margin:10px 0;">
+      <div class="invoice-row" style="color:var(--danger);"><span>جمع مانده بدهی:</span> <b>${fmt(totalDebtSum)} تومان</b></div>
+    `;
+    openModal('modal-ledger');
+  }
+
+  function shareLedgerAsImage() {
+    html2canvas(document.getElementById('ledger-print-area'), { scale: 2 }).then(canvas => {
+      canvas.toBlob(blob => {
+        let file = new File([blob], 'statement.png', { type: 'image/png' });
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({ files: [file] }).catch(()=>{});
+        } else {
+          let link = document.createElement('a'); link.download = 'statement.png'; link.href = canvas.toDataURL(); link.click();
+        }
+      });
+    });
+  }
+
+  async function pickContact(type) {
+    if('contacts' in navigator) {
+      try {
+        const contacts = await navigator.contacts.select(['name', 'tel'], { multiple: false });
+        if(contacts.length > 0) {
+          let name = contacts[0].name[0] || '';
+          let phone = contacts[0].tel[0] || '';
+          if(type === 'customer') { db.customers.push({ id: Date.now(), name, phone, debt: 0 }); renderCustomers(); }
+          saveDb();
+          alert(`مخاطب ${name} اضافه شد.`);
+        }
+      } catch(ex) {}
+    } else { alert('پشتیبانی نمی‌شود.'); }
+  }
+
+  /* --- خروجی‌های متنی و تصویری فاکتور فروش (با ارتفاع پویا و خط‌چین مرتب) --- */
+  function generateFormattedText() {
+    let customer = document.getElementById('sale-customer').value;
+    let discount = Number(document.getElementById('sale-discount').value) || 0;
+    let received = Number(document.getElementById('sale-received').value) || 0;
+    let sum = currentItems.reduce((a, b) => a + b.total, 0);
+    let finalTotal = Math.max(0, sum - discount);
+    let remaining = Math.max(0, finalTotal - received);
+
+    let text = `🛍️ **فاکتور فروش فروشگاه**\n`;
+    text += `-----------------------------------\n`;
+    text += `👤 **مشتری:** ${customer}\n`;
+    text += `📅 **تاریخ:** ${new Date().toLocaleDateString('fa-IR')}\n`;
+    text += `-----------------------------------\n`;
+    currentItems.forEach((it, idx) => {
+      text += `${idx + 1}. ${it.name} (${it.category})\n`;
+      text += `   📌 ${it.qty} عدد × ${fmt(it.unitPrice)} = ${fmt(it.total)} تومان\n`;
+      if(idx < currentItems.length - 1) text += `┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄\n`;
+    });
+    text += `-----------------------------------\n`;
+    text += `💰 **جمع کل:** ${fmt(sum)} تومان\n`;
+    if(discount > 0) text += `🏷️ **تخفیف:** ${fmt(discount)} تومان\n`;
+    text += `💳 **قابل پرداخت:** ${fmt(finalTotal)} تومان\n`;
+    text += `💵 **دریافتی:** ${fmt(received)} تومان\n`;
+    text += `⚠️ **مانده بدهی:** ${fmt(remaining)} تومان\n`;
+    text += `-----------------------------------\n`;
+    text += `🙏 **از حسن انتخاب شما سپاسگزاریم!**`;
+    return text;
+  }
+
+  function shareAsText() {
+    let txt = generateFormattedText();
+    if(navigator.share) { navigator.share({ title: 'فاکتور فروش', text: txt }).catch(()=>{}); }
+    else { navigator.clipboard.writeText(txt); alert('متن فاکتور در حافظه کپی شد.'); }
+  }
+
+  async function saveAsText() {
+    let txt = generateFormattedText();
+    let blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+    let a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'invoice.txt'; a.click();
+  }
+
+  function prepareRenderArea() {
+    let renderArea = document.getElementById('invoice-render-area');
+    let customer = document.getElementById('sale-customer').value;
+    let discount = Number(document.getElementById('sale-discount').value) || 0;
+    let received = Number(document.getElementById('sale-received').value) || 0;
+    let sum = currentItems.reduce((a, b) => a + b.total, 0);
+    let finalTotal = Math.max(0, sum - discount);
+    let remaining = Math.max(0, finalTotal - received);
+
+    let itemsHtml = currentItems.map((it, i) => `
+      <div class="invoice-row" style="flex-direction:column; align-items:flex-start; padding:8px 0;">
+        <div style="width:100%; display:flex; justify-content:space-between;">
+          <b>${i+1}. ${it.name}</b>
+          <b>${fmt(it.total)} ت</b>
+        </div>
+        <small style="color:#666;">دسته‌بندی: ${it.category} | تعداد: ${it.qty} × ${fmt(it.unitPrice)}</small>
+      </div>
+    `).join('');
+
+    renderArea.innerHTML = `
+      <div class="invoice-box">
+        <div class="invoice-header">
+          <h3 style="margin:0; color:#d81b60;">${db.settings.title}</h3>
+          <small>فاکتور رسمی فروش</small>
+        </div>
+        <div class="invoice-row"><span>مشتری:</span> <b>${customer}</b></div>
+        <div class="invoice-row"><span>تاریخ:</span> <b>${new Date().toLocaleDateString('fa-IR')}</b></div>
+        <hr style="border:0.5px dashed #d81b60; margin:8px 0;">
+        ${itemsHtml}
+        <hr style="border:0.5px dashed #d81b60; margin:8px 0;">
+        <div class="invoice-row"><span>جمع کل:</span> <b>${fmt(sum)} تومان</b></div>
+        <div class="invoice-row"><span>تخفیف:</span> <b>${fmt(discount)} تومان</b></div>
+        <div class="invoice-row" style="font-weight:bold; color:#d81b60;"><span>مبلغ نهایی:</span> <b>${fmt(finalTotal)} تومان</b></div>
+        <div class="invoice-row"><span>دریافتی:</span> <b>${fmt(received)} تومان</b></div>
+        <div class="invoice-row" style="color:#c62828;"><span>مانده بدهی:</span> <b>${fmt(remaining)} تومان</b></div>
+        <p style="text-align:center; margin:12px 0 0 0; font-size:0.8rem; color:#888;">با تشکر از خرید شما 🙏</p>
+      </div>
+    `;
+  }
+
+  function shareAsImage() {
+    prepareRenderArea();
+    html2canvas(document.getElementById('invoice-render-area'), { scale: 2 }).then(canvas => {
+      canvas.toBlob(blob => {
+        let file = new File([blob], 'invoice.png', { type: 'image/png' });
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({ files: [file] }).catch(()=>{});
+        } else { saveAsImage(); }
+      });
+    });
+  }
+
+  function saveAsImage() {
+    prepareRenderArea();
+    html2canvas(document.getElementById('invoice-render-area'), { scale: 2 }).then(canvas => {
+      let a = document.createElement('a'); a.href = canvas.toDataURL('image/png'); a.download = 'invoice.png'; a.click();
+    });
+  }
+
+  /* --- REPORTS & SETTINGS --- */
+  function renderReports() {
+    let period = document.getElementById('report-period')?.value || 'all';
+    let filteredSales = db.sales;
+    let filteredExpenses = db.expenses;
+    let filteredPurchases = db.purchases;
+
+    if(period === 'today') {
+      let todayStr = new Date().toLocaleDateString('fa-IR');
+      filteredSales = db.sales.filter(s => s.date === todayStr);
+      filteredExpenses = db.expenses.filter(e => e.date === todayStr);
+      filteredPurchases = db.purchases.filter(p => p.date === todayStr);
+    }
+
+    let totSales = filteredSales.reduce((a,b)=>a+Number(b.total||b.price||0), 0);
+    let totProfit = filteredSales.reduce((a,b)=>a+Number(b.profit||0), 0);
+    let totPurchases = filteredPurchases.reduce((a,b)=>a+Number(b.total||b.price||0), 0);
+    let totExpense = filteredExpenses.reduce((a,b)=>a+Number(b.amount||0), 0);
+
+    let html = `
+      <div class="list-row"><span>کل مبلغ فروش‌ها:</span><b style="color:var(--success);">${fmt(totSales)} تومان</b></div>
+      <div class="list-row"><span>کل سود خالص:</span><b style="color:var(--info);">${fmt(totProfit)} تومان</b></div>
+      <div class="list-row"><span>مجموع خریدهای عمده:</span><b style="color:var(--warning);">${fmt(totPurchases)} تومان</b></div>
+      <div class="list-row"><span>مجموع هزینه‌ها:</span><b style="color:var(--danger);">${fmt(totExpense)} تومان</b></div>
+      <div class="list-row" style="background:var(--primary-light); font-weight:800;"><span>سود خالص نهایی (پس از هزینه):</span><span>${fmt(totProfit - totExpense)} تومان</span></div>
+    `;
+    let el = document.getElementById('reports-detail');
+    if(el) el.innerHTML = html;
+  }
+
+  function saveSettings() {
+    db.settings.title = document.getElementById('cfg-title').value;
+    db.settings.subtitle = document.getElementById('cfg-subtitle').value;
+    db.settings.bank = document.getElementById('cfg-bank').value;
+    db.settings.crypto = document.getElementById('cfg-crypto').value;
+    saveDb();
+    alert('تنظیمات ذخیره شد');
+  }
+
+  function exportBackup() {
+    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+    let dlAnchor = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", "forooshyar_backup.json");
+    document.body.appendChild(dlAnchor); dlAnchor.click(); dlAnchor.remove();
+  }
+
+  function importBackup(e) {
+    let file = e.target.files[0];
+    if(!file) return;
+    let reader = new FileReader();
+    reader.onload = function(evt) {
+      try {
+        db = JSON.parse(evt.target.result);
+        saveDb();
+        alert('بازیابی انجام شد');
+      } catch(err) { alert('فایل نامعتبر'); }
+    };
+    reader.readAsText(file);
+  }
+
+  renderAll();
+  onProductSelectChange();
+</script>
+</body>
+</html>
