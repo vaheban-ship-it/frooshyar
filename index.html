@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>فروش‌یار</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#d81b60">
+  <link rel="icon" href="icon-192.png">
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #d81b60;
+      --primary-light: #fce4ec;
+      --secondary: #8e24aa;
+      --bg: #f4f5f9;
+      --surface: #ffffff;
+      --text: #212121;
+      --text-secondary: #757575;
+      --border: #e0e0e0;
+      --success: #2e7d32;
+      --danger: #c62828;
+      --warning: #ef6c00;
+      --info: #0288d1;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+    .app-container { max-width: 600px; margin: 0 auto; background: var(--bg); min-height: 100vh; padding-bottom: 90px; position: relative; }
+
+    /* Header */
+    .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 14px 18px; border-radius: 0 0 24px 24px; box-shadow: 0 4px 20px rgba(216,27,96,0.3); position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; }
+    .header-info { display: flex; align-items: center; gap: 10px; }
+    .header h1 { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+    .header p { margin: 3px 0 0; opacity: 0.9; font-size: 0.78rem; }
+    .header img { height: 40px; width: 40px; object-fit: cover; border-radius: 50%; background: white; border: 2px solid #fff; }
+    .header-actions { display: flex; align-items: center; gap: 6px; }
+    .header-btn { background: rgba(255,255,255,0.22); border: none; color: white; height: 36px; padding: 0 10px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-weight: bold; cursor: pointer; transition: background 0.2s; gap: 4px; }
+    .header-btn:hover, .header-btn:active { background: rgba(255,255,255,0.35); }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* Cards & Grids */
+    .card { background: var(--surface); margin: 12px; padding: 16px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--primary); display: flex; align-items: center; justify-content: space-between; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px; }
+    .stat-box { background: var(--surface); padding: 16px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center; }
+    .stat-box i { font-size: 1.5rem; margin-bottom: 8px; display: block; }
+    .stat-box .value { font-size: 1.1rem; font-weight: 700; }
+    .stat-box .label { font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px; }
+    .stat-box.sales i { color: var(--success); }
+    .stat-box.profit i { color: var(--info); }
+    .stat-box.expense i { color: var(--danger); }
+    .stat-box.stock i { color: var(--warning); }
+
+    /* Buttons */
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn { border: none; padding: 12px 14px; border-radius: 12px; font-family: inherit; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; color: white; width: 100%; transition: transform 0.1s, opacity 0.2s; user-select: none; }
+    .btn:active { transform: scale(0.95); opacity: 0.9; }
+    .btn-success { background: var(--success); }
+    .btn-danger { background: var(--danger); }
+    .btn-warning { background: var(--warning); }
+    .btn-primary { background: var(--primary); }
+    .btn-info { background: var(--info); }
+    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+    .btn-sm { padding: 6px 10px; font-size: 0.78rem; width: auto; border-radius: 8px; }
+
+    /* Inputs */
+    .search-box { margin-bottom: 12px; position: relative; }
+    .search-box i { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
+    .search-input { width: 100%; padding: 10px 14px 10px 40px; border: 1.5px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; background: var(--surface); }
+    .search-input:focus { border-color: var(--primary); }
+
+    .form-group { margin-bottom: 12px; }
+    .form-label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; color: var(--text-secondary); }
+    .form-input, .form-select, .form-textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 0.9rem; background: var(--surface); outline: none; }
+    .form-textarea { resize: vertical; min-height: 60px; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); }
+
+    /* Dynamic Item Rows */
+    .dynamic-item-card { background: #fdfdfd; border: 1.5px solid #e0e0e0; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .dynamic-item-title { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    .dynamic-item-sub { font-size: 0.78rem; color: var(--text-secondary); margin-top: 2px; }
+
+    /* Lists */
+    .list-container { max-height: 480px; overflow-y: auto; border-radius: 12px; border: 1px solid var(--border); }
+    .list-container.no-limit { max-height: none; overflow: visible; }
+    .list-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 0.88rem; background: var(--surface); }
+    .list-row:nth-child(even) { background: #f2f4f8; }
+    .list-row:last-child { border-bottom: none; }
+
+    /* Badges */
+    .badge { padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: bold; }
+    .badge-success { background: #e8f5e9; color: var(--success); }
+    .badge-danger { background: #ffebee; color: var(--danger); }
+    .badge-info { background: #e1f5fe; color: var(--info); }
+
+    /* Modal */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
+    .modal.active { display: flex !important; }
+    .modal-content { background: var(--surface); width: 100%; max-width: 520px; padding: 20px; border-radius: 20px; max-height: 90vh; overflow-y: auto; }
+
+    /* Invoice & Statement Preview Cards */
+    .invoice-box { background: #fff; color: #212121; padding: 20px; border-radius: 16px; border: 2px dashed #d81b60; font-size: 0.88rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    .invoice-header { text-align: center; border-bottom: 2px dashed #d81b60; padding-bottom: 12px; margin-bottom: 12px; }
+    .invoice-logo { height: 54px; width: 54px; object-fit: cover; border-radius: 50%; margin-bottom: 6px; border: 2px solid var(--primary); }
+    .invoice-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 0.5px dashed #eee; font-size: 0.86rem; }
+    .invoice-row.payment-method { font-size: 0.8rem; background: #fafafa; padding: 6px 8px; border-radius: 6px; margin-top: 4px; border: 1px solid #eee; }
+
+    /* Calendar Grid */
+    .calendar-container { background: var(--surface); border-radius: 16px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+    .calendar-day-head { font-size: 0.75rem; font-weight: bold; color: var(--text-secondary); padding: 4px 0; }
+    .calendar-day { font-size: 0.85rem; padding: 8px 0; border-radius: 10px; border: 1px solid #f0f0f0; cursor: pointer; background: #fff; transition: background 0.2s; position: relative; }
+    .calendar-day:active, .calendar-day.selected { background: var(--primary-light); border-color: var(--primary); font-weight: bold; color: var(--primary); }
+    .calendar-day.today { border: 2px solid var(--primary); font-weight: bold; }
+    .calendar-day .dot { width: 5px; height: 5px; background: var(--primary); border-radius: 50%; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); }
+
+    /* Bottom Navigation */
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; background: var(--surface); display: flex; justify-content: space-around; padding: 6px 2px; border-top: 1px solid var(--border); box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 1000; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; font-size: 0.68rem; gap: 2px; flex: 1; cursor: pointer; text-align: center; user-select: none; }
+    .nav-item i { font-size: 1.1rem; }
+    .nav-item.active { color: var(--primary); font-weight: 700; }
+
+    /* Multi Item Rows */
+    .input-row-group { display: flex; gap: 6px; margin-bottom: 6px; align-items: center; }
+    .input-row-group input, .input-row-group select { font-size: 0.82rem; }
+    .checkbox-group { display: flex; flex-direction: column; gap: 6px; border: 1px dashed var(--border); padding: 8px 10px; border-radius: 10px; background: #fafafa; }
+    .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; cursor: pointer; }
+    .checkbox-item input { width: 16px; height: 16px; accent-color: var(--primary); }
+
+    /* Language Option Items */
+    .lang-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 12px; border: 1.5px solid var(--border); margin-bottom: 8px; cursor: pointer; font-weight: bold; }
+    .lang-option.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-info">
+      <img id="header-logo" src="" alt="لوگو" style="display:none">
+      <div>
+        <h1><i class="fas fa-shopping-bag"></i> <span id="header-title" data-i18n="app_title">فروش‌یار</span></h1>
+        <p id="header-subtitle" data-i18n="app_subtitle">سیستم جامع حسابداری فروشگاه</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <!-- دکمه تغییر زبان با نشانگر هوشمند -->
+      <button class="header-btn" onclick="openModal('modal-lang')" title="تغییر زبان">
+        <i class="fas fa-globe"></i> <span id="current-lang-btn">FA | آذ</span>
+      </button>
+      <!-- دکمه تقویم -->
+      <button class="header-btn" title="تقویم گزارش‌گیری" onclick="openModal('modal-calendar')"><i class="fas fa-calendar-alt"></i></button>
+    </div>
+  </div>
+
+  <!-- 1. DASHBOARD -->
+  <div id="sec-dashboard" class="section active">
+    <div class="stats-grid">
+      <div class="stat-box sales">
+        <i class="fas fa-chart-line"></i>
+        <div class="value" id="dash-sales">۰ تومان</div>
+        <div class="label" data-i18n="lbl_total_sales">فروش کل (محاسبه‌شده)</div>
+      </div>
+      <div class="stat-box profit">
+        <i class="fas fa-coins"></i>
+        <div class="value" id="dash-profit">۰ تومان</div>
+        <div class="label" data-i18n="lbl_total_profit">سود کل</div>
+      </div>
+      <div class="stat-box stock">
+        <i class="fas fa-boxes"></i>
+        <div class="value" id="dash-stock">۰ عدد</div>
+        <div class="label" data-i18n="lbl_total_stock">موجودی اقلام انبار</div>
+      </div>
+      <div class="stat-box expense">
+        <i class="fas fa-wallet"></i>
+        <div class="value" id="dash-expense">۰ تومان</div>
+        <div class="label" data-i18n="lbl_total_expense">مجموع هزینه‌ها</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span data-i18n="title_quick_access">دسترسی سریع</span><i class="fas fa-bolt"></i></div>
+      <div class="row-2">
+        <button class="btn btn-success" onclick="openSaleModal()"><i class="fas fa-plus"></i> <span data-i18n="btn_new_sale">فاکتور فروش</span></button>
+        <button class="btn btn-danger" onclick="openPurchaseModal()"><i class="fas fa-plus"></i> <span data-i18n="btn_new_purchase">فاکتور خرید</span></button>
+      </div>
+      <div style="height:10px"></div>
+      <div class="row-2">
+        <button class="btn btn-primary" onclick="openModal('modal-expense')"><i class="fas fa-minus-circle"></i> <span data-i18n="btn_add_expense">ثبت هزینه</span></button>
+        <button class="btn btn-warning" onclick="showSection('sec-reports', document.querySelectorAll('.nav-item')[7])"><i class="fas fa-chart-pie"></i> <span data-i18n="btn_reports">گزارشات جامع</span></button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span data-i18n="title_debtors">مشتریان بدهکار</span><i class="fas fa-hand-holding-usd"></i></div>
+      <div id="dash-debtors" class="list-container"></div>
+    </div>
+  </div>
+
+  <!-- 2. PRODUCTS -->
+  <div id="sec-products" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span data-i18n="nav_products">مدیریت کالاها و انبار</span>
+        <button class="btn btn-primary btn-sm" onclick="openProductModal()"><i class="fas fa-plus"></i> <span data-i18n="btn_add_prod">کالا جدید</span></button>
+      </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-product" class="search-input" placeholder="جستجوی نام کالا..." oninput="renderProducts()">
+      </div>
+      <div id="products-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <!-- 3. STOCK -->
+  <div id="sec-stock" class="section">
+    <div class="card">
+      <div class="card-title"><span data-i18n="nav_stock">موجودی انبار و کاردکس</span><i class="fas fa-boxes"></i></div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-stock" class="search-input" placeholder="جستجو در انبار..." oninput="renderStock()">
+      </div>
+      <div id="stock-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <!-- 4. SALES -->
+  <div id="sec-sales" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span data-i18n="nav_sales">فاکتورهای فروش</span>
+        <button class="btn btn-success btn-sm" onclick="openSaleModal()"><i class="fas fa-plus"></i> <span data-i18n="btn_new_sale">فاکتور جدید</span></button>
+      </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-sale" class="search-input" placeholder="جستجوی فاکتور فروش..." oninput="renderSales()">
+      </div>
+      <div id="sales-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <!-- 5. PURCHASES -->
+  <div id="sec-purchases" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span data-i18n="nav_purchases">فاکتورهای خرید</span>
+        <button class="btn btn-danger btn-sm" onclick="openPurchaseModal()"><i class="fas fa-plus"></i> <span data-i18n="btn_new_purchase">فاکتور خرید جدید</span></button>
+      </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-purchase" class="search-input" placeholder="جستجوی فاکتور خرید..." oninput="renderPurchases()">
+      </div>
+      <div id="purchases-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <!-- 6. CUSTOMERS -->
+  <div id="sec-customers" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span data-i18n="nav_customers">مشتریان</span>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-warning btn-sm" onclick="pickContact('customer')"><i class="fas fa-address-book"></i> مخاطبین</button>
+          <button class="btn btn-primary btn-sm" onclick="openCustomerModal()"><i class="fas fa-plus"></i> جدید</button>
+        </div>
+      </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-customer" class="search-input" placeholder="جستجوی مشتری..." oninput="renderCustomers()">
+      </div>
+      <div id="customers-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <!-- 7. SUPPLIERS -->
+  <div id="sec-suppliers" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span data-i18n="nav_suppliers">تأمین‌کنندگان</span>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-warning btn-sm" onclick="pickContact('supplier')"><i class="fas fa-address-book"></i> مخاطبین</button>
+          <button class="btn btn-primary btn-sm" onclick="openSupplierModal()"><i class="fas fa-plus"></i> جدید</button>
+        </div>
+      </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-supplier" class="search-input" placeholder="جستجوی تأمین‌کننده..." oninput="renderSuppliers()">
+      </div>
+      <div id="suppliers-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <!-- 8. MORE / SETTINGS -->
+  <div id="sec-more" class="section">
+    <div class="card">
+      <div class="card-title"><span data-i18n="title_store_settings">تنظیمات عمومی فروشگاه</span><i class="fas fa-cog"></i></div>
+      <div class="form-group"><label class="form-label">نام فروشگاه / عنوان</label><input type="text" id="cfg-title" class="form-input"></div>
+      <div class="form-group"><label class="form-label">زیرعنوان فاکتور</label><input type="text" id="cfg-subtitle" class="form-input"></div>
+      <div class="form-group"><label class="form-label">لوگوی فروشگاه</label><input type="file" id="cfg-logo-file" accept="image/*" class="form-input" onchange="uploadLogo(event)"></div>
+    </div>
+
+    <!-- مدیریت کارت‌های بانکی -->
+    <div class="card">
+      <div class="card-title"><span>مدیریت کارت‌های بانکی</span><i class="fas fa-credit-card"></i></div>
+      <div id="bank-accounts-list"></div>
+      <button class="btn btn-outline btn-sm" type="button" onclick="addBankInputRow()" style="margin-top:8px;"><i class="fas fa-plus"></i> افزودن حساب بانکی جدید</button>
+    </div>
+
+    <!-- مدیریت ولت‌های رمزارز -->
+    <div class="card">
+      <div class="card-title"><span>مدیریت کیف پول‌های رمزارز (Crypto)</span><i class="fab fa-bitcoin"></i></div>
+      <div id="crypto-wallets-list"></div>
+      <button class="btn btn-outline btn-sm" type="button" onclick="addCryptoInputRow()" style="margin-top:8px;"><i class="fas fa-plus"></i> افزودن ولت جدید</button>
+    </div>
+
+    <div class="card">
+      <button class="btn btn-primary" onclick="saveSettings()">ذخیره تمام تنظیمات</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>پشتیبان‌گیری و بازیابی</span><i class="fas fa-database"></i></div>
+      <button class="btn btn-warning" onclick="exportBackup()" style="margin-bottom:10px;"><i class="fas fa-download"></i> دانلود فایل بکاپ</button>
+      <div class="form-group"><label class="form-label">بازیابی اطلاعات</label><input type="file" accept=".json" class="form-input" onchange="importBackup(event)"></div>
+      <button class="btn btn-danger btn-sm" onclick="resetAppData()" style="margin-top:10px; width:100%;"><i class="fas fa-undo"></i> بازنشانی کامل اطلاعات برنامه</button>
+    </div>
+  </div>
+
+  <!-- REPORTS -->
+  <div id="sec-reports" class="section">
+    <div class="card">
+      <div class="card-title"><span>گزارش جامع مالی و عملکرد</span><i class="fas fa-chart-pie"></i></div>
+      <div class="form-group">
+        <label class="form-label">تعیین بازه زمانی جهت گزارش‌گیری</label>
+        <select id="report-period" class="form-select" onchange="renderReports()">
+          <option value="today">امروز</option>
+          <option value="7days">۷ روز اخیر</option>
+          <option value="30days">۳۰ روز اخیر</option>
+          <option value="all" selected>کل دوره‌ها (همه‌زمان)</option>
+        </select>
+      </div>
+      <div id="reports-detail" class="list-container" style="padding: 10px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+
+<!-- Language Modal -->
+<div id="modal-lang" class="modal">
+  <div class="modal-content" style="max-width:380px;">
+    <div class="card-title"><span>انتخاب زبان / Language</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-lang')"></i></div>
+    
+    <div class="lang-option" id="lang-opt-fa" onclick="setLanguage('fa')">
+      <span>فارسی (FA)</span>
+      <i class="fas fa-check"></i>
+    </div>
+    
+    <div class="lang-option" id="lang-opt-az" onclick="setLanguage('az')">
+      <span>آذربایجانی / Azərbaycan dili (آذ)</span>
+      <i class="fas fa-check"></i>
+    </div>
+
+    <div class="lang-option" id="lang-opt-en" onclick="setLanguage('en')">
+      <span>English (EN)</span>
+      <i class="fas fa-check"></i>
+    </div>
+
+    <div style="height:12px;"></div>
+    <button class="btn btn-outline" onclick="closeModal('modal-lang')">بستن / Close</button>
+  </div>
+</div>
+
+<!-- Calendar Modal -->
+<div id="modal-calendar" class="modal">
+  <div class="modal-content" style="max-width:480px;">
+    <div class="card-title"><span>تقویم گزارش‌گیری روزانه</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-calendar')"></i></div>
+    
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <button class="btn btn-outline btn-sm" onclick="changeCalMonth(-1)"><i class="fas fa-chevron-right"></i> ماه قبل</button>
+        <span id="cal-month-title" style="font-weight:bold; color:var(--primary);"></span>
+        <button class="btn btn-outline btn-sm" onclick="changeCalMonth(1)">ماه بعد <i class="fas fa-chevron-left"></i></button>
+      </div>
+      <div class="calendar-grid">
+        <div class="calendar-day-head">ش</div>
+        <div class="calendar-day-head">ی</div>
+        <div class="calendar-day-head">د</div>
+        <div class="calendar-day-head">س</div>
+        <div class="calendar-day-head">چ</div>
+        <div class="calendar-day-head">پ</div>
+        <div class="calendar-day-head">ج</div>
+      </div>
+      <div id="calendar-days-grid" class="calendar-grid" style="margin-top:6px;"></div>
+    </div>
+
+    <!-- خلاصه عملکرد روز انتخابی -->
+    <div id="cal-day-details" style="margin-top:14px; display:none;">
+      <div style="font-size:0.85rem; font-weight:bold; margin-bottom:8px; color:var(--text);" id="cal-selected-date-title">علاقمندی‌های روز</div>
+      <div class="row-2">
+        <div class="stat-box sales" style="padding:10px; cursor:pointer;" onclick="filterSalesByCalDate()">
+          <i class="fas fa-shopping-cart" style="font-size:1.1rem; margin-bottom:4px;"></i>
+          <div class="value" id="cal-day-sale-val" style="font-size:0.95rem;">۰ ت</div>
+          <div class="label" id="cal-day-sale-cnt">فاکتور فروش (۰)</div>
+        </div>
+        <div class="stat-box expense" style="padding:10px; cursor:pointer;" onclick="filterPurchasesByCalDate()">
+          <i class="fas fa-truck-loading" style="font-size:1.1rem; margin-bottom:4px;"></i>
+          <div class="value" id="cal-day-pur-val" style="font-size:0.95rem;">۰ ت</div>
+          <div class="label" id="cal-day-pur-cnt">فاکتور خرید (۰)</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:12px;"></div>
+    <button class="btn btn-outline" onclick="closeModal('modal-calendar')">بستن</button>
+  </div>
+</div>
+
+<!-- Sale Modal -->
+<div id="modal-sale" class="modal">
+  <div class="modal-content">
+    <div class="card-title">
+      <span id="sale-modal-title">صدور فاکتور فروش</span>
+      <div>
+        <button class="btn btn-warning btn-sm" type="button" onclick="clearSaleForm()" title="پاک‌سازی سریع"><i class="fas fa-eraser"></i> پاکسازی</button>
+        <i class="fas fa-times" style="cursor:pointer; margin-right:8px;" onclick="closeModal('modal-sale')"></i>
+      </div>
+    </div>
+    <input type="hidden" id="sale-edit-id">
+    
+    <div class="form-group">
+      <label class="form-label">انتخاب مشتری</label>
+      <select id="sale-customer" class="form-select"></select>
+    </div>
+    
+    <!-- پنل ثابت درج کالا -->
+    <div class="card" style="margin:0 0 12px 0; padding:12px; background:#f8f9fa; border:1px solid #e2e8f0;">
+      <div style="font-size:0.85rem; font-weight:bold; margin-bottom:8px; color:var(--primary);">افزودن قلم کالا</div>
+      <div class="form-group">
+        <label class="form-label">انتخاب کالا</label>
+        <select id="sale-input-prod" class="form-select" onchange="onSaleInputProdChange()"></select>
+      </div>
+      <div class="row-2">
+        <div class="form-group">
+          <label class="form-label">تعداد</label>
+          <input type="number" id="sale-input-qty" class="form-input" value="1" min="1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">قیمت واحد (تومان)</label>
+          <input type="number" id="sale-input-price" class="form-input">
+        </div>
+      </div>
+      <button class="btn btn-primary" type="button" onclick="addSaleItemFromInput()" style="margin-top:4px;"><i class="fas fa-plus"></i> افزودن به لیست فاکتور</button>
+    </div>
+
+    <!-- لیست اقلام افزوده شده به فاکتور -->
+    <div class="form-group">
+      <label class="form-label">اقلام ثبت‌شده در فاکتور</label>
+      <div id="sale-items-list"></div>
+    </div>
+
+    <div class="form-group"><label class="form-label">تخفیف کل (تومان)</label><input type="number" id="sale-discount" class="form-input" value="0" oninput="calcSaleTotals()"></div>
+    <div class="form-group"><label class="form-label">جمع کل نهایی (تومان)</label><input type="number" id="sale-total" class="form-input" readonly style="background:#f5f5f5; font-weight:bold;"></div>
+    <div class="form-group"><label class="form-label">مبلغ دریافتی (تومان)</label><input type="number" id="sale-received" class="form-input" oninput="calcSaleTotals()"></div>
+    <div class="form-group"><label class="form-label">مانده حساب / بدهی (تومان)</label><input type="number" id="sale-remaining" class="form-input" readonly style="background:#fff3e0; font-weight:bold;"></div>
+
+    <!-- انتخاب شیوه پرداخت جهت درج در فاکتور -->
+    <div class="form-group">
+      <label class="form-label">انتخاب حساب‌های بانکی/ولت جهت درج در فاکتور</label>
+      <div id="sale-accounts-selector" class="checkbox-group"></div>
+    </div>
+
+    <input type="hidden" id="sale-profit" value="0">
+    <div class="row-2">
+      <button class="btn btn-success" onclick="saveSale()">ذخیره و صدور</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-sale')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Purchase Modal -->
+<div id="modal-purchase" class="modal">
+  <div class="modal-content">
+    <div class="card-title">
+      <span id="pur-modal-title">ثبت فاکتور خرید</span>
+      <div>
+        <button class="btn btn-warning btn-sm" type="button" onclick="clearPurForm()" title="پاک‌سازی سریع"><i class="fas fa-eraser"></i> پاکسازی</button>
+        <i class="fas fa-times" style="cursor:pointer; margin-right:8px;" onclick="closeModal('modal-purchase')"></i>
+      </div>
+    </div>
+    <input type="hidden" id="pur-edit-id">
+    
+    <div class="form-group">
+      <label class="form-label">تأمین‌کننده</label>
+      <select id="pur-supplier" class="form-select"></select>
+    </div>
+
+    <!-- پنل ثابت درج کالا خرید -->
+    <div class="card" style="margin:0 0 12px 0; padding:12px; background:#f8f9fa; border:1px solid #e2e8f0;">
+      <div style="font-size:0.85rem; font-weight:bold; margin-bottom:8px; color:var(--danger);">افزودن قلم کالا خرید</div>
+      <div class="form-group">
+        <label class="form-label">نام کالا</label>
+        <input type="text" id="pur-input-name" class="form-input" placeholder="نام کالا را وارد کنید">
+      </div>
+      <div class="row-2">
+        <div class="form-group">
+          <label class="form-label">تعداد</label>
+          <input type="number" id="pur-input-qty" class="form-input" value="1" min="1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">قیمت خرید واحد (تومان)</label>
+          <input type="number" id="pur-input-price" class="form-input" value="0">
+        </div>
+      </div>
+      <button class="btn btn-danger" type="button" onclick="addPurItemFromInput()" style="margin-top:4px;"><i class="fas fa-plus"></i> افزودن به لیست خرید</button>
+    </div>
+
+    <!-- لیست اقلام خرید -->
+    <div class="form-group">
+      <label class="form-label">اقلام ثبت‌شده در فاکتور خرید</label>
+      <div id="pur-items-list"></div>
+    </div>
+
+    <div class="form-group"><label class="form-label">تخفیف کل (تومان)</label><input type="number" id="pur-discount" class="form-input" value="0" oninput="calcPurTotals()"></div>
+    <div class="form-group"><label class="form-label">مبلغ خرید کل (تومان)</label><input type="number" id="pur-total" class="form-input" readonly style="background:#f5f5f5; font-weight:bold;"></div>
+    <div class="form-group"><label class="form-label">مبلغ پرداختی (تومان)</label><input type="number" id="pur-paid" class="form-input" oninput="calcPurTotals()"></div>
+    <div class="form-group"><label class="form-label">مانده بدهی ما (تومان)</label><input type="number" id="pur-remaining" class="form-input" readonly style="background:#ffebee; font-weight:bold;"></div>
+    <div class="row-2">
+      <button class="btn btn-danger" onclick="savePurchase()">ثبت خرید</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-purchase')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Expense Modal -->
+<div id="modal-expense" class="modal">
+  <div class="modal-content">
+    <div class="card-title"><span>ثبت هزینه</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-expense')"></i></div>
+    <div class="form-group"><label class="form-label">دسته‌بندی / بابت</label>
+      <select id="exp-category" class="form-select">
+        <option value="اجاره">اجاره مغازه</option>
+        <option value="قبوض">قبوض (برق، آب، گاز، تلفن)</option>
+        <option value="حقوق">حقوق و دستمزد</option>
+        <option value="ایاب و ذهاب">ایاب و ذهاب و باربری</option>
+        <option value="متفرقه">متفرقه</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">جزئیات و شرح هزینه</label><input type="text" id="exp-title" class="form-input" placeholder="مثلا خرید ملزومات"></div>
+    <div class="form-group"><label class="form-label">تاریخ ثبت</label><input type="text" id="exp-date" class="form-input"></div>
+    <div class="form-group"><label class="form-label">مبلغ (تومان)</label><input type="number" id="exp-amount" class="form-input"></div>
+    <div class="row-2">
+      <button class="btn btn-primary" onclick="addExpense()">ثبت هزینه</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-expense')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Product Modal -->
+<div id="modal-product" class="modal">
+  <div class="modal-content">
+    <div class="card-title"><span id="prod-modal-title">افزودن / ویرایش کالا</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-product')"></i></div>
+    <input type="hidden" id="prod-edit-id">
+    <div class="form-group"><label class="form-label">نام کالا</label><input type="text" id="prod-name" class="form-input"></div>
+    <div class="form-group"><label class="form-label">موجودی انبار</label><input type="number" id="prod-qty" class="form-input" placeholder=""></div>
+    <div class="form-group"><label class="form-label">قیمت خرید (تومان)</label><input type="number" id="prod-buy-price" class="form-input"></div>
+    <div class="form-group"><label class="form-label">قیمت فروش (تومان)</label><input type="number" id="prod-price" class="form-input"></div>
+    <div class="row-2">
+      <button class="btn btn-primary" onclick="saveProduct()">ذخیره کالا</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-product')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Customer Modal -->
+<div id="modal-customer" class="modal">
+  <div class="modal-content">
+    <div class="card-title"><span id="cust-modal-title">پرونده مشتری</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-customer')"></i></div>
+    <input type="hidden" id="cust-edit-id">
+    <div class="form-group"><label class="form-label">نام و نام خانوادگی مشتری</label><input type="text" id="cust-name" class="form-input"></div>
+    
+    <div class="form-group">
+      <label class="form-label">شماره‌های تماس</label>
+      <div id="cust-phones-list"></div>
+      <button class="btn btn-outline btn-sm" type="button" onclick="addCustPhoneRow()"><i class="fas fa-plus"></i> افزودن شماره تلفن</button>
+    </div>
+
+    <div class="form-group"><label class="form-label">آدرس کامل متنی</label><textarea id="cust-address" class="form-textarea" placeholder="استان، شهر، خیابان..."></textarea></div>
+
+    <div class="row-2">
+      <button class="btn btn-primary" onclick="saveCustomerModal()">ذخیره پرونده</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-customer')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Supplier Modal -->
+<div id="modal-supplier" class="modal">
+  <div class="modal-content">
+    <div class="card-title"><span id="supp-modal-title">پرونده تأمین‌کننده</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-supplier')"></i></div>
+    <input type="hidden" id="supp-edit-id">
+    <div class="form-group"><label class="form-label">نام شرکت / تأمین‌کننده</label><input type="text" id="supp-name" class="form-input"></div>
+    
+    <div class="form-group">
+      <label class="form-label">شماره‌های تماس</label>
+      <div id="supp-phones-list"></div>
+      <button class="btn btn-outline btn-sm" type="button" onclick="addSuppPhoneRow()"><i class="fas fa-plus"></i> افزودن شماره تلفن</button>
+    </div>
+
+    <div class="form-group"><label class="form-label">آدرس دفتر / انبار</label><textarea id="supp-address" class="form-textarea" placeholder="آدرس متنی..."></textarea></div>
+
+    <div class="row-2">
+      <button class="btn btn-primary" onclick="saveSupplierModal()">ذخیره پرونده</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-supplier')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Ledger Modal -->
+<div id="modal-ledger" class="modal">
+  <div class="modal-content" style="max-width:480px;">
+    <div class="card-title"><span id="ledger-title">دفتر حساب</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-ledger')"></i></div>
+    
+    <div id="ledger-print-area" class="invoice-box"></div>
+
+    <div style="height: 12px;"></div>
+    <div class="row-2">
+      <button class="btn btn-outline" onclick="closeModal('modal-ledger')">بستن</button>
+    </div>
+  </div>
+</div>
+
+<!-- Invoice Print/Share Modal -->
+<div id="modal-invoice-preview" class="modal">
+  <div class="modal-content" style="max-width:460px;">
+    <div class="card-title"><span>پیش‌نمایش فاکتور رسمی</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-invoice-preview')"></i></div>
+    
+    <div id="invoice-print-area" class="invoice-box"></div>
+
+    <div style="height:12px;"></div>
+    <div class="row-2">
+      <button class="btn btn-info" onclick="shareInvoiceAsText()"><i class="fas fa-comment-alt"></i> متن فاکتور</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-invoice-preview')">بستن</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a class="nav-item active" onclick="showSection('sec-dashboard', this)"><i class="fas fa-home"></i><span data-i18n="nav_home">خانه</span></a>
+  <a class="nav-item" onclick="showSection('sec-products', this)"><i class="fas fa-tshirt"></i><span data-i18n="nav_products">کالاها</span></a>
+  <a class="nav-item" onclick="showSection('sec-stock', this)"><i class="fas fa-boxes"></i><span data-i18n="nav_stock">انبار</span></a>
+  <a class="nav-item" onclick="showSection('sec-sales', this)"><i class="fas fa-receipt"></i><span data-i18n="nav_sales">فروش</span></a>
+  <a class="nav-item" onclick="showSection('sec-purchases', this)"><i class="fas fa-shopping-bag"></i><span data-i18n="nav_purchases">خرید</span></a>
+  <a class="nav-item" onclick="showSection('sec-customers', this)"><i class="fas fa-users"></i><span data-i18n="nav_customers">مشتریان</span></a>
+  <a class="nav-item" onclick="showSection('sec-suppliers', this)"><i class="fas fa-truck"></i><span data-i18n="nav_suppliers">تأمین</span></a>
+  <a class="nav-item" onclick="showSection('sec-more', this)"><i class="fas fa-ellipsis-h"></i><span data-i18n="nav_more">بیشتر</span></a>
+</div>
+
+<script>
+  /* --- NATIVE INTERNAL JALAALI CALENDAR HELPER --- */
+  var JalaaliHelper = {
+    toJalaali: function(gy, gm, gd) {
+      var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+      var jy = (gy <= 1600) ? 0 : 979;
+      gy -= (gy <= 1600) ? 621 : 1600;
+      var gy2 = (gm > 2) ? (gy + 1) : gy;
+      var days = (365 * gy) + parseInt((gy2 + 3) / 4) - parseInt((gy2 + 99) / 100) + parseInt((gy2 + 399) / 400) - 80 + gd + g_d_m[gm - 1];
+      jy += 33 * parseInt(days / 12053);
+      days %= 12053;
+      jy += 4 * parseInt(days / 1461);
+      days %= 1461;
+      if (days > 365) {
+        jy += parseInt((days - 1) / 365);
+        days = (days - 1) % 365;
+      }
+      var jm = (days < 186) ? 1 + parseInt(days / 31) : 7 + parseInt((days - 186) / 30);
+      var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
+      return { jy: jy, jm: jm, jd: jd };
+    },
+    toGregorian: function(jy, jm, jd) {
+      var gy = (jy <= 979) ? 621 : 1600;
+      jy -= (jy <= 979) ? 0 : 979;
+      var days = (365 * jy) + parseInt(jy / 33) * 8 + parseInt((jy % 33 + 3) / 4) + 78 + jd + ((jm < 7) ? (jm - 1) * 31 : ((jm - 7) * 30 + 186));
+      gy += 400 * parseInt(days / 146097);
+      days %= 146097;
+      if (days > 36524) {
+        gy += 100 * parseInt(--days / 36524);
+        days %= 36524;
+        if (days >= 365) days++;
+      }
+      gy += 4 * parseInt(days / 1461);
+      days %= 1461;
+      if (days > 365) {
+        gy += parseInt((days - 1) / 365);
+        days = (days - 1) % 365;
+      }
+      var gd = days + 1;
+      var sal_a = [0, 31, ((gy % 4 === 0 && gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      var gm;
+      for (gm = 0; gm < 13; gm++) {
+        var v = sal_a[gm];
+        if (gd <= v) break;
+        gd -= v;
+      }
+      return { gy: gy, gm: gm, gd: gd };
+    },
+    monthLength: function(jy, jm) {
+      if (jm <= 6) return 31;
+      if (jm <= 11) return 30;
+      var res = jy % 33;
+      var isLeap = (res===1||res===5||res===9||res===13||res===17||res===22||res===26||res===30);
+      return isLeap ? 30 : 29;
+    }
+  };
+
+  /* --- I18N DICTIONARY --- */
+  var currentLang = localStorage.getItem('forooshyar_lang') || 'fa';
+
+  var i18n = {
+    fa: {
+      app_title: "فروش‌یار",
+      app_subtitle: "سیستم جامع حسابداری فروشگاه",
+      nav_home: "خانه",
+      nav_products: "کالاها",
+      nav_stock: "انبار",
+      nav_sales: "فروش",
+      nav_purchases: "خرید",
+      nav_customers: "مشتریان",
+      nav_suppliers: "تأمین",
+      nav_more: "بیشتر",
+      lbl_total_sales: "فروش کل (محاسبه‌شده)",
+      lbl_total_profit: "سود کل",
+      lbl_total_stock: "موجودی اقلام انبار",
+      lbl_total_expense: "مجموع هزینه‌ها",
+      title_quick_access: "دسترسی سریع",
+      title_debtors: "مشتریان بدهکار",
+      btn_new_sale: "فاکتور فروش",
+      btn_new_purchase: "فاکتور خرید",
+      btn_add_expense: "ثبت هزینه",
+      btn_reports: "گزارشات جامع",
+      btn_add_prod: "کالا جدید",
+      title_store_settings: "تنظیمات عمومی فروشگاه",
+      btn_lang_indicator: "FA | آذ"
+    },
+    az: {
+      app_title: "فروش‌یار",
+      app_subtitle: "ماغازانین جامع حسابداری سیستمی",
+      nav_home: "ائو",
+      nav_products: "کالالار",
+      nav_stock: "انبار",
+      nav_sales: "ساتیش",
+      nav_purchases: "آلیش",
+      nav_customers: "آلیجی‌لار",
+      nav_suppliers: "ساتاجی‌لار",
+      nav_more: "چوخلو",
+      lbl_total_sales: "کول ساتیش",
+      lbl_total_profit: "کول نفع (سود)",
+      lbl_total_stock: "انبار موجودی‌سی",
+      lbl_total_expense: "کول خرج‌لر",
+      title_quick_access: "تز دسترسی",
+      title_debtors: "بدهکار آلیجی‌لار",
+      btn_new_sale: "ساتیش فاکتوری",
+      btn_new_purchase: "آلیش فاکتوری",
+      btn_add_expense: "خرج ثبت ائتمک",
+      btn_reports: "جامع گزارش‌لار",
+      btn_add_prod: "یئنی کالا",
+      title_store_settings: "ماغازانین عمومی تنظیمی",
+      btn_lang_indicator: "آذ | AZ"
+    },
+    en: {
+      app_title: "Forooshyar",
+      app_subtitle: "Store Accounting System",
+      nav_home: "Home",
+      nav_products: "Products",
+      nav_stock: "Stock",
+      nav_sales: "Sales",
+      nav_purchases: "Purchases",
+      nav_customers: "Customers",
+      nav_suppliers: "Suppliers",
+      nav_more: "More",
+      lbl_total_sales: "Total Sales",
+      lbl_total_profit: "Total Profit",
+      lbl_total_stock: "Stock Inventory",
+      lbl_total_expense: "Total Expenses",
+      title_quick_access: "Quick Access",
+      title_debtors: "Debtors",
+      btn_new_sale: "New Sale",
+      btn_new_purchase: "New Purchase",
+      btn_add_expense: "Add Expense",
+      btn_reports: "Reports",
+      btn_add_prod: "New Product",
+      title_store_settings: "General Settings",
+      btn_lang_indicator: "EN"
+    }
+  };
+
+  function applyLanguage() {
+    try {
+      var dict = i18n[currentLang] || i18n.fa;
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = (currentLang === 'en') ? 'ltr' : 'rtl';
+
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        var key = el.getAttribute('data-i18n');
+        if(dict[key]) el.innerText = dict[key];
+      });
+
+      var btnInd = document.getElementById('current-lang-btn');
+      if(btnInd) btnInd.innerText = dict.btn_lang_indicator || 'FA | آذ';
+
+      document.querySelectorAll('.lang-option').forEach(function(opt) { opt.classList.remove('active'); });
+      var activeOpt = document.getElementById('lang-opt-' + currentLang);
+      if(activeOpt) activeOpt.classList.add('active');
+
+      localStorage.setItem('forooshyar_lang', currentLang);
+    } catch(e) {}
+  }
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    applyLanguage();
+    closeModal('modal-lang');
+  }
+
+  var defaultDb = {
+    settings: { 
+      title: "فروشگاه گوزل لر", 
+      subtitle: "سیستم جامع حسابداری فروشگاهی", 
+      logo: "",
+      banks: [{ id: 1, bankName: "ملی", cardNumber: "6037997512345678" }],
+      cryptos: [{ id: 1, currency: "TON", wallet: "UQBx...8970" }]
+    },
+    products: [
+      { id: 1, name: "مانتو کتان بلند اسپرت", qty: 25, buyPrice: 400000, price: 550000 },
+      { id: 2, name: "شلوار جین زنانه", qty: 30, buyPrice: 300000, price: 450000 },
+      { id: 3, name: "شومیز حریر", qty: 23, buyPrice: 240000, price: 350000 }
+    ],
+    sales: [],
+    purchases: [],
+    expenses: [],
+    customers: [{ id: 1, name: "آب.سمیه", phones: [{ label: "همراه", number: "09141111111" }], address: "تبریز - خیابان امام", debt: 430000 }],
+    suppliers: [{ id: 1, name: "تولیدی تهران‌پوشاک", phones: [{ label: "دفتر", number: "02188888888" }], address: "تهران - بازار بزرگ", debt: 0 }]
+  };
+
+  var db = defaultDb;
+  try {
+    var raw = localStorage.getItem('forooshyar_db_v8');
+    if (raw) {
+      var parsed = JSON.parse(raw);
+      if (parsed) db = parsed;
+    }
+  } catch(e) { db = defaultDb; }
+
+  if(!db.products) db.products = defaultDb.products;
+  if(!db.sales) db.sales = [];
+  if(!db.purchases) db.purchases = [];
+  if(!db.expenses) db.expenses = [];
+  if(!db.customers) db.customers = defaultDb.customers;
+  if(!db.suppliers) db.suppliers = defaultDb.suppliers;
+  if(!db.settings) db.settings = defaultDb.settings;
+  if(!db.settings.banks) db.settings.banks = defaultDb.settings.banks;
+  if(!db.settings.cryptos) db.settings.cryptos = defaultDb.settings.cryptos;
+
+  var activeSaleItems = [];
+  var activePurItems = [];
+  var currentPreviewInvoice = null;
+  var currentPreviewType = 'sale';
+  var selectedCalDateStr = '';
+  var currentCalJalaali = { jYear: 1403, jMonth: 1 };
+
+  try {
+    var todayG = new Date();
+    var todayJ = JalaaliHelper.toJalaali(todayG.getFullYear(), todayG.getMonth() + 1, todayG.getDate());
+    currentCalJalaali.jYear = todayJ.jy;
+    currentCalJalaali.jMonth = todayJ.jm;
+  } catch(e) {}
+
+  function saveDb() {
+    try {
+      localStorage.setItem('forooshyar_db_v8', JSON.stringify(db));
+    } catch(e) {}
+    renderAll();
+  }
+
+  function fmt(n) { return Number(n || 0).toLocaleString('fa-IR'); }
+
+  function showSection(id, el) {
+    try {
+      document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+      var sec = document.getElementById(id);
+      if(sec) sec.classList.add('active');
+      if(el) {
+        document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+        el.classList.add('active');
+      }
+      renderAll();
+    } catch(err) {}
+  }
+
+  function openModal(id) { 
+    try {
+      var m = document.getElementById(id);
+      if(m) {
+        m.style.display = 'flex';
+        m.classList.add('active');
+      }
+      if(id === 'modal-calendar') renderCalendarGrid();
+    } catch(e) {}
+  }
+
+  function closeModal(id) { 
+    try {
+      var m = document.getElementById(id);
+      if(m) {
+        m.style.display = 'none';
+        m.classList.remove('active');
+      }
+    } catch(e) {}
+  }
+
+  function renderAll() {
+    try {
+      applyLanguage();
+
+      var titleEl = document.getElementById('header-title');
+      var subEl = document.getElementById('header-subtitle');
+      var cfgTitle = document.getElementById('cfg-title');
+      var cfgSub = document.getElementById('cfg-subtitle');
+
+      if(titleEl && db.settings.title) titleEl.innerText = db.settings.title;
+      if(subEl && db.settings.subtitle) subEl.innerText = db.settings.subtitle;
+      if(cfgTitle) cfgTitle.value = db.settings.title || '';
+      if(cfgSub) cfgSub.value = db.settings.subtitle || '';
+
+      var img = document.getElementById('header-logo');
+      if(db.settings.logo && img) {
+        img.src = db.settings.logo;
+        img.style.display = 'inline-block';
+      } else if(img) {
+        img.style.display = 'none';
+      }
+
+      var period = document.getElementById('report-period') ? document.getElementById('report-period').value : 'all';
+      var filteredSales = db.sales || [];
+      var filteredExpenses = db.expenses || [];
+
+      if(period === 'today') {
+        var todayStr = new Date().toLocaleDateString('fa-IR');
+        filteredSales = (db.sales || []).filter(function(s) { return s.date === todayStr; });
+        filteredExpenses = (db.expenses || []).filter(function(e) { return e.date === todayStr; });
+      }
+
+      var totSales = filteredSales.reduce(function(a,b){ return a + Number(b.total||b.price||0); }, 0);
+      var totProfit = filteredSales.reduce(function(a,b){ return a + Number(b.profit||0); }, 0);
+      var totExpense = filteredExpenses.reduce(function(a,b){ return a + Number(b.amount||0); }, 0);
+      var totStock = (db.products || []).reduce(function(a,b){ return a + Number(b.qty||0); }, 0);
+
+      var dSales = document.getElementById('dash-sales');
+      var dProfit = document.getElementById('dash-profit');
+      var dExpense = document.getElementById('dash-expense');
+      var dStock = document.getElementById('dash-stock');
+
+      if(dSales) dSales.innerText = fmt(totSales) + ' تومان';
+      if(dProfit) dProfit.innerText = fmt(totProfit) + ' تومان';
+      if(dExpense) dExpense.innerText = fmt(totExpense) + ' تومان';
+      if(dStock) dStock.innerText = fmt(totStock) + ' عدد';
+
+      renderDashDebtors();
+      renderProducts();
+      renderStock();
+      renderSales();
+      renderPurchases();
+      renderCustomers();
+      renderSuppliers();
+      renderReports();
+      renderSettingsAccounts();
+      populateSelects();
+
+      var expDateEl = document.getElementById('exp-date');
+      if(expDateEl) expDateEl.value = new Date().toLocaleDateString('fa-IR');
+    } catch(err) {}
+  }
+
+  function populateSelects() {
+    try {
+      var custSelect = document.getElementById('sale-customer');
+      if(custSelect) custSelect.innerHTML = (db.customers || []).map(function(c) { return '<option value="'+c.name+'">'+c.name+'</option>'; }).join('');
+
+      var suppSelect = document.getElementById('pur-supplier');
+      if(suppSelect) suppSelect.innerHTML = (db.suppliers || []).map(function(s) { return '<option value="'+s.name+'">'+s.name+'</option>'; }).join('');
+
+      var prodSelect = document.getElementById('sale-input-prod');
+      if(prodSelect) {
+        prodSelect.innerHTML = (db.products || []).map(function(p) { return '<option value="'+p.id+'">'+p.name+' (موجودی: '+p.qty+')</option>'; }).join('');
+        onSaleInputProdChange();
+      }
+
+      var accSelector = document.getElementById('sale-accounts-selector');
+      if(accSelector) {
+        var html = '';
+        (db.settings.banks || []).forEach(function(b) {
+          html += '<label class="checkbox-item"><input type="checkbox" class="sale-acc-cb" data-type="bank" data-id="'+b.id+'" checked> <span>کارت بانک '+b.bankName+': '+b.cardNumber+'</span></label>';
+        });
+        (db.settings.cryptos || []).forEach(function(c) {
+          html += '<label class="checkbox-item"><input type="checkbox" class="sale-acc-cb" data-type="crypto" data-id="'+c.id+'" checked> <span>ولت رمزارز ('+c.currency+'): '+c.wallet+'</span></label>';
+        });
+        accSelector.innerHTML = html || '<span style="font-size:0.75rem; color:#888;">هیچ کارتی تعریف نشده است</span>';
+      }
+    } catch(e) {}
+  }
+
+  function renderSettingsAccounts() {
+    try {
+      var bList = document.getElementById('bank-accounts-list');
+      if(bList) {
+        var htmlB = '';
+        (db.settings.banks || []).forEach(function(b, index) {
+          htmlB += '<div class="input-row-group">'+
+            '<input type="text" class="form-input bank-name-inp" placeholder="نام بانک (مثلا ملی)" value="'+(b.bankName||'')+'" style="flex:1;">'+
+            '<input type="text" class="form-input bank-card-inp" placeholder="شماره کارت ۱۶ رقمی" value="'+(b.cardNumber||'')+'" style="flex:2;">'+
+            '<button class="btn btn-danger btn-sm" type="button" onclick="removeBankRow('+index+')"><i class="fas fa-trash"></i></button>'+
+          '</div>';
+        });
+        bList.innerHTML = htmlB;
+      }
+
+      var cList = document.getElementById('crypto-wallets-list');
+      if(cList) {
+        var htmlC = '';
+        (db.settings.cryptos || []).forEach(function(c, index) {
+          htmlC += '<div class="input-row-group">'+
+            '<select class="form-select crypto-curr-inp" style="flex:1;">'+
+              '<option value="TON" '+(c.currency==='TON'?'selected':'')+'>TON</option>'+
+              '<option value="USDT (TRC20)" '+(c.currency==='USDT (TRC20)'?'selected':'')+'>USDT</option>'+
+              '<option value="BTC" '+(c.currency==='BTC'?'selected':'')+'>BTC</option>'+
+              '<option value="ETH" '+(c.currency==='ETH'?'selected':'')+'>ETH</option>'+
+              '<option value="سایر" '+(c.currency==='سایر'?'selected':'')+'>سایر</option>'+
+            '</select>'+
+            '<input type="text" class="form-input crypto-wall-inp" placeholder="آدرس کیف پول" value="'+(c.wallet||'')+'" style="flex:2;">'+
+            '<button class="btn btn-danger btn-sm" type="button" onclick="removeCryptoRow('+index+')"><i class="fas fa-trash"></i></button>'+
+          '</div>';
+        });
+        cList.innerHTML = htmlC;
+      }
+    } catch(e) {}
+  }
+
+  function addBankInputRow() {
+    if(!db.settings.banks) db.settings.banks = [];
+    db.settings.banks.push({ id: Date.now(), bankName: "", cardNumber: "" });
+    renderSettingsAccounts();
+  }
+
+  function removeBankRow(index) {
+    db.settings.banks.splice(index, 1);
+    renderSettingsAccounts();
+  }
+
+  function addCryptoInputRow() {
+    if(!db.settings.cryptos) db.settings.cryptos = [];
+    db.settings.cryptos.push({ id: Date.now(), currency: "TON", wallet: "" });
+    renderSettingsAccounts();
+  }
+
+  function removeCryptoRow(index) {
+    db.settings.cryptos.splice(index, 1);
+    renderSettingsAccounts();
+  }
+
+  function renderDashDebtors() {
+    try {
+      var html = '';
+      (db.customers || []).filter(function(c) { return c.debt > 0; }).forEach(function(c) {
+        var firstPhone = c.phones && c.phones.length > 0 ? c.phones[0].number : (c.phone || '');
+        html += '<div class="list-row"><span><b>'+c.name+'</b> ('+(firstPhone)+')</span><span style="color:var(--danger); font-weight:800;">'+fmt(c.debt)+' تومان بدهکار</span></div>';
+      });
+      var el = document.getElementById('dash-debtors');
+      if(el) el.innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">مشتری بدهکاری وجود ندارد</div>';
+    } catch(e) {}
+  }
+
+  function renderProducts() {
+    try {
+      var searchEl = document.getElementById('search-product');
+      var q = (searchEl ? searchEl.value : '').toLowerCase();
+      var html = '';
+      (db.products || []).filter(function(p) { return p.name.toLowerCase().indexOf(q) !== -1; }).forEach(function(p) {
+        html += '<div class="list-row">'+
+          '<div><b>'+p.name+'</b><small style="display:block; color:var(--text-secondary);">خرید: '+fmt(p.buyPrice)+' | فروش: '+fmt(p.price)+' تومان</small></div>'+
+          '<div style="display:flex; align-items:center; gap:6px;">'+
+            '<span>موجودی: <b>'+p.qty+'</b></span>'+
+            '<button class="btn btn-primary btn-sm" onclick="editProduct('+p.id+')"><i class="fas fa-edit"></i></button>'+
+            '<button class="btn btn-danger btn-sm" onclick="deleteProduct('+p.id+')"><i class="fas fa-trash"></i></button>'+
+          '</div>'+
+        '</div>';
+      });
+      var el = document.getElementById('products-list');
+      if(el) el.innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">کالایی یافت نشد</div>';
+    } catch(e) {}
+  }
+
+  function openProductModal() {
+    try {
+      document.getElementById('prod-edit-id').value = '';
+      document.getElementById('prod-name').value = '';
+      document.getElementById('prod-qty').value = '';
+      document.getElementById('prod-buy-price').value = '';
+      document.getElementById('prod-price').value = '';
+      openModal('modal-product');
+    } catch(e) {}
+  }
+
+  function editProduct(id) {
+    try {
+      var p = (db.products || []).find(function(x) { return x.id === id; });
+      if(!p) return;
+      document.getElementById('prod-edit-id').value = p.id;
+      document.getElementById('prod-name').value = p.name;
+      document.getElementById('prod-qty').value = p.qty;
+      document.getElementById('prod-buy-price').value = p.buyPrice || 0;
+      document.getElementById('prod-price').value = p.price;
+      openModal('modal-product');
+    } catch(e) {}
+  }
+
+  function saveProduct() {
+    try {
+      var id = document.getElementById('prod-edit-id').value;
+      var name = document.getElementById('prod-name').value;
+      var qty = document.getElementById('prod-qty').value === '' ? 0 : Number(document.getElementById('prod-qty').value);
+      var buyPrice = Number(document.getElementById('prod-buy-price').value);
+      var price = Number(document.getElementById('prod-price').value);
+      if(!name) return alert('نام کالا الزامی است');
+
+      if(!db.products) db.products = [];
+      if(id) {
+        var p = db.products.find(function(x) { return x.id == id; });
+        if(p) { p.name = name; p.qty = qty; p.buyPrice = buyPrice; p.price = price; }
+      } else {
+        db.products.push({ id: Date.now(), name: name, qty: qty, buyPrice: buyPrice, price: price });
+      }
+      saveDb();
+      closeModal('modal-product');
+    } catch(e) {}
+  }
+
+  function deleteProduct(id) {
+    if(confirm('حذف شود؟')) {
+      db.products = (db.products || []).filter(function(x) { return x.id !== id; });
+      saveDb();
+    }
+  }
+
+  function renderStock() {
+    try {
+      var searchEl = document.getElementById('search-stock');
+      var q = (searchEl ? searchEl.value : '').toLowerCase();
+      var html = '';
+      (db.products || []).filter(function(p) { return p.name.toLowerCase().indexOf(q) !== -1; }).forEach(function(p) {
+        html += '<div class="list-row">'+
+          '<span><b>'+p.name+'</b></span>'+
+          '<span style="color:'+(p.qty > 5 ? 'var(--success)' : 'var(--danger)')+'; font-weight:700;">موجودی: '+p.qty+' عدد</span>'+
+        '</div>';
+      });
+      var el = document.getElementById('stock-list');
+      if(el) el.innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">موردی یافت نشد</div>';
+    } catch(e) {}
+  }
+
+  function onSaleInputProdChange() {
+    try {
+      var prodId = document.getElementById('sale-input-prod').value;
+      var p = (db.products || []).find(function(x) { return x.id == prodId; });
+      if(p) {
+        var priceInput = document.getElementById('sale-input-price');
+        if(priceInput) priceInput.value = p.price;
+      }
+    } catch(e) {}
+  }
+
+  function addSaleItemFromInput() {
+    try {
+      var prodId = document.getElementById('sale-input-prod').value;
+      var qty = Number(document.getElementById('sale-input-qty').value) || 1;
+      var unitPrice = Number(document.getElementById('sale-input-price').value) || 0;
+
+      var p = (db.products || []).find(function(x) { return x.id == prodId; });
+      if(!p) return alert('لطفاً کالا را انتخاب کنید');
+
+      activeSaleItems.push({
+        productId: p.id,
+        name: p.name,
+        qty: qty,
+        unitPrice: unitPrice,
+        buyPrice: p.buyPrice || 0
+      });
+
+      renderSaleItemsList();
+      document.getElementById('sale-input-qty').value = 1;
+    } catch(e) {}
+  }
+
+  function renderSaleItemsList() {
+    try {
+      var html = '';
+      activeSaleItems.forEach(function(it, index) {
+        html += '<div class="dynamic-item-card">'+
+          '<div>'+
+            '<div class="dynamic-item-title">'+it.name+'</div>'+
+            '<div class="dynamic-item-sub">'+it.qty+' عدد × '+fmt(it.unitPrice)+' ت = <b>'+fmt(it.qty * it.unitPrice)+' تومان</b></div>'+
+          '</div>'+
+          '<div>'+
+            '<button type="button" class="btn btn-danger btn-sm" onclick="removeSaleItem('+index+')"><i class="fas fa-trash"></i></button>'+
+          '</div>'+
+        '</div>';
+      });
+      var listEl = document.getElementById('sale-items-list');
+      if(listEl) listEl.innerHTML = html || '<div style="text-align:center; color:#888; font-size:0.8rem; padding:8px;">هیچ کالایی به فاکتور اضافه نشده است</div>';
+      calcSaleTotals();
+    } catch(e) {}
+  }
+
+  function removeSaleItem(index) {
+    activeSaleItems.splice(index, 1);
+    renderSaleItemsList();
+  }
+
+  function clearSaleForm() {
+    activeSaleItems = [];
+    document.getElementById('sale-edit-id').value = '';
+    document.getElementById('sale-discount').value = 0;
+    document.getElementById('sale-received').value = '';
+    renderSaleItemsList();
+  }
+
+  function calcSaleTotals() {
+    try {
+      var subtotal = 0;
+      var totalProfit = 0;
+
+      activeSaleItems.forEach(function(it) {
+        subtotal += (it.qty * it.unitPrice);
+        totalProfit += (it.qty * (it.unitPrice - (it.buyPrice || 0)));
+      });
+
+      var discEl = document.getElementById('sale-discount');
+      var discount = Number(discEl ? discEl.value : 0) || 0;
+      var total = subtotal - discount;
+      if(total < 0) total = 0;
+
+      var totalEl = document.getElementById('sale-total');
+      if(totalEl) totalEl.value = total;
+
+      var recEl = document.getElementById('sale-received');
+      var received = Number(recEl ? recEl.value : 0) || 0;
+      var remaining = total - received;
+
+      var remEl = document.getElementById('sale-remaining');
+      if(remEl) remEl.value = remaining > 0 ? remaining : 0;
+
+      var profEl = document.getElementById('sale-profit');
+      if(profEl) profEl.value = totalProfit;
+    } catch(e) {}
+  }
+
+  function openSaleModal(editId) {
+    try {
+      populateSelects();
+      activeSaleItems = [];
+
+      if(editId) {
+        var s = (db.sales || []).find(function(x) { return x.id === editId; });
+        if(!s) return;
+        document.getElementById('sale-edit-id').value = s.id;
+        document.getElementById('sale-customer').value = s.customer;
+        document.getElementById('sale-discount').value = s.discount || 0;
+        document.getElementById('sale-received').value = s.received !== undefined ? s.received : s.total;
+        
+        if(s.items && s.items.length > 0) {
+          activeSaleItems = JSON.parse(JSON.stringify(s.items));
+        } else {
+          var p = (db.products || []).find(function(x) { return x.name === s.item; }) || (db.products || [])[0];
+          activeSaleItems.push({ productId: p ? p.id : 0, name: s.item || 'کالا', qty: s.qty || 1, unitPrice: s.unitPrice || s.price, buyPrice: p ? p.buyPrice : 0 });
+        }
+      } else {
+        clearSaleForm();
+      }
+      renderSaleItemsList();
+      openModal('modal-sale');
+    } catch(e) {}
+  }
+
+  function saveSale() {
+    try {
+      var editId = document.getElementById('sale-edit-id') ? document.getElementById('sale-edit-id').value : '';
+      var customer = document.getElementById('sale-customer') ? document.getElementById('sale-customer').value : 'مشتری متفرقه';
+      var discount = Number(document.getElementById('sale-discount') ? document.getElementById('sale-discount').value : 0) || 0;
+      var total = Number(document.getElementById('sale-total') ? document.getElementById('sale-total').value : 0) || 0;
+      var received = Number(document.getElementById('sale-received') ? document.getElementById('sale-received').value : 0) || 0;
+      var remaining = Number(document.getElementById('sale-remaining') ? document.getElementById('sale-remaining').value : 0) || 0;
+      var profit = Number(document.getElementById('sale-profit') ? document.getElementById('sale-profit').value : 0) || 0;
+
+      if(activeSaleItems.length === 0) return alert('حداقل یک قلم کالا به فاکتور اضافه کنید');
+
+      var selectedBanks = [];
+      var selectedCryptos = [];
+      document.querySelectorAll('.sale-acc-cb:checked').forEach(function(cb) {
+        var type = cb.getAttribute('data-type');
+        var id = cb.getAttribute('data-id');
+        if(type === 'bank') {
+          var b = (db.settings.banks||[]).find(function(x){ return x.id == id; });
+          if(b) selectedBanks.push(b);
+        } else if(type === 'crypto') {
+          var c = (db.settings.cryptos||[]).find(function(x){ return x.id == id; });
+          if(c) selectedCryptos.push(c);
+        }
+      });
+
+      var primaryItemDesc = activeSaleItems.map(function(i) { return i.name + ' × ' + i.qty; }).join(', ');
+
+      if(!editId) {
+        activeSaleItems.forEach(function(it) {
+          var prod = (db.products || []).find(function(x) { return x.id == it.productId; });
+          if(prod) prod.qty -= it.qty;
+        });
+      }
+
+      if(!db.sales) db.sales = [];
+      if(editId) {
+        var s = db.sales.find(function(x) { return x.id == editId; });
+        if(s) {
+          s.customer = customer;
+          s.items = JSON.parse(JSON.stringify(activeSaleItems));
+          s.item = primaryItemDesc;
+          s.discount = discount;
+          s.total = total;
+          s.price = total;
+          s.received = received;
+          s.remaining = remaining;
+          s.profit = profit;
+          s.selectedBanks = selectedBanks;
+          s.selectedCryptos = selectedCryptos;
+        }
+      } else {
+        var saleObj = {
+          id: Date.now(),
+          customer: customer,
+          items: JSON.parse(JSON.stringify(activeSaleItems)),
+          item: primaryItemDesc,
+          discount: discount,
+          total: total,
+          price: total,
+          received: received,
+          remaining: remaining,
+          profit: profit,
+          selectedBanks: selectedBanks,
+          selectedCryptos: selectedCryptos,
+          date: new Date().toLocaleDateString('fa-IR')
+        };
+        db.sales.unshift(saleObj);
+
+        if(!db.customers) db.customers = [];
+        var c = db.customers.find(function(x) { return x.name === customer; });
+        if(c) c.debt = (c.debt || 0) + remaining;
+      }
+
+      saveDb();
+      closeModal('modal-sale');
+      if(!editId && db.sales.length > 0) showInvoicePreview(db.sales[0], 'sale');
+    } catch(e) {}
+  }
+
+  function renderSales(filterDate) {
+    try {
+      var searchEl = document.getElementById('search-sale');
+      var q = (searchEl ? searchEl.value : '').toLowerCase();
+      var html = '';
+      
+      var list = db.sales || [];
+      if(filterDate) list = list.filter(function(s){ return s.date === filterDate; });
+
+      list.filter(function(s) { return (s.item && s.item.toLowerCase().indexOf(q) !== -1) || (s.customer && s.customer.toLowerCase().indexOf(q) !== -1); }).forEach(function(s, idx) {
+        var isSettled = (s.remaining || 0) <= 0;
+        var len = list.length;
+        html += '<div class="list-row">'+
+          '<div>'+
+            '<b>فاکتور فروش #'+(len - idx)+'</b> <span class="badge '+(isSettled ? 'badge-success':'badge-danger')+'">'+(isSettled ? 'تسویه' : 'بدهکار')+'</span>'+
+            '<small style="display:block; color:var(--text-secondary);">'+s.customer+' | '+s.date+' - '+s.item+'</small>'+
+          '</div>'+
+          '<div style="display:flex; align-items:center; gap:6px;">'+
+            '<b style="color:var(--success);">'+fmt(s.total || s.price)+' ت</b>'+
+            '<button class="btn btn-info btn-sm" onclick=\'showInvoicePreview('+JSON.stringify(s)+', "sale")\'><i class="fas fa-eye"></i></button>'+
+            '<button class="btn btn-primary btn-sm" onclick="openSaleModal('+s.id+')"><i class="fas fa-edit"></i></button>'+
+            '<button class="btn btn-danger btn-sm" onclick="deleteSale('+s.id+')"><i class="fas fa-trash"></i></button>'+
+          '</div>'+
+        '</div>';
+      });
+      var el = document.getElementById('sales-list');
+      if(el) el.innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">فاکتوری ثبت نشده است</div>';
+    } catch(e) {}
+  }
+
+  function deleteSale(id) {
+    if(confirm('فاکتور حذف شود؟')) {
+      db.sales = (db.sales || []).filter(function(x) { return x.id !== id; });
+      saveDb();
+    }
+  }
+
+  function addPurItemFromInput() {
+    try {
+      var nameEl = document.getElementById('pur-input-name');
+      var name = nameEl ? nameEl.value.trim() : '';
+      var qty = Number(document.getElementById('pur-input-qty') ? document.getElementById('pur-input-qty').value : 1) || 1;
+      var unitPrice = Number(document.getElementById('pur-input-price') ? document.getElementById('pur-input-price').value : 0) || 0;
+
+      if(!name) return alert('نام کالا را وارد کنید');
+
+      activePurItems.push({ name: name, qty: qty, unitPrice: unitPrice });
+      renderPurItemsList();
+
+      if(nameEl) nameEl.value = '';
+      var qtyInput = document.getElementById('pur-input-qty');
+      if(qtyInput) qtyInput.value = 1;
+      var priceInput = document.getElementById('pur-input-price');
+      if(priceInput) priceInput.value = 0;
+    } catch(e) {}
+  }
+
+  function renderPurItemsList() {
+    try {
+      var html = '';
+      activePurItems.forEach(function(it, index) {
+        html += '<div class="dynamic-item-card">'+
+          '<div>'+
+            '<div class="dynamic-item-title">'+it.name+'</div>'+
+            '<div class="dynamic-item-sub">'+it.qty+' عدد × '+fmt(it.unitPrice)+' ت = <b>'+fmt(it.qty * it.unitPrice)+' تومان</b></div>'+
+          '</div>'+
+          '<div>'+
+            '<button type="button" class="btn btn-danger btn-sm" onclick="removePurItem('+index+')"><i class="fas fa-trash"></i></button>'+
+          '</div>'+
+        '</div>';
+      });
+      var listEl = document.getElementById('pur-items-list');
+      if(listEl) listEl.innerHTML = html || '<div style="text-align:center; color:#888; font-size:0.8rem; padding:8px;">هیچ کالایی به فاکتور خرید اضافه نشده است</div>';
+      calcPurTotals();
+    } catch(e) {}
+  }
+
+  function removePurItem(index) {
+    activePurItems.splice(index, 1);
+    renderPurItemsList();
+  }
+
+  function clearPurForm() {
+    activePurItems = [];
+    document.getElementById('pur-edit-id').value = '';
+    document.getElementById('pur-discount').value = 0;
+    document.getElementById('pur-paid').value = '';
+    renderPurItemsList();
+  }
+
+  function calcPurTotals() {
+    try {
+      var subtotal = 0;
+      activePurItems.forEach(function(it) {
+        subtotal += (it.qty * it.unitPrice);
+      });
+
+      var discEl = document.getElementById('pur-discount');
+      var discount = Number(discEl ? discEl.value : 0) || 0;
+      var total = subtotal - discount;
+      if(total < 0) total = 0;
+
+      var totEl = document.getElementById('pur-total');
+      if(totEl) totEl.value = total;
+
+      var paidEl = document.getElementById('pur-paid');
+      var paid = Number(paidEl ? paidEl.value : 0) || 0;
+      var remaining = total - paid;
+
+      var remEl = document.getElementById('pur-remaining');
+      if(remEl) remEl.value = remaining > 0 ? remaining : 0;
+    } catch(e) {}
+  }
+
+  function openPurchaseModal(editId) {
+    try {
+      populateSelects();
+      activePurItems = [];
+
+      if(editId) {
+        var p = (db.purchases || []).find(function(x) { return x.id === editId; });
+        if(!p) return;
+        document.getElementById('pur-edit-id').value = p.id;
+        document.getElementById('pur-supplier').value = p.supplier;
+        document.getElementById('pur-discount').value = p.discount || 0;
+        document.getElementById('pur-paid').value = p.paid !== undefined ? p.paid : p.total;
+        
+        if(p.items && p.items.length > 0) {
+          activePurItems = JSON.parse(JSON.stringify(p.items));
+        } else {
+          activePurItems.push({ name: p.item, qty: p.qty || 1, unitPrice: p.unitPrice || p.price });
+        }
+      } else {
+        clearPurForm();
+      }
+      renderPurItemsList();
+      openModal('modal-purchase');
+    } catch(e) {}
+  }
+
+  function savePurchase() {
+    try {
+      var editId = document.getElementById('pur-edit-id') ? document.getElementById('pur-edit-id').value : '';
+      var supplier = document.getElementById('pur-supplier') ? document.getElementById('pur-supplier').value : 'تأمین‌کننده متفرقه';
+      var discount = Number(document.getElementById('pur-discount') ? document.getElementById('pur-discount').value : 0) || 0;
+      var total = Number(document.getElementById('pur-total') ? document.getElementById('pur-total').value : 0) || 0;
+      var paid = Number(document.getElementById('pur-paid') ? document.getElementById('pur-paid').value : 0) || 0;
+      var remaining = Number(document.getElementById('pur-remaining') ? document.getElementById('pur-remaining').value : 0) || 0;
+
+      if(activePurItems.length === 0) return alert('حداقل یک قلم کالا خرید وارد کنید');
+
+      var primaryDesc = activePurItems.map(function(i) { return i.name + ' × ' + i.qty; }).join(', ');
+
+      if(!editId) {
+        if(!db.products) db.products = [];
+        activePurItems.forEach(function(it) {
+          var prod = db.products.find(function(x) { return x.name.toLowerCase() === it.name.toLowerCase(); });
+          if(prod) { 
+            prod.qty += it.qty; 
+            prod.buyPrice = it.unitPrice; 
+          } else { 
+            db.products.push({ id: Date.now() + Math.random(), name: it.name, qty: it.qty, buyPrice: it.unitPrice, price: Math.round(it.unitPrice * 1.3) }); 
+          }
+        });
+      }
+
+      if(!db.purchases) db.purchases = [];
+      if(editId) {
+        var p = db.purchases.find(function(x) { return x.id == editId; });
+        if(p) {
+          p.supplier = supplier;
+          p.items = JSON.parse(JSON.stringify(activePurItems));
+          p.item = primaryDesc;
+          p.discount = discount;
+          p.total = total;
+          p.price = total;
+          p.paid = paid;
+          p.remaining = remaining;
+        }
+      } else {
+        var purObj = {
+          id: Date.now(),
+          supplier: supplier,
+          items: JSON.parse(JSON.stringify(activePurItems)),
+          item: primaryDesc,
+          discount: discount,
+          total: total,
+          price: total,
+          paid: paid,
+          remaining: remaining,
+          date: new Date().toLocaleDateString('fa-IR')
+        };
+        db.purchases.unshift(purObj);
+
+        if(!db.suppliers) db.suppliers = [];
+        var sup = db.suppliers.find(function(x) { return x.name === supplier; });
+        if(sup) sup.debt = (sup.debt || 0) + remaining;
+      }
+
+      saveDb();
+      closeModal('modal-purchase');
+      if(!editId && db.purchases.length > 0) showInvoicePreview(db.purchases[0], 'purchase');
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+  function renderPurchases(filterDate) {
+    try {
+      var searchEl = document.getElementById('search-purchase');
+      var q = (searchEl ? searchEl.value : '').toLowerCase();
+      var html = '';
+      var list = db.purchases || [];
+      if(filterDate) list = list.filter(function(p){ return p.date === filterDate; });
+
+      list.filter(function(p) { return (p.item && p.item.toLowerCase().indexOf(q) !== -1) || (p.supplier && p.supplier.toLowerCase().indexOf(q) !== -1); }).forEach(function(p, idx) {
+        var isSettled = (p.remaining || 0) <= 0;
+        var len = list.length;
+        html += '<div class="list-row">'+
+          '<div>'+
+            '<b>خرید #'+(len - idx)+'</b> <span class="badge '+(isSettled ? 'badge-success':'badge-danger')+'">'+(isSettled ? 'تسویه' : 'بدهکار')+'</span>'+
+            '<small style="display:block; color:var(--text-secondary);">'+p.supplier+' | '+p.date+' - '+p.item+'</small>'+
+          '</div>'+
+          '<div style="display:flex; align-items:center; gap:6px;">'+
+            '<b style="color:var(--danger);">'+fmt(p.total || p.price)+' ت</b>'+
+            '<button class="btn btn-info btn-sm" onclick=\'showInvoicePreview('+JSON.stringify(p)+', "purchase")\'><i class="fas fa-eye"></i></button>'+
+            '<button class="btn btn-primary btn-sm" onclick="openPurchaseModal('+p.id+')"><i class="fas fa-edit"></i></button>'+
+            '<button class="btn btn-danger btn-sm" onclick="deletePurchase('+p.id+')"><i class="fas fa-trash"></i></button>'+
+          '</div>'+
+        '</div>';
+      });
+      var el = document.getElementById('purchases-list');
+      if(el) el.innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">فاکتور خریدی ثبت نشده است</div>';
+    } catch(e) {}
+  }
+
+  function deletePurchase(id) {
+    if(confirm('فاکتور خرید حذف شود؟')) {
+      db.purchases = (db.purchases || []).filter(function(x) { return x.id !== id; });
+      saveDb();
+    }
+  }
+
+  function renderCustomers() {
+    try {
+      var q = (document.getElementById('search-customer') ? document.getElementById('search-customer').value : '').toLowerCase();
+      var html = '';
+      (db.customers || []).filter(function(c) { return c.name.toLowerCase().indexOf(q) !== -1; }).forEach(function(c) {
+        var phonesStr = (c.phones || []).map(function(ph){ return ph.number; }).join(' - ') || c.phone || 'بدون شماره';
+        html += '<div class="list-row">'+
+          '<div><b>'+c.name+'</b><small style="display:block; color:var(--text-secondary);">تلفن: '+phonesStr+' | بدهی: '+fmt(c.debt)+' تومان</small></div>'+
+          '<div style="display:flex; gap:6px;">'+
+            '<button class="btn btn-primary btn-sm" onclick="editCustomer('+c.id+')"><i class="fas fa-edit"></i></button>'+
+            '<button class="btn btn-danger btn-sm" onclick="deleteCustomer('+c.id+')"><i class="fas fa-trash"></i></button>'+
+          '</div>'+
+        '</div>';
+      });
+      var el = document.getElementById('customers-list');
+      if(el) el.innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">مشتری یافت نشد</div>';
+    } catch(e) {}
+  }
+
+  function openCustomerModal(id) {
+    try {
+      document.getElementById('cust-edit-id').value = '';
+      document.getElementById('cust-name').value = '';
+      document.getElementById('cust-address').value = '';
+      document.getElementById('cust-phones-list').innerHTML = '';
+      addCustPhoneRow('همراه', '');
+      openModal('modal-customer');
+    } catch(e) {}
+  }
+
+  function addCustPhoneRow(label, number) {
+    try {
+      var list = document.getElementById('cust-phones-list');
+      var div = document.createElement('div');
+      div.className = 'input-row-group';
+      div.innerHTML = '<input type="text" class="form-input cust-phone-lbl" value="'+(label||'همراه')+'" style="flex:1;">'+
+                      '<input type="text" class="form-input cust-phone-num" placeholder="شماره تماس" value="'+(number||'')+'" style="flex:2;">'+
+                      '<button class="btn btn-danger btn-sm" type="button" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>';
+      list.appendChild(div);
+    } catch(e) {}
+  }
+
+  function editCustomer(id) {
+    try {
+      var c = (db.customers || []).find(function(x){ return x.id === id; });
+      if(!c) return;
+      document.getElementById('cust-edit-id').value = c.id;
+      document.getElementById('cust-name').value = c.name;
+      document.getElementById('cust-address').value = c.address || '';
+      
+      var list = document.getElementById('cust-phones-list');
+      list.innerHTML = '';
+      if(c.phones && c.phones.length > 0) {
+        c.phones.forEach(function(p){ addCustPhoneRow(p.label, p.number); });
+      } else {
+        addCustPhoneRow('همراه', c.phone || '');
+      }
+      openModal('modal-customer');
+    } catch(e) {}
+  }
+
+  function saveCustomerModal() {
+    try {
+      var id = document.getElementById('cust-edit-id').value;
+      var name = document.getElementById('cust-name').value.trim();
+      var address = document.getElementById('cust-address').value;
+      if(!name) return alert('نام مشتری الزامی است');
+
+      var phones = [];
+      document.querySelectorAll('#cust-phones-list .input-row-group').forEach(function(row) {
+        var lbl = row.querySelector('.cust-phone-lbl').value;
+        var num = row.querySelector('.cust-phone-num').value.trim();
+        if(num) phones.push({ label: lbl, number: num });
+      });
+
+      if(!db.customers) db.customers = [];
+      if(id) {
+        var c = db.customers.find(function(x){ return x.id == id; });
+        if(c) { c.name = name; c.address = address; c.phones = phones; }
+      } else {
+        db.customers.push({ id: Date.now(), name: name, address: address, phones: phones, debt: 0 });
+      }
+      saveDb();
+      closeModal('modal-customer');
+    } catch(e) {}
+  }
+
+  function deleteCustomer(id) {
+    if(confirm('حذف مشتری؟')) {
+      db.customers = (db.customers || []).filter(function(x){ return x.id !== id; });
+      saveDb();
+    }
+  }
+
+  function renderSuppliers() {
+    try {
+      var q = (document.getElementById('search-supplier') ? document.getElementById('search-supplier').value : '').toLowerCase();
+      var html = '';
+      (db.suppliers || []).filter(function(s) { return s.name.toLowerCase().indexOf(q) !== -1; }).forEach(function(s) {
+        var phonesStr = (s.phones || []).map(function(ph){ return ph.number; }).join(' - ') || 'بدون شماره';
+        html += '<div class="list-row">'+
+          '<div><b>'+s.name+'</b><small style="display:block; color:var(--text-secondary);">تلفن: '+phonesStr+' | طلب/بدهی: '+fmt(s.debt)+' تومان</small></div>'+
+          '<div style="display:flex; gap:6px;">'+
+            '<button class="btn btn-primary btn-sm" onclick="editSupplier('+s.id+')"><i class="fas fa-edit"></i></button>'+
+            '<button class="btn btn-danger btn-sm" onclick="deleteSupplier('+s.id+')"><i class="fas fa-trash"></i></button>'+
+          '</div>'+
+        '</div>';
+      });
+      var el = document.getElementById('suppliers-list');
+      if(el) el.innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">تأمین‌کننده‌ای یافت نشد</div>';
+    } catch(e) {}
+  }
+
+  function openSupplierModal() {
+    try {
+      document.getElementById('supp-edit-id').value = '';
+      document.getElementById('supp-name').value = '';
+      document.getElementById('supp-address').value = '';
+      document.getElementById('supp-phones-list').innerHTML = '';
+      addSuppPhoneRow('دفتر', '');
+      openModal('modal-supplier');
+    } catch(e) {}
+  }
+
+  function addSuppPhoneRow(label, number) {
+    try {
+      var list = document.getElementById('supp-phones-list');
+      var div = document.createElement('div');
+      div.className = 'input-row-group';
+      div.innerHTML = '<input type="text" class="form-input supp-phone-lbl" value="'+(label||'دفتر')+'" style="flex:1;">'+
+                      '<input type="text" class="form-input supp-phone-num" placeholder="شماره تماس" value="'+(number||'')+'" style="flex:2;">'+
+                      '<button class="btn btn-danger btn-sm" type="button" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>';
+      list.appendChild(div);
+    } catch(e) {}
+  }
+
+  function editSupplier(id) {
+    try {
+      var s = (db.suppliers || []).find(function(x){ return x.id === id; });
+      if(!s) return;
+      document.getElementById('supp-edit-id').value = s.id;
+      document.getElementById('supp-name').value = s.name;
+      document.getElementById('supp-address').value = s.address || '';
+      
+      var list = document.getElementById('supp-phones-list');
+      list.innerHTML = '';
+      if(s.phones && s.phones.length > 0) {
+        s.phones.forEach(function(p){ addSuppPhoneRow(p.label, p.number); });
+      } else {
+        addSuppPhoneRow('دفتر', '');
+      }
+      openModal('modal-supplier');
+    } catch(e) {}
+  }
+
+  function saveSupplierModal() {
+    try {
+      var id = document.getElementById('supp-edit-id').value;
+      var name = document.getElementById('supp-name').value.trim();
+      var address = document.getElementById('supp-address').value;
+      if(!name) return alert('نام تأمین‌کننده الزامی است');
+
+      var phones = [];
+      document.querySelectorAll('#supp-phones-list .input-row-group').forEach(function(row) {
+        var lbl = row.querySelector('.supp-phone-lbl').value;
+        var num = row.querySelector('.supp-phone-num').value.trim();
+        if(num) phones.push({ label: lbl, number: num });
+      });
+
+      if(!db.suppliers) db.suppliers = [];
+      if(id) {
+        var s = db.suppliers.find(function(x){ return x.id == id; });
+        if(s) { s.name = name; s.address = address; s.phones = phones; }
+      } else {
+        db.suppliers.push({ id: Date.now(), name: name, address: address, phones: phones, debt: 0 });
+      }
+      saveDb();
+      closeModal('modal-supplier');
+    } catch(e) {}
+  }
+
+  function deleteSupplier(id) {
+    if(confirm('حذف تأمین‌کننده؟')) {
+      db.suppliers = (db.suppliers || []).filter(function(x){ return x.id !== id; });
+      saveDb();
+    }
+  }
+
+  function addExpense() {
+    try {
+      var category = document.getElementById('exp-category').value;
+      var title = document.getElementById('exp-title').value.trim();
+      var date = document.getElementById('exp-date').value;
+      var amount = Number(document.getElementById('exp-amount').value) || 0;
+
+      if(amount <= 0) return alert('مبلغ هزینه را وارد کنید');
+
+      if(!db.expenses) db.expenses = [];
+      db.expenses.unshift({ id: Date.now(), category: category, title: title || category, date: date, amount: amount });
+      saveDb();
+      closeModal('modal-expense');
+      document.getElementById('exp-title').value = '';
+      document.getElementById('exp-amount').value = '';
+    } catch(e) {}
+  }
+
+  function showInvoicePreview(obj, type) {
+    try {
+      currentPreviewInvoice = obj;
+      currentPreviewType = type;
+      var area = document.getElementById('invoice-print-area');
+      if(!area) return;
+
+      var isSale = (type === 'sale');
+      var titleText = isSale ? 'فاکتور فروش کالا' : 'فاکتور خرید کالا';
+      var partyLabel = isSale ? 'مشتری' : 'تأمین‌کننده';
+      var partyName = isSale ? obj.customer : obj.supplier;
+
+      var itemsHtml = '';
+      if(obj.items && obj.items.length > 0) {
+        obj.items.forEach(function(it, i){
+          itemsHtml += '<div class="invoice-row"><span>'+(i+1)+'. '+it.name+' ('+it.qty+' عدد)</span><span>'+fmt(it.qty * it.unitPrice)+' ت</span></div>';
+        });
+      } else {
+        itemsHtml = '<div class="invoice-row"><span>'+(obj.item || 'شرح کالا')+'</span><span>'+fmt(obj.total || obj.price)+' ت</span></div>';
+      }
+
+      var paymentHtml = '';
+      if(isSale && obj.selectedBanks && obj.selectedBanks.length > 0) {
+        obj.selectedBanks.forEach(function(b){
+          paymentHtml += '<div class="invoice-row payment-method"><i class="fas fa-credit-card"></i> واریز به کارت '+b.bankName+': <b>'+b.cardNumber+'</b></div>';
+        });
+      }
+      if(isSale && obj.selectedCryptos && obj.selectedCryptos.length > 0) {
+        obj.selectedCryptos.forEach(function(c){
+          paymentHtml += '<div class="invoice-row payment-method"><i class="fab fa-bitcoin"></i> ولت رمزارز ('+c.currency+'): <b>'+c.wallet+'</b></div>';
+        });
+      }
+
+      area.innerHTML = '<div class="invoice-header">'+
+        (db.settings.logo ? '<img src="'+db.settings.logo+'" class="invoice-logo">' : '')+
+        '<h3 style="margin:4px 0;">'+(db.settings.title || 'فروشگاه')+'</h3>'+
+        '<p style="margin:0; font-size:0.75rem; color:#666;">'+titleText+'</p>'+
+      '</div>'+
+      '<div class="invoice-row"><span>تاریخ: <b>'+(obj.date || '-')+'</b></span><span>شماره: #'+String(obj.id).slice(-6)+'</span></div>'+
+      '<div class="invoice-row"><span>'+partyLabel+': <b>'+partyName+'</b></span></div>'+
+      '<div style="margin:10px 0; border-top:1px dashed #ccc; padding-top:6px;">'+itemsHtml+'</div>'+
+      (obj.discount ? '<div class="invoice-row"><span>تخفیف:</span><span>'+fmt(obj.discount)+' ت</span></div>' : '')+
+      '<div class="invoice-row" style="font-weight:bold; font-size:0.95rem; border-top:1px solid #333; margin-top:6px; padding-top:6px;"><span>مبلغ کل:</span><span>'+fmt(obj.total || obj.price)+' تومان</span></div>'+
+      (isSale ? '<div class="invoice-row"><span>مبلغ دریافتی:</span><span>'+fmt(obj.received)+' تومان</span></div>'+
+                '<div class="invoice-row"><span>مانده بدهی:</span><span style="color:var(--danger);">'+fmt(obj.remaining)+' تومان</span></div>' : '')+
+      paymentHtml+
+      '<div style="text-align:center; margin-top:14px; font-size:0.75rem; color:#777;">از حسن انتخاب شما سپاسگزاریم 🙏</div>';
+
+      openModal('modal-invoice-preview');
+    } catch(e) {}
+  }
+
+  function shareInvoiceAsText() {
+    try {
+      if(!currentPreviewInvoice) return;
+      var obj = currentPreviewInvoice;
+      var isSale = (currentPreviewType === 'sale');
+      var text = '🛒 ' + (db.settings.title || 'فروشگاه') + '\n' +
+                 (isSale ? 'فاکتور فروش' : 'فاکتور خرید') + ' - تاریخ: ' + obj.date + '\n' +
+                 (isSale ? 'مشتری: ' : 'تأمین‌کننده: ') + (obj.customer || obj.supplier) + '\n' +
+                 '------------------\n';
+      if(obj.items) {
+        obj.items.forEach(function(it){
+          text += '• ' + it.name + ' (' + it.qty + ' عدد) - ' + fmt(it.qty * it.unitPrice) + ' تومان\n';
+        });
+      }
+      text += '------------------\n' +
+              'مبلغ کل: ' + fmt(obj.total || obj.price) + ' تومان\n' +
+              (isSale ? 'باقیمانده بدهی: ' + fmt(obj.remaining) + ' تومان\n' : '') +
+              'با تشکر از خرید شما 🙏';
+
+      if(navigator.share) {
+        navigator.share({ title: 'فاکتور فروش', text: text });
+      } else {
+        navigator.clipboard.writeText(text);
+        alert('متن فاکتور با موفقیت در کلیپ‌بورد کپی شد!');
+      }
+    } catch(e) {}
+  }
+
+  function uploadLogo(event) {
+    try {
+      var file = event.target.files[0];
+      if(!file) return;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        db.settings.logo = e.target.result;
+        saveDb();
+      };
+      reader.readAsDataURL(file);
+    } catch(e) {}
+  }
+
+  function saveSettings() {
+    try {
+      db.settings.title = document.getElementById('cfg-title').value || db.settings.title;
+      db.settings.subtitle = document.getElementById('cfg-subtitle').value || db.settings.subtitle;
+
+      db.settings.banks = [];
+      document.querySelectorAll('#bank-accounts-list .input-row-group').forEach(function(row) {
+        var bName = row.querySelector('.bank-name-inp').value.trim();
+        var cNum = row.querySelector('.bank-card-inp').value.trim();
+        if(cNum) db.settings.banks.push({ id: Date.now() + Math.random(), bankName: bName, cardNumber: cNum });
+      });
+
+      db.settings.cryptos = [];
+      document.querySelectorAll('#crypto-wallets-list .input-row-group').forEach(function(row) {
+        var curr = row.querySelector('.crypto-curr-inp').value;
+        var wall = row.querySelector('.crypto-wall-inp').value.trim();
+        if(wall) db.settings.cryptos.push({ id: Date.now() + Math.random(), currency: curr, wallet: wall });
+      });
+
+      saveDb();
+      alert('تنظیمات ذخیره شد!');
+    } catch(e) {}
+  }
+
+  function exportBackup() {
+    try {
+      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+      var dlAnchor = document.createElement('a');
+      dlAnchor.setAttribute("href", dataStr);
+      dlAnchor.setAttribute("download", "forooshyar_backup_" + new Date().toISOString().slice(0,10) + ".json");
+      document.body.appendChild(dlAnchor);
+      dlAnchor.click();
+      dlAnchor.remove();
+    } catch(e) {}
+  }
+
+  function importBackup(event) {
+    try {
+      var file = event.target.files[0];
+      if(!file) return;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          var parsed = JSON.parse(e.target.result);
+          if(parsed) {
+            db = parsed;
+            saveDb();
+            alert('اطلاعات با موفقیت بازیابی شد!');
+            location.reload();
+          }
+        } catch(err) {
+          alert('فایل پشتیبان نامعتبر است!');
+        }
+      };
+      reader.readAsText(file);
+    } catch(e) {}
+  }
+
+  function resetAppData() {
+    if(confirm('هشدار: تمام اطلاعات برنامه پاک خواهد شد! آیا مطمئن هستید؟')) {
+      localStorage.removeItem('forooshyar_db_v8');
+      location.reload();
+    }
+  }
+
+  function renderReports() {
+    try {
+      var period = document.getElementById('report-period').value;
+      var filteredSales = db.sales || [];
+      var filteredExpenses = db.expenses || [];
+      var filteredPurchases = db.purchases || [];
+
+      if(period === 'today') {
+        var todayStr = new Date().toLocaleDateString('fa-IR');
+        filteredSales = filteredSales.filter(function(s){ return s.date === todayStr; });
+        filteredExpenses = filteredExpenses.filter(function(e){ return e.date === todayStr; });
+        filteredPurchases = filteredPurchases.filter(function(p){ return p.date === todayStr; });
+      } else if(period === '7days' || period === '30days') {
+        // برای سادگی در این بازه همه یا فیلتر روزانه اعمال میشود
+      }
+
+      var tSales = filteredSales.reduce(function(a,b){ return a + Number(b.total || b.price || 0); }, 0);
+      var tProfit = filteredSales.reduce(function(a,b){ return a + Number(b.profit || 0); }, 0);
+      var tExpense = filteredExpenses.reduce(function(a,b){ return a + Number(b.amount || 0); }, 0);
+      var tPurchase = filteredPurchases.reduce(function(a,b){ return a + Number(b.total || b.price || 0); }, 0);
+      var netIncome = tProfit - tExpense;
+
+      var html = '<div class="list-row"><span>فروش کل دوره:</span><b style="color:var(--success);">'+fmt(tSales)+' تومان</b></div>'+
+                 '<div class="list-row"><span>سود ناخالص فروش:</span><b style="color:var(--info);">'+fmt(tProfit)+' تومان</b></div>'+
+                 '<div class="list-row"><span>مجموع خرید انبار:</span><b style="color:var(--danger);">'+fmt(tPurchase)+' تومان</b></div>'+
+                 '<div class="list-row"><span>مجموع هزینه‌ها:</span><b style="color:var(--danger);">'+fmt(tExpense)+' تومان</b></div>'+
+                 '<div class="list-row" style="background:#e8f5e9; font-weight:bold;"><span>سود خالص نهایی:</span><span style="color:'+(netIncome>=0?'var(--success)':'var(--danger)')+';">'+fmt(netIncome)+' تومان</span></div>';
+
+      var detailEl = document.getElementById('reports-detail');
+      if(detailEl) detailEl.innerHTML = html;
+    } catch(e) {}
+  }
+
+  function renderCalendarGrid() {
+    try {
+      var jy = currentCalJalaali.jYear;
+      var jm = currentCalJalaali.jMonth;
+      var monthNames = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
+      
+      var titleEl = document.getElementById('cal-month-title');
+      if(titleEl) titleEl.innerText = monthNames[jm - 1] + ' ' + jy;
+
+      var firstG = JalaaliHelper.toGregorian(jy, jm, 1);
+      var gDate = new Date(firstG.gy, firstG.gm - 1, firstG.gd);
+      var dayOfWeek = gDate.getDay(); // 0: Sun, 1: Mon...
+      var startDayIndex = (dayOfWeek + 1) % 7;
+
+      var mLen = JalaaliHelper.monthLength(jy, jm);
+      var html = '';
+
+      for(var i=0; i<startDayIndex; i++) {
+        html += '<div></div>';
+      }
+
+      var todayJ = JalaaliHelper.toJalaali(new Date().getFullYear(), new Date().getMonth()+1, new Date().getDate());
+
+      for(var d=1; d<=mLen; d++) {
+        var dStr = d.toString();
+        if(d < 10) dStr = '۰' + d;
+        var mStr = jm.toString();
+        if(jm < 10) mStr = '۰' + mStr;
+        var fullDateStr = jy + '/' + mStr + '/' + dStr;
+
+        var isToday = (todayJ.jy === jy && todayJ.jm === jm && todayJ.jd === d);
+        var isSelected = (selectedCalDateStr === fullDateStr);
+
+        html += '<div class="calendar-day '+(isToday?'today':'')+' '+(isSelected?'selected':'')+'" onclick="selectCalendarDay('+jy+','+jm+','+d+')">'+d+'</div>';
+      }
+
+      var gridEl = document.getElementById('calendar-days-grid');
+      if(gridEl) gridEl.innerHTML = html;
+    } catch(e) {}
+  }
+
+  function changeCalMonth(dir) {
+    currentCalJalaali.jMonth += dir;
+    if(currentCalJalaali.jMonth > 12) {
+      currentCalJalaali.jMonth = 1;
+      currentCalJalaali.jYear++;
+    } else if(currentCalJalaali.jMonth < 1) {
+      currentCalJalaali.jMonth = 12;
+      currentCalJalaali.jYear--;
+    }
+    renderCalendarGrid();
+  }
+
+  function selectCalendarDay(jy, jm, jd) {
+    var dStr = jd < 10 ? '۰' + jd : jd;
+    var mStr = jm < 10 ? '۰' + jm : jm;
+    selectedCalDateStr = jy + '/' + mStr + '/' + dStr;
+    renderCalendarGrid();
+    
+    var detailsEl = document.getElementById('cal-day-details');
+    if(detailsEl) detailsEl.style.display = 'block';
+
+    var titleDateEl = document.getElementById('cal-selected-date-title');
+    if(titleDateEl) titleDateEl.innerText = 'گزارش روز: ' + jy + '/' + mStr + '/' + dStr;
+
+    var daySales = (db.sales || []).filter(function(s){ return s.date && s.date.includes(jd) && s.date.includes(jm); });
+    var dayPurs = (db.purchases || []).filter(function(p){ return p.date && p.date.includes(jd) && p.date.includes(jm); });
+
+    var sSum = daySales.reduce(function(a,b){ return a + Number(b.total||0); }, 0);
+    var pSum = dayPurs.reduce(function(a,b){ return a + Number(b.total||0); }, 0);
+
+    document.getElementById('cal-day-sale-val').innerText = fmt(sSum) + ' ت';
+    document.getElementById('cal-day-sale-cnt').innerText = 'فاکتور فروش ('+daySales.length+')';
+
+    document.getElementById('cal-day-pur-val').innerText = fmt(pSum) + ' ت';
+    document.getElementById('cal-day-pur-cnt').innerText = 'فاکتور خرید ('+dayPurs.length+')';
+  }
+
+  function filterSalesByCalDate() {
+    closeModal('modal-calendar');
+    showSection('sec-sales', document.querySelectorAll('.nav-item')[3]);
+  }
+
+  function filterPurchasesByCalDate() {
+    closeModal('modal-calendar');
+    showSection('sec-purchases', document.querySelectorAll('.nav-item')[4]);
+  }
+
+  // اجرای اولیه برنامه هنگام لود صفحه
+  window.onload = function() {
+    renderAll();
+  };
+</script>
