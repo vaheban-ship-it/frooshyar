@@ -1,0 +1,2341 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- طراح و مالک معنوی: علی نصیری صومعه علیا -->
+  <title>فروش‌یار - سیستم جامع حسابداری</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#d81b60">
+  <link rel="icon" href="icon-192.png">
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --primary: #d81b60;
+      --primary-light: #fce4ec;
+      --secondary: #8e24aa;
+      --bg: #f4f5f9;
+      --surface: #ffffff;
+      --text: #212121;
+      --text-secondary: #757575;
+      --border: #e0e0e0;
+      --success: #2e7d32;
+      --danger: #c62828;
+      --warning: #ef6c00;
+      --info: #0288d1;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+    .app-container { max-width: 600px; margin: 0 auto; background: var(--bg); min-height: 100vh; padding-bottom: 90px; position: relative; }
+
+    button, .btn, .sub-tool-btn, .nav-item, input, select, textarea {
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+    input, select, textarea { cursor: text !important; }
+
+    .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 12px 16px; border-radius: 0 0 20px 20px; box-shadow: 0 4px 15px rgba(216,27,96,0.25); position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; }
+    .header-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .header h1 { margin: 0; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 8px; }
+    .header p { margin: 2px 0 0; opacity: 0.85; font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header img { height: 36px; width: 36px; object-fit: cover; border-radius: 50%; background: white; border: 2px solid #fff; flex-shrink: 0; }
+
+    .sub-toolbar { background: var(--surface); padding: 8px 12px; margin: 8px 12px; border-radius: 14px; display: flex; gap: 8px; overflow-x: auto; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 1px solid var(--border); white-space: nowrap; }
+    .sub-toolbar::-webkit-scrollbar { display: none; }
+    .sub-tool-btn { background: #f8f9fa; border: 1px solid var(--border); color: var(--text); padding: 7px 12px; border-radius: 10px; font-size: 0.8rem; font-family: inherit; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; transition: all 0.2s; }
+    .sub-tool-btn:active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+    .sub-tool-btn i { color: var(--primary); }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .card { background: var(--surface); margin: 12px; padding: 16px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--primary); display: flex; align-items: center; justify-content: space-between; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px; }
+    .stat-box { background: var(--surface); padding: 16px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center; }
+    .stat-box i { font-size: 1.5rem; margin-bottom: 8px; display: block; }
+    .stat-box .value { font-size: 1.1rem; font-weight: 700; }
+    .stat-box .label { font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px; }
+    .stat-box.sales i { color: var(--success); }
+    .stat-box.profit i { color: var(--info); }
+    .stat-box.expense i { color: var(--danger); }
+    .stat-box.stock i { color: var(--warning); }
+
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+    .btn { border: none; padding: 12px 14px; border-radius: 12px; font-family: inherit; font-size: 0.9rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; color: white; width: 100%; transition: transform 0.1s, opacity 0.2s; user-select: none; }
+    .btn:active { transform: scale(0.95); opacity: 0.9; }
+    .btn-success { background: var(--success); }
+    .btn-danger { background: var(--danger); }
+    .btn-warning { background: var(--warning); }
+    .btn-primary { background: var(--primary); }
+    .btn-info { background: var(--info); }
+    .btn-secondary { background: #4a5568; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+    .btn-sm { padding: 6px 10px; font-size: 0.78rem; width: auto; border-radius: 8px; }
+
+    .search-box { margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .search-box i { color: var(--primary); font-size: 1.1rem; }
+    .search-input { flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 0.9rem; outline: none; background: var(--surface); }
+    .search-input:focus { border-color: var(--primary); }
+
+    .form-group { margin-bottom: 12px; }
+    .form-label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; color: var(--text-secondary); }
+    .form-input, .form-select, .form-textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 0.9rem; background: var(--surface); outline: none; }
+    .form-textarea { resize: vertical; min-height: 60px; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); }
+
+    .switch-label { display: flex; align-items: center; justify-content: space-between; background: #f8f9fa; border: 1px solid var(--border); padding: 8px 12px; border-radius: 10px; cursor: pointer; margin-bottom: 10px; }
+    .switch-label span { font-size: 0.85rem; font-weight: bold; }
+    .switch-inp { position: relative; width: 44px; height: 24px; -webkit-appearance: none; appearance: none; background: #ccc; outline: none; border-radius: 12px; cursor: pointer; transition: background 0.3s; }
+    .switch-inp:checked { background: var(--primary); }
+    .switch-inp::before { content: ''; position: absolute; width: 20px; height: 20px; border-radius: 50%; top: 2px; right: 2px; background: white; transition: transform 0.3s; }
+    [dir="ltr"] .switch-inp::before { left: 2px; right: auto; }
+    .switch-inp:checked::before { transform: translateX(-20px); }
+    [dir="ltr"] .switch-inp:checked::before { transform: translateX(20px); }
+
+    .dynamic-item-card { background: #fdfdfd; border: 1.5px solid #e0e0e0; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .dynamic-item-title { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    .dynamic-item-sub { font-size: 0.78rem; color: var(--text-secondary); margin-top: 2px; }
+
+    .list-container { max-height: none; overflow: visible; border-radius: 12px; border: 1px solid var(--border); }
+    .list-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 0.88rem; background: var(--surface); }
+    .list-row:nth-child(even) { background: #f2f4f8; }
+    .list-row:last-child { border-bottom: none; }
+
+    .badge { padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: bold; }
+    .badge-success { background: #e8f5e9; color: var(--success); }
+    .badge-danger { background: #ffebee; color: var(--danger); }
+    .badge-info { background: #e1f5fe; color: var(--info); }
+
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
+    .modal.active { display: flex !important; }
+    .modal-content { background: var(--surface); width: 100%; max-width: 520px; padding: 20px; border-radius: 20px; max-height: 90vh; overflow-y: auto; }
+
+    .invoice-box { background: #ffffff; color: #212121; padding: 20px; border-radius: 16px; border: 2px dashed #d81b60; font-size: 0.88rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    .invoice-header { text-align: center; border-bottom: 2px dashed #d81b60; padding-bottom: 12px; margin-bottom: 12px; background: #ffffff; }
+    .invoice-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 0.5px dashed #eee; font-size: 0.86rem; background: #ffffff; color: #212121; }
+
+    .calendar-container { background: var(--surface); border-radius: 16px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+    .calendar-day-head { font-size: 0.75rem; font-weight: bold; color: var(--text-secondary); padding: 4px 0; }
+    .calendar-day { font-size: 0.85rem; padding: 8px 0; border-radius: 10px; border: 1px solid #f0f0f0; cursor: pointer; background: #fff; transition: background 0.2s; position: relative; }
+    .calendar-day:active, .calendar-day.selected { background: var(--primary-light); border-color: var(--primary); font-weight: bold; color: var(--primary); }
+
+    details.cal-accordion { background: #fafafa; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 6px; padding: 8px 12px; font-size: 0.84rem; }
+    details.cal-accordion summary { font-weight: bold; color: var(--primary); cursor: pointer; outline: none; }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; background: var(--surface); display: flex; justify-around: space-around; padding: 6px 2px; border-top: 1px solid var(--border); box-shadow: 0 -4px 15px rgba(0,0,0,0.08); z-index: 1000; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; font-size: 0.68rem; gap: 2px; flex: 1; cursor: pointer; text-align: center; user-select: none; }
+    .nav-item i { font-size: 1.1rem; }
+    .nav-item.active { color: var(--primary); font-weight: 700; }
+
+    .input-row-group { display: flex; gap: 6px; margin-bottom: 6px; align-items: center; }
+    .checkbox-group { display: flex; flex-direction: column; gap: 6px; border: 1px dashed var(--border); padding: 8px 10px; border-radius: 10px; background: #fafafa; }
+    .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; cursor: pointer; }
+    .checkbox-item input { width: 16px; height: 16px; accent-color: var(--primary); }
+
+    .lang-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 12px; border: 1.5px solid var(--border); margin-bottom: 8px; cursor: pointer; font-weight: bold; }
+    .lang-option.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+    .lang-option .fa-check { display: none; }
+    .lang-option.active .fa-check { display: inline-block; color: var(--primary); }
+
+    .avatar-preview { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--primary); margin-top: 6px; }
+
+    .help-card { background: #fafafa; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+    .help-card h4 { margin: 0 0 6px 0; color: var(--primary); font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
+    .help-card p { margin: 0; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; }
+
+    .sticky-ledger-summary {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1.5px solid var(--primary-light);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      margin-bottom: 12px;
+    }
+
+    .social-card-item {
+      padding: 10px 14px;
+      border-radius: 12px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      text-decoration: none;
+    }
+    .social-bg-instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+    .social-bg-telegram { background: #0088cc; }
+    .social-bg-eitaa { background: #e67e22; }
+    .social-bg-gmail { background: #d93025; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="header">
+    <div class="header-info">
+      <img id="header-logo" src="" alt="لوگو" style="display:none">
+      <div>
+        <h1 id="header-title"><i class="fas fa-shopping-bag"></i> فروش‌یار</h1>
+        <p id="header-subtitle" data-i18n="subtitle">سیستم جامع حسابداری فروشگاهی</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-toolbar">
+    <button class="sub-tool-btn" onclick="showSection('sec-more', this)"><i class="fas fa-ellipsis-h text-primary"></i> <span data-i18n="nav_more">بیشتر / تنظیمات</span></button>
+    <button class="sub-tool-btn" onclick="openModal('modal-ai')"><i class="fas fa-magic text-warning"></i> <span data-i18n="ai_assistant">دستیار هوش مصنوعی</span></button>
+    <button class="sub-tool-btn" onclick="openModal('modal-creator')"><i class="fas fa-headset"></i> <span data-i18n="contact_us">تماس با ما</span></button>
+    <button class="sub-tool-btn" onclick="openModal('modal-help')"><i class="fas fa-question-circle"></i> <span data-i18n="help">راهنما</span></button>
+    <button class="sub-tool-btn" onclick="openModal('modal-lang')"><i class="fas fa-globe"></i> <span data-i18n="language">زبان</span> (<span id="current-lang-btn">FA</span>)</button>
+    <button class="sub-tool-btn" onclick="openSaleModal()"><i class="fas fa-plus-circle"></i> <span data-i18n="sale_invoice">فاکتور فروش</span></button>
+    <button class="sub-tool-btn" onclick="openPurchaseModal()"><i class="fas fa-cart-plus"></i> <span data-i18n="purchase_invoice">فاکتور خرید</span></button>
+    <button class="sub-tool-btn" onclick="openProductModal()"><i class="fas fa-tshirt"></i> <span data-i18n="new_product">کالا جدید</span></button>
+    <button class="sub-tool-btn" onclick="openExpenseManagerModal()"><i class="fas fa-wallet"></i> <span data-i18n="expenses">هزینه‌ها</span></button>
+    <button class="sub-tool-btn" onclick="openModal('modal-calendar')"><i class="fas fa-calendar-alt"></i> <span data-i18n="calendar">تقویم</span></button>
+  </div>
+
+  <div id="sec-dashboard" class="section active">
+    <div class="stats-grid">
+      <div class="stat-box sales">
+        <i class="fas fa-chart-line"></i>
+        <div class="value" id="dash-sales">۰ تومان</div>
+        <div class="label" data-i18n="total_sales">فروش کل (محاسبه‌شده)</div>
+      </div>
+      <div class="stat-box profit">
+        <i class="fas fa-coins"></i>
+        <div class="value" id="dash-profit">۰ تومان</div>
+        <div class="label" data-i18n="total_profit">سود کل</div>
+      </div>
+      <div class="stat-box stock">
+        <i class="fas fa-boxes"></i>
+        <div class="value" id="dash-stock">۰ عدد</div>
+        <div class="label" data-i18n="stock_items">موجودی اقلام انبار</div>
+      </div>
+      <div class="stat-box expense">
+        <i class="fas fa-wallet"></i>
+        <div class="value" id="dash-expense">۰ تومان</div>
+        <div class="label" data-i18n="total_expenses">مجموع هزینه‌ها</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span data-i18n="quick_access">دسترسی سریع</span><i class="fas fa-bolt"></i></div>
+      <div class="row-2">
+        <button class="btn btn-success" onclick="openSaleModal()"><i class="fas fa-plus"></i> <span data-i18n="sale_invoice">فاکتور فروش</span></button>
+        <button class="btn btn-danger" onclick="openPurchaseModal()"><i class="fas fa-plus"></i> <span data-i18n="purchase_invoice">فاکتور خرید</span></button>
+      </div>
+      <div style="height:10px"></div>
+      <div class="row-2">
+        <button class="btn btn-primary" onclick="openExpenseManagerModal()"><i class="fas fa-receipt"></i> <span data-i18n="manage_expenses">ثبت و مدیریت هزینه‌ها</span></button>
+        <button class="btn btn-warning" onclick="showSection('sec-reports', document.querySelectorAll('.nav-item')[7])"><i class="fas fa-chart-pie"></i> <span data-i18n="reports">گزارشات جامع</span></button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row-2">
+        <button class="btn btn-outline" style="border-color:var(--danger); color:var(--danger);" onclick="toggleHomeSection('dash-debtors-wrap')">
+          <i class="fas fa-hand-holding-usd"></i> <span data-i18n="debtor_customers">مشتریان بدهکار</span>
+        </button>
+        <button class="btn btn-outline" style="border-color:var(--warning); color:var(--warning);" onclick="toggleHomeSection('dash-creditors-wrap')">
+          <i class="fas fa-truck-loading"></i> <span data-i18n="creditor_suppliers">تأمین‌کنندگان بستانکار</span>
+        </button>
+      </div>
+
+      <div id="dash-debtors-wrap" style="display:none; margin-top:14px;">
+        <div class="card-title" style="font-size:0.9rem; color:var(--danger);" data-i18n="debtors_list">لیست مشتریان بدهکار</div>
+        <div id="dash-debtors" class="list-container"></div>
+      </div>
+
+      <div id="dash-creditors-wrap" style="display:none; margin-top:14px;">
+        <div class="card-title" style="font-size:0.9rem; color:var(--warning);" data-i18n="creditors_list">لیست تأمین‌کنندگان بستانکار</div>
+        <div id="dash-creditors" class="list-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sec-products" class="section">
+    <div class="card" style="background: #fdfbf7; border: 1.5px solid #ffe0b2;">
+      <div class="card-title" style="color: var(--warning); font-size: 0.92rem;">
+        <span data-i18n="global_profit_title">اعمال سود درصدی کلی بر تمام کالاها</span>
+        <i class="fas fa-calculator"></i>
+      </div>
+      
+      <label class="switch-label">
+        <span data-i18n="global_profit_toggle">فعال‌سازی محاسبه سود درصدی انبار</span>
+        <input type="checkbox" id="global-profit-switch" class="switch-inp" onchange="toggleGlobalProfitInput()">
+      </label>
+
+      <div id="global-profit-panel" style="display:none; margin-top:8px;">
+        <div class="input-row-group">
+          <input type="number" id="global-profit-percent" class="form-input" placeholder="" style="flex:2;">
+          <button class="btn btn-warning btn-sm" onclick="applyGlobalProfitMargin()" style="flex:1.5;"><i class="fas fa-percentage"></i> <span data-i18n="calc_stock">محاسبه انبار</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span data-i18n="manage_products">مدیریت کالاها</span>
+        <button class="btn btn-primary btn-sm" onclick="openProductModal()"><i class="fas fa-plus"></i> <span data-i18n="new_product">کالا جدید</span></button>
+      </div>
+      
+      <div class="row-2" style="margin-bottom:12px;">
+        <div class="search-box" style="margin:0;">
+          <i class="fas fa-search"></i>
+          <input type="text" id="search-product" class="search-input" data-i18n-placeholder="search_product_ph" placeholder="جستجوی نام کالا..." oninput="renderProducts()">
+        </div>
+        <select id="filter-product-cat" class="form-select" onchange="renderProducts()">
+          <option value="">همه دسته‌بندی‌ها</option>
+        </select>
+      </div>
+
+      <div id="products-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <div id="sec-stock" class="section">
+    <div class="card">
+      <div class="card-title"><span data-i18n="stock_kardex">موجودی انبار و کاردکس</span><i class="fas fa-boxes"></i></div>
+      <div class="row-2" style="margin-bottom:12px;">
+        <div class="search-box" style="margin:0;">
+          <i class="fas fa-search"></i>
+          <input type="text" id="search-stock" class="search-input" data-i18n-placeholder="search_stock_ph" placeholder="جستجو در انبار..." oninput="renderStock()">
+        </div>
+        <select id="filter-stock-cat" class="form-select" onchange="renderStock()">
+          <option value="">همه دسته‌بندی‌ها</option>
+        </select>
+      </div>
+      <div id="stock-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <div id="sec-sales" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span data-i18n="sales_invoices">فاکتورهای فروش</span>
+        <button class="btn btn-success btn-sm" onclick="openSaleModal()"><i class="fas fa-plus"></i> <span data-i18n="new_invoice">فاکتور جدید</span></button>
+      </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-sale" class="search-input" data-i18n-placeholder="search_sale_ph" placeholder="جستجوی فاکتور فروش..." oninput="renderSales()">
+      </div>
+      <div id="sales-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <div id="sec-purchases" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span data-i18n="purchase_invoices">فاکتورهای خرید</span>
+        <button class="btn btn-danger btn-sm" onclick="openPurchaseModal()"><i class="fas fa-plus"></i> <span data-i18n="new_purchase_invoice">فاکتور خرید جدید</span></button>
+      </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-purchase" class="search-input" data-i18n-placeholder="search_purchase_ph" placeholder="جستجوی فاکتور خرید..." oninput="renderPurchases()">
+      </div>
+      <div id="purchases-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <div id="sec-customers" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span data-i18n="customers">مشتریان</span>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-warning btn-sm" onclick="pickContact('customer')"><i class="fas fa-address-book"></i> <span data-i18n="pick_contacts">انتخاب مخاطبین</span></button>
+          <button class="btn btn-primary btn-sm" onclick="openCustomerModal()"><i class="fas fa-plus"></i> <span data-i18n="btn_new">جدید</span></button>
+        </div>
+      </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-customer" class="search-input" data-i18n-placeholder="search_customer_ph" placeholder="جستجوی مشتری..." oninput="renderCustomers()">
+      </div>
+      <div id="customers-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <div id="sec-suppliers" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span data-i18n="suppliers">تأمین‌کنندگان</span>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-warning btn-sm" onclick="pickContact('supplier')"><i class="fas fa-address-book"></i> <span data-i18n="pick_contacts">انتخاب مخاطبین</span></button>
+          <button class="btn btn-primary btn-sm" onclick="openSupplierModal()"><i class="fas fa-plus"></i> <span data-i18n="btn_new">جدید</span></button>
+        </div>
+      </div>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-supplier" class="search-input" data-i18n-placeholder="search_supplier_ph" placeholder="جستجوی تأمین‌کننده..." oninput="renderSuppliers()">
+      </div>
+      <div id="suppliers-list" class="list-container"></div>
+    </div>
+  </div>
+
+  <div id="sec-more" class="section">
+    <div class="card">
+      <div class="card-title"><span data-i18n="store_settings">تنظیمات عمومی فروشگاه</span><i class="fas fa-cog"></i></div>
+      <div class="form-group"><label class="form-label" data-i18n="store_name">نام فروشگاه / عنوان</label><input type="text" id="cfg-title" class="form-input"></div>
+      <div class="form-group"><label class="form-label" data-i18n="invoice_subtitle">زیرعنوان فاکتور</label><input type="text" id="cfg-subtitle" class="form-input"></div>
+      
+      <!-- بخش جدید: انتخاب زبان پیش‌فرض در تنظیمات -->
+      <div class="form-group">
+        <label class="form-label" data-i18n="default_language">زبان پیش‌فرض برنامه / Default Language</label>
+        <div class="row-2">
+          <div class="lang-option" id="cfg-lang-fa" onclick="setLanguage('fa')" style="margin-bottom:0; justify-content:center; text-align:center;"><span>فارسی (FA)</span></div>
+          <div class="lang-option" id="cfg-lang-en" onclick="setLanguage('en')" style="margin-bottom:0; justify-content:center; text-align:center;"><span>English (EN)</span></div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:12px;"><label class="form-label" data-i18n="store_logo">لوگوی فروشگاه</label><input type="file" id="cfg-logo-file" accept="image/*" class="form-input" onchange="uploadLogo(event)"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span><i class="fas fa-phone-alt" style="font-size:0.85rem;"></i> <i class="fas fa-map-marker-alt" style="font-size:0.85rem;"></i> <span data-i18n="manage_addresses">مدیریت شماره‌های تماس و آدرس‌ها</span></span><i class="fas fa-map-marked-alt"></i></div>
+      <div id="store-addresses-list"></div>
+      <button class="btn btn-outline btn-sm" type="button" onclick="addStoreAddressRow()" style="margin-top:8px;"><i class="fas fa-plus"></i> <span data-i18n="add_address">افزودن آدرس / تلفن جدید</span></button>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span><i class="fas fa-share-alt" style="font-size:0.85rem;"></i> <span data-i18n="manage_socials">مدیریت وب‌سایت و شبکه‌های اجتماعی</span></span><i class="fas fa-share-alt"></i></div>
+      <div id="store-socials-list"></div>
+      <button class="btn btn-outline btn-sm" type="button" onclick="addStoreSocialRow()" style="margin-top:8px;"><i class="fas fa-plus"></i> <span data-i18n="add_social">افزودن شبکه اجتماعی جدید</span></button>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span><i class="fas fa-credit-card" style="font-size:0.85rem;"></i> <span data-i18n="manage_banks">مدیریت کارت‌های بانکی</span></span><i class="fas fa-credit-card"></i></div>
+      <div id="bank-accounts-list"></div>
+      <button class="btn btn-outline btn-sm" type="button" onclick="addBankInputRow()" style="margin-top:8px;"><i class="fas fa-plus"></i> <span data-i18n="add_bank">افزودن حساب بانکی جدید</span></button>
+    </div>
+
+    <div class="card">
+      <button class="btn btn-primary" onclick="saveSettings()" data-i18n="save_all_settings">ذخیره تمام تنظیمات</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span><i class="fas fa-database" style="font-size:0.85rem;"></i> <span data-i18n="backup_restore">پشتیبان‌گیری و بازیابی</span></span><i class="fas fa-database"></i></div>
+      <button class="btn btn-warning" onclick="exportBackup()" style="margin-bottom:10px;"><i class="fas fa-download"></i> <span data-i18n="export_backup">ذخیره فایل پشتیبان (Backup)</span></button>
+      <div class="form-group">
+        <label class="form-label"><i class="fas fa-file-import"></i> <span data-i18n="select_backup">انتخاب فایل پشتیبان (JSON)</span></label>
+        <div style="position: relative; overflow: hidden; display: inline-block; width: 100%;">
+          <button class="btn btn-outline" style="width: 100%; justify-content: flex-start; gap: 10px; background: #fff; color: var(--text-secondary); border: 1.5px solid var(--border);">
+            <i class="fas fa-folder-open" style="color: var(--primary);"></i>
+            <span id="restore-file-label" data-i18n="choose_file">فایل پشتیبان را انتخاب کنید</span>
+          </button>
+          <input type="file" id="restore-file-input" accept=".json" style="position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer;" onchange="handleRestoreFileChange(event)">
+        </div>
+        <div id="restore-file-status" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;"></div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="resetAppData()" style="margin-top:10px; width:100%;"><i class="fas fa-undo"></i> <span data-i18n="reset_app">بازنشانی کامل اطلاعات برنامه</span></button>
+    </div>
+  </div>
+
+  <div id="sec-reports" class="section">
+    <div class="card">
+      <div class="card-title">
+        <span data-i18n="reports">گزارش جامع مالی و عملکرد</span>
+        <button class="btn btn-primary btn-sm" onclick="openModal('modal-calendar')"><i class="fas fa-calendar-alt"></i> <span data-i18n="calendar">تقویم</span></button>
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="select_period">تعیین بازه زمانی جهت گزارش‌گیری</label>
+        <select id="report-period" class="form-select" onchange="renderReports()">
+          <option value="today" data-i18n="period_today">امروز</option>
+          <option value="7days" data-i18n="period_7days">۷ روز اخیر</option>
+          <option value="30days" data-i18n="period_30days">۳۰ روز اخیر</option>
+          <option value="all" selected data-i18n="period_all">کل دوره‌ها (همه‌زمان)</option>
+        </select>
+      </div>
+      <div id="reports-detail" class="list-container" style="padding: 10px;"></div>
+      <div style="height:12px;"></div>
+      <button class="btn btn-outline" onclick="showSection('sec-dashboard', document.querySelectorAll('.nav-item')[0])"><i class="fas fa-arrow-right"></i> <span data-i18n="back_to_home">بازگشت به صفحه اصلی</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div id="modal-creator" class="modal">
+  <div class="modal-content" style="text-align: center;">
+    <div class="card-title">
+      <span><i class="fas fa-user-shield text-primary"></i> <span data-i18n="contact_creator">تماس با سازنده نرم‌افزار</span></span>
+      <i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-creator')"></i>
+    </div>
+    <div style="margin-bottom: 12px;">
+      <img src="1000112273.jpg" alt="علی نصیری صومعه علیا" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2.5px solid var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.15);" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'80\'><circle cx=\'40\' cy=\'40\' r=\'40\' fill=\'%23d81b60\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23fff\' font-size=\'14\'>علی</text></svg>'">
+    </div>
+    <h3 style="margin: 5px 0 2px 0; font-size: 1.05rem; color: var(--primary);">علی نصیری صومعه علیا</h3>
+    <p style="margin: 0 0 14px 0; font-size: 0.8rem; color: var(--text-secondary);" data-i18n="creator_desc">طراح، معمار نرم‌افزار و توسعه‌دهنده سیستم جامع فروش‌یار</p>
+    
+    <div style="display: flex; flex-direction: column; gap: 8px; text-align: right;">
+      <a href="https://t.me/pvmyan" target="_blank" class="social-card-item social-bg-telegram" style="font-size: 0.85rem;">
+        <div style="display:flex; align-items:center; gap:8px;"><i class="fab fa-telegram"></i> <span data-i18n="telegram_support">پشتیبانی تلگرام</span></div>
+        <span style="font-size: 0.78rem; direction: ltr;">@pvmyan</span>
+      </a>
+      <a href="https://instagram.com/ali__nasiri100" target="_blank" class="social-card-item social-bg-instagram" style="font-size: 0.85rem;">
+        <div style="display:flex; align-items:center; gap:8px;"><i class="fab fa-instagram"></i> <span>اینستاگرام</span></div>
+        <span style="font-size: 0.78rem; direction: ltr;">@ali__nasiri100</span>
+      </a>
+      <a href="https://eitaa.com/Alin100" target="_blank" class="social-card-item social-bg-eitaa" style="font-size: 0.85rem;">
+        <div style="display:flex; align-items:center; gap:8px;"><i class="fas fa-comments"></i> <span>ایتا</span></div>
+        <span style="font-size: 0.78rem; direction: ltr;">@Alin100</span>
+      </a>
+      <a href="mailto:vaheban@gmail.com" class="social-card-item social-bg-gmail" style="font-size: 0.85rem;">
+        <div style="display:flex; align-items:center; gap:8px;"><i class="fas fa-envelope"></i> <span data-i18n="email_support">جمیل پشتیبانی</span></div>
+        <span style="font-size: 0.75rem; direction: ltr;">vaheban@gmail.com</span>
+      </a>
+    </div>
+    <div style="height:14px;"></div>
+    <button class="btn btn-outline" onclick="closeModal('modal-creator')"><i class="fas fa-arrow-right"></i> <span data-i18n="back">بازگشت</span></button>
+  </div>
+</div>
+
+<div id="modal-ai" class="modal">
+  <div class="modal-content">
+    <div class="card-title">
+      <span><i class="fas fa-brain text-primary"></i> <span data-i18n="ai_assistant_title">دستیار هوشمند فروش‌یا‌ر (AI)</span></span>
+      <i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-ai')"></i>
+    </div>
+    <div id="ai-content-body" style="font-size:0.86rem; line-height:1.6; color:#333;"></div>
+    <div style="height:14px;"></div>
+    <button class="btn btn-outline" onclick="closeModal('modal-ai')"><i class="fas fa-arrow-right"></i> <span data-i18n="back">بازگشت</span></button>
+  </div>
+</div>
+
+<div id="modal-ledger" class="modal">
+  <div class="modal-content" id="ledger-printable-area">
+    <div class="card-title" id="ledger-modal-header-actions">
+      <span id="ledger-modal-title" data-i18n="ledger_account">دفتر حساب مخاطب</span>
+      <i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-ledger')"></i>
+    </div>
+    <div class="sticky-ledger-summary" id="sticky-ledger-summary">
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; margin-bottom:4px;">
+        <span id="ledger-total-label" data-i18n="ledger_total_bal">مجموع مانده حساب:</span>
+        <b id="ledger-summary-total" style="font-size:0.95rem;">۰ تومان</b>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:var(--text-secondary);">
+        <span id="ledger-summary-count">تعداد تراکنش‌ها: ۰</span>
+        <span id="ledger-summary-status" class="badge">وضعیت: تسویه</span>
+      </div>
+    </div>
+
+    <div class="card hide-on-capture" id="ledger-form-section" style="margin:0 0 12px 0; padding:12px; background:#f8f9fa; border:1px solid #e2e8f0;">
+      <div style="font-size:0.85rem; font-weight:bold; margin-bottom:8px; color:var(--primary);" id="ledger-trans-title">ثبت تسویه / دریافت وجه</div>
+      <input type="hidden" id="ledger-party-name">
+      <input type="hidden" id="ledger-party-type">
+      
+      <div class="row-2">
+        <div class="form-group" style="margin-bottom:6px;">
+          <label class="form-label" id="ledger-amount-label">مبلغ دریافت وجه (تومان)</label>
+          <input type="number" id="ledger-trans-amount" class="form-input" placeholder="" oninput="checkLedgerInputRule()" onfocus="checkLedgerInputRule()">
+        </div>
+        <div class="form-group" style="margin-bottom:6px;">
+          <label class="form-label" id="ledger-excess-label">مازاد دریافت (تومان)</label>
+          <input type="number" id="ledger-trans-excess" class="form-input" placeholder="" oninput="onLedgerExcessChange()">
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:8px;">
+        <label class="form-label" data-i18n="trans_desc">شرح تراکنش</label>
+        <input type="text" id="ledger-trans-desc" class="form-input" value="تسویه حساب / دریافت وجه">
+      </div>
+      <button class="btn btn-success btn-sm" type="button" onclick="saveLedgerTransaction()"><i class="fas fa-check-circle"></i> <span data-i18n="save_in_ledger">ثبت در دفتر حساب</span></button>
+    </div>
+
+    <div id="ledger-content" class="list-container" style="padding:10px;"></div>
+    
+    <div class="row-2 hide-on-capture" id="ledger-action-buttons" style="margin-top: 10px;">
+      <button class="btn btn-info" onclick="shareLedgerAsText()"><i class="fas fa-comment-alt"></i> <span data-i18n="share_text">ارسال متنی صورت‌حساب</span></button>
+      <button class="btn btn-success" onclick="shareLedgerAsImage()"><i class="fas fa-image"></i> <span data-i18n="share_image">ارسال تصویری صورت‌حساب</span></button>
+    </div>
+    
+    <div style="height:12px;" class="hide-on-capture"></div>
+    <button class="btn btn-outline hide-on-capture" id="ledger-back-btn" onclick="closeModal('modal-ledger')"><i class="fas fa-arrow-right"></i> <span data-i18n="back">بازگشت</span></button>
+  </div>
+</div>
+
+<div id="modal-help" class="modal">
+  <div class="modal-content">
+    <div class="card-title"><span data-i18n="help_guide_title">راهنمای جامع فروش‌یار</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-help')"></i></div>
+    <div id="help-cards-container">
+      <div class="help-card">
+        <h4><i class="fas fa-tshirt"></i> <span data-i18n="help_item_1_title">۱. مدیریت کالاها و انبار</span></h4>
+        <p data-i18n="help_item_1_desc">محصولات را همراه با قیمت خرید، فروش، موجودی و دسته‌بندی ثبت کنید.</p>
+      </div>
+      <div class="help-card">
+        <h4><i class="fas fa-receipt"></i> <span data-i18n="help_item_2_title">۲. صدور فاکتور فروش</span></h4>
+        <p data-i18n="help_item_2_desc">فاکتور فروش صادر کرده و مبالغ و تخفیف‌ها را مدیریت کنید.</p>
+      </div>
+    </div>
+    <div style="height:12px;"></div>
+    <button class="btn btn-primary" onclick="closeModal('modal-help')"><i class="fas fa-arrow-right"></i> <span data-i18n="got_it">متوجه شدم</span></button>
+  </div>
+</div>
+
+<div id="modal-expense-manager" class="modal">
+  <div class="modal-content">
+    <div class="card-title">
+      <span data-i18n="expense_management">مدیریت کامل هزینه‌ها</span>
+      <i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-expense-manager')"></i>
+    </div>
+
+    <div class="card" style="margin:0 0 12px 0; padding:12px; background:#f8f9fa; border:1px solid #e2e8f0;">
+      <div style="font-size:0.85rem; font-weight:bold; margin-bottom:8px; color:var(--danger);" data-i18n="add_new_expense">ثبت هزینه جدید</div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="expense_title">شرح / عنوان هزینه *</label>
+        <input type="text" id="exp-new-title" class="form-input" placeholder="">
+      </div>
+      <div class="row-2">
+        <div class="form-group">
+          <label class="form-label" data-i18n="amount">مبلغ (تومان) *</label>
+          <input type="number" id="exp-new-amount" class="form-input" placeholder="">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="category">دسته‌بندی</label>
+          <select id="exp-new-cat" class="form-select">
+            <option value="عمومی" data-i18n="cat_general">عمومی</option>
+            <option value="اجاره" data-i18n="cat_rent">اجاره</option>
+            <option value="قبوض" data-i18n="cat_utilities">قبوض</option>
+            <option value="حقوق" data-i18n="cat_salaries">حقوق</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-danger" type="button" onclick="saveNewExpenseFromManager()"><i class="fas fa-plus"></i> <span data-i18n="save_expense">ثبت هزینه</span></button>
+    </div>
+
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" id="search-expense" class="search-input" data-i18n-placeholder="search_expense_ph" placeholder="جستجو در هزینه‌ها..." oninput="renderExpensesList()">
+    </div>
+    <div id="expenses-list" class="list-container"></div>
+    <div style="height:12px;"></div>
+    <button class="btn btn-outline" onclick="closeModal('modal-expense-manager')"><i class="fas fa-arrow-right"></i> <span data-i18n="back">بازگشت</span></button>
+  </div>
+</div>
+
+<div id="modal-product" class="modal">
+  <div class="modal-content">
+    <div class="card-title"><span id="prod-modal-title" data-i18n="edit_add_product">افزودن / ویرایش کالا</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-product')"></i></div>
+    <input type="hidden" id="prod-edit-id">
+    
+    <div class="form-group"><label class="form-label" data-i18n="product_name">نام کالا *</label><input type="text" id="prod-name" class="form-input"></div>
+    <div class="form-group"><label class="form-label" data-i18n="product_barcode">کد کالا / بارکد</label><input type="text" id="prod-barcode" class="form-input" placeholder=""></div>
+    <div class="form-group"><label class="form-label" data-i18n="category">دسته‌بندی کالا</label><input type="text" id="prod-category" class="form-input" list="categories-list"><datalist id="categories-list"></datalist></div>
+    <div class="form-group"><label class="form-label" data-i18n="stock_qty">موجودی انبار</label><input type="number" id="prod-qty" class="form-input" placeholder=""></div>
+    <div class="form-group"><label class="form-label" data-i18n="buy_price">قیمت خرید (تومان)</label><input type="number" id="prod-buy-price" class="form-input" placeholder="" oninput="calcProdPriceFromMargin()"></div>
+    
+    <label class="switch-label">
+      <span data-i18n="auto_calc_margin">محاسبه خودکار قیمت فروش با درصد سود</span>
+      <input type="checkbox" id="prod-auto-profit-toggle" class="switch-inp" onchange="toggleProdProfitInput()">
+    </label>
+
+    <div class="form-group" id="prod-margin-wrap" style="display:none;">
+      <label class="form-label" data-i18n="profit_margin">درصد سود (٪)</label><input type="number" id="prod-profit-margin" class="form-input" placeholder="" oninput="calcProdPriceFromMargin()">
+    </div>
+
+    <div class="form-group"><label class="form-label" data-i18n="sell_price">قیمت فروش (تومان)</label><input type="number" id="prod-price" class="form-input" placeholder=""></div>
+    <div class="row-2">
+      <button class="btn btn-primary" onclick="saveProduct()" data-i18n="save_product">ذخیره کالا</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-product')"><i class="fas fa-arrow-right"></i> <span data-i18n="back">بازگشت</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-customer" class="modal">
+  <div class="modal-content">
+    <div class="card-title"><span id="cust-modal-title" data-i18n="customer_file">پرونده مشتری</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-customer')"></i></div>
+    <input type="hidden" id="cust-edit-id">
+    
+    <div class="form-group" style="text-align:center;">
+      <label class="form-label" data-i18n="contact_avatar">تصویر مخاطب</label>
+      <input type="file" accept="image/*" class="form-input" onchange="uploadCustomerAvatar(event)">
+      <img id="cust-avatar-preview" src="" class="avatar-preview" style="display:none;">
+    </div>
+
+    <div class="form-group"><label class="form-label" data-i18n="customer_name">نام و نام خانوادگی مشتری</label><input type="text" id="cust-name" class="form-input"></div>
+    <div class="form-group">
+      <label class="form-label" data-i18n="phone_numbers">شماره‌های تماس</label>
+      <div id="cust-phones-list"></div>
+      <button class="btn btn-outline btn-sm" type="button" onclick="addCustPhoneRow()"><i class="fas fa-plus"></i> <span data-i18n="add_phone">افزودن شماره</span></button>
+    </div>
+    <div class="form-group"><label class="form-label" data-i18n="full_address">آدرس کامل</label><textarea id="cust-address" class="form-textarea"></textarea></div>
+
+    <div class="row-2">
+      <button class="btn btn-primary" onclick="saveCustomerModal()" data-i18n="save_file">ذخیره پرونده</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-customer')"><i class="fas fa-arrow-right"></i> <span data-i18n="back">بازگشت</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-supplier" class="modal">
+  <div class="modal-content">
+    <div class="card-title"><span id="supp-modal-title" data-i18n="supplier_file">پرونده تأمین‌کننده</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-supplier')"></i></div>
+    <input type="hidden" id="supp-edit-id">
+    
+    <div class="form-group" style="text-align:center;">
+      <label class="form-label" data-i18n="contact_avatar">تصویر مخاطب</label>
+      <input type="file" accept="image/*" class="form-input" onchange="uploadSupplierAvatar(event)">
+      <img id="supp-avatar-preview" src="" class="avatar-preview" style="display:none;">
+    </div>
+
+    <div class="form-group"><label class="form-label" data-i18n="supplier_name">نام شرکت / تأمین‌کننده</label><input type="text" id="supp-name" class="form-input"></div>
+    <div class="form-group">
+      <label class="form-label" data-i18n="phone_numbers">شماره‌های تماس</label>
+      <div id="supp-phones-list"></div>
+      <button class="btn btn-outline btn-sm" type="button" onclick="addSuppPhoneRow()"><i class="fas fa-plus"></i> <span data-i18n="add_phone">افزودن شماره</span></button>
+    </div>
+    <div class="form-group"><label class="form-label" data-i18n="full_address">آدرس دفتر / انبار</label><textarea id="supp-address" class="form-textarea"></textarea></div>
+
+    <div class="row-2">
+      <button class="btn btn-primary" onclick="saveSupplierModal()" data-i18n="save_file">ذخیره پرونده</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-supplier')"><i class="fas fa-arrow-right"></i> <span data-i18n="back">بازگشت</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-sale" class="modal">
+  <div class="modal-content">
+    <div class="card-title">
+      <span id="sale-modal-title" data-i18n="issue_sale_invoice">صدور فاکتور فروش</span>
+      <div>
+        <button class="btn btn-warning btn-sm" type="button" onclick="clearSaleForm()"><i class="fas fa-eraser"></i> <span data-i18n="clear_form">پاکسازی</span></button>
+        <i class="fas fa-times" style="cursor:pointer; margin-right:8px;" onclick="closeModal('modal-sale')"></i>
+      </div>
+    </div>
+    <input type="hidden" id="sale-edit-id">
+    
+    <div class="form-group">
+      <label class="form-label" data-i18n="select_customer">انتخاب مشتری</label>
+      <select id="sale-customer" class="form-select" onchange="onSaleCustomerChange()"></select>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label" data-i18n="invoice_date">تاریخ فاکتور</label>
+      <div class="row-3">
+        <select id="sale-year" class="form-select"></select>
+        <select id="sale-month" class="form-select"></select>
+        <select id="sale-day" class="form-select"></select>
+      </div>
+    </div>
+    
+    <div class="card" style="margin:0 0 12px 0; padding:12px; background:#f8f9fa; border:1px solid #e2e8f0;">
+      <div style="font-size:0.85rem; font-weight:bold; margin-bottom:8px; color:var(--primary);" data-i18n="add_product_item">افزودن قلم کالا</div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="select_product">انتخاب کالا</label>
+        <select id="sale-input-prod" class="form-select" onchange="onSaleInputProdChange()"></select>
+      </div>
+      <div class="row-2">
+        <div class="form-group">
+          <label class="form-label" data-i18n="quantity">تعداد</label>
+          <input type="number" id="sale-input-qty" class="form-input" placeholder="" min="1">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="unit_price">قیمت واحد (تومان)</label>
+          <input type="number" id="sale-input-price" class="form-input" placeholder="">
+        </div>
+      </div>
+      <button class="btn btn-primary" type="button" onclick="addSaleItemFromInput()" style="margin-top:4px;"><i class="fas fa-plus"></i> <span data-i18n="add_to_list">افزودن به لیست</span></button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" data-i18n="registered_items">اقلام ثبت‌شده در فاکتور</label>
+      <div id="sale-items-list"></div>
+    </div>
+
+    <div class="form-group"><label class="form-label" data-i18n="total_discount">تخفیف کل (تومان)</label><input type="number" id="sale-discount" class="form-input" placeholder="" oninput="calcSaleTotals()"></div>
+    <div class="form-group"><label class="form-label" data-i18n="invoice_subtotal">جمع کل فاکتور جاری (تومان)</label><input type="number" id="sale-subtotal" class="form-input" readonly style="background:#f5f5f5; font-weight:bold;" placeholder=""></div>
+
+    <div class="form-group"><label class="form-label" data-i18n="amount_received">مبلغ دریافتی نقدی / کارت (تومان)</label><input type="number" id="sale-received" class="form-input" placeholder="" oninput="calcSaleTotals()"></div>
+    
+    <div class="form-group">
+      <label class="form-label" style="color: var(--success); font-weight: bold;" data-i18n="excess_amount">مازاد دریافت (تومان)</label>
+      <input type="number" id="sale-excess" class="form-input" readonly style="background:#e8f5e9; font-weight:bold; color: var(--success);" placeholder="">
+    </div>
+
+    <div class="form-group"><label class="form-label" id="sale-remaining-label" data-i18n="new_debt_rem">مانده حساب / بدهی جدید مشتری (تومان)</label><input type="number" id="sale-remaining" class="form-input" readonly style="background:#f1f8e9; font-weight:bold;" placeholder=""></div>
+
+    <div class="form-group">
+      <label class="form-label" data-i18n="select_bank_accounts">انتخاب حساب‌های بانکی جهت درج در فاکتور</label>
+      <div id="sale-accounts-selector" class="checkbox-group"></div>
+    </div>
+
+    <input type="hidden" id="sale-profit" value="0">
+    <div class="row-2">
+      <button class="btn btn-success" onclick="saveSale()" data-i18n="save_and_issue">ذخیره و صدور</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-sale')"><i class="fas fa-arrow-right"></i> <span data-i18n="back">بازگشت</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-purchase" class="modal">
+  <div class="modal-content">
+    <div class="card-title">
+      <span id="pur-modal-title" data-i18n="record_purchase_invoice">ثبت فاکتور خرید</span>
+      <div>
+        <button class="btn btn-warning btn-sm" type="button" onclick="clearPurForm()"><i class="fas fa-eraser"></i> <span data-i18n="clear_form">پاکسازی</span></button>
+        <i class="fas fa-times" style="cursor:pointer; margin-right:8px;" onclick="closeModal('modal-purchase')"></i>
+      </div>
+    </div>
+    <input type="hidden" id="pur-edit-id">
+    
+    <div class="form-group">
+      <label class="form-label" data-i18n="supplier">تأمین‌کننده</label>
+      <select id="pur-supplier" class="form-select" onchange="onPurSupplierChange()"></select>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label" data-i18n="purchase_date">تاریخ فاکتور خرید</label>
+      <div class="row-3">
+        <select id="pur-year" class="form-select"></select>
+        <select id="pur-month" class="form-select"></select>
+        <select id="pur-day" class="form-select"></select>
+      </div>
+    </div>
+
+    <div class="card" style="margin:0 0 12px 0; padding:12px; background:#f8f9fa; border:1px solid #e2e8f0;">
+      <div style="font-size:0.85rem; font-weight:bold; margin-bottom:8px; color:var(--danger);" data-i18n="add_pur_product_item">افزودن قلم کالا خرید</div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="product_name">نام کالا</label>
+        <input type="text" id="pur-input-name" class="form-input" placeholder="">
+      </div>
+      <div class="row-2">
+        <div class="form-group">
+          <label class="form-label" data-i18n="quantity">تعداد</label>
+          <input type="number" id="pur-input-qty" class="form-input" placeholder="" min="1">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="buy_unit_price">قیمت خرید واحد (تومان)</label>
+          <input type="number" id="pur-input-price" class="form-input" placeholder="">
+        </div>
+      </div>
+      <button class="btn btn-danger" type="button" onclick="addPurItemFromInput()" style="margin-top:4px;"><i class="fas fa-plus"></i> <span data-i18n="add_to_pur_list">افزودن به لیست خرید</span></button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" data-i18n="registered_pur_items">اقلام ثبت‌شده در فاکتور خرید</label>
+      <div id="pur-items-list"></div>
+    </div>
+
+    <div class="form-group"><label class="form-label" data-i18n="total_discount">تخفیف کل (تومان)</label><input type="number" id="pur-discount" class="form-input" placeholder="" oninput="calcPurTotals()"></div>
+    <div class="form-group"><label class="form-label" data-i18n="pur_subtotal">مبلغ خرید فاکتور جاری (تومان)</label><input type="number" id="pur-subtotal" class="form-input" readonly style="background:#f5f5f5; font-weight:bold;" placeholder=""></div>
+
+    <div class="form-group"><label class="form-label" data-i18n="amount_paid">مبلغ پرداختی (تومان)</label><input type="number" id="pur-paid" class="form-input" placeholder="" oninput="calcPurTotals()"></div>
+    
+    <div class="form-group">
+      <label class="form-label" style="color: var(--warning); font-weight: bold;" data-i18n="excess_paid">مازاد پرداخت (تومان)</label>
+      <input type="number" id="pur-excess" class="form-input" readonly style="background:#fff8e1; font-weight:bold; color: var(--warning);" placeholder="">
+    </div>
+
+    <div class="form-group"><label class="form-label" id="pur-remaining-label" data-i18n="pur_rem_debt">مانده بدهی ما به تأمین‌کننده (تومان)</label><input type="number" id="pur-remaining" class="form-input" readonly style="background:#ffebee; font-weight:bold;" placeholder=""></div>
+    
+    <div class="row-2">
+      <button class="btn btn-danger" onclick="savePurchase()" data-i18n="record_purchase">ثبت خرید</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-purchase')"><i class="fas fa-arrow-right"></i> <span data-i18n="back">بازگشت</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-invoice-preview" class="modal">
+  <div class="modal-content" style="max-width:460px;">
+    <div class="card-title"><span data-i18n="invoice_preview">پیش‌نمایش فاکتور رسمی</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-invoice-preview')"></i></div>
+    <div id="invoice-print-area" class="invoice-box"></div>
+    <div style="height:12px;"></div>
+    <div class="row-2">
+      <button class="btn btn-info" onclick="shareInvoiceAsText()"><i class="fas fa-comment-alt"></i> <span data-i18n="share_text">ارسال متنی</span></button>
+      <button class="btn btn-success" onclick="shareInvoiceAsImage()"><i class="fas fa-image"></i> <span data-i18n="share_image">ارسال تصویری</span></button>
+    </div>
+    <button class="btn btn-outline" style="margin-top:8px; width:100%;" onclick="closeModal('modal-invoice-preview')"><i class="fas fa-arrow-right"></i> <span data-i18n="back">بازگشت</span></button>
+  </div>
+</div>
+
+<div id="modal-calendar" class="modal">
+  <div class="modal-content" style="max-width:480px;">
+    <div class="card-title"><span data-i18n="daily_calendar_report">تقویم گزارش‌گیری روزانه</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-calendar')"></i></div>
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <button class="btn btn-outline btn-sm" onclick="changeCalMonth(-1)"><i class="fas fa-chevron-right"></i> <span data-i18n="prev_month">ماه قبل</span></button>
+        <span id="cal-month-title" style="font-weight:bold; color:var(--primary);"></span>
+        <button class="btn btn-outline btn-sm" onclick="changeCalMonth(1)"><span data-i18n="next_month">ماه بعد</span> <i class="fas fa-chevron-left"></i></button>
+      </div>
+      <div class="calendar-grid">
+        <div class="calendar-day-head" data-i18n="day_sat">ش</div>
+        <div class="calendar-day-head" data-i18n="day_sun">ی</div>
+        <div class="calendar-day-head" data-i18n="day_mon">د</div>
+        <div class="calendar-day-head" data-i18n="day_tue">س</div>
+        <div class="calendar-day-head" data-i18n="day_wed">چ</div>
+        <div class="calendar-day-head" data-i18n="day_thu">پ</div>
+        <div class="calendar-day-head" data-i18n="day_fri">ج</div>
+      </div>
+      <div id="calendar-days-grid" class="calendar-grid" style="margin-top:6px;"></div>
+    </div>
+
+    <div id="cal-day-details" style="margin-top:14px; display:none;">
+      <div style="font-size:0.85rem; font-weight:bold; margin-bottom:8px; color:var(--text);" id="cal-selected-date-title" data-i18n="daily_report">گزارش روز</div>
+      <div id="cal-accordion-list"></div>
+    </div>
+
+    <div style="height:12px;"></div>
+    <button class="btn btn-outline" onclick="closeModal('modal-calendar')"><i class="fas fa-arrow-right"></i> <span data-i18n="back">بازگشت</span></button>
+  </div>
+</div>
+
+<div id="modal-lang" class="modal">
+  <div class="modal-content" style="max-width:380px;">
+    <div class="card-title"><span data-i18n="select_language">انتخاب زبان / Language</span><i class="fas fa-times" style="cursor:pointer;" onclick="closeModal('modal-lang')"></i></div>
+    <div class="lang-option" id="lang-opt-fa" onclick="setLanguage('fa')"><span>فارسی (FA)</span><i class="fas fa-check"></i></div>
+    <div class="lang-option" id="lang-opt-en" onclick="setLanguage('en')"><span>English (EN)</span><i class="fas fa-check"></i></div>
+    <div style="height:12px;"></div>
+    <button class="btn btn-outline" onclick="closeModal('modal-lang')"><i class="fas fa-arrow-right"></i> <span data-i18n="back">بازگشت</span></button>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a class="nav-item active" onclick="showSection('sec-dashboard', this)"><i class="fas fa-home"></i><span data-i18n="nav_home">خانه</span></a>
+  <a class="nav-item" onclick="showSection('sec-products', this)"><i class="fas fa-tshirt"></i><span data-i18n="nav_products">کالاها</span></a>
+  <a class="nav-item" onclick="showSection('sec-stock', this)"><i class="fas fa-boxes"></i><span data-i18n="nav_stock">انبار</span></a>
+  <a class="nav-item" onclick="showSection('sec-sales', this)"><i class="fas fa-receipt"></i><span data-i18n="nav_sales">فروش</span></a>
+  <a class="nav-item" onclick="showSection('sec-purchases', this)"><i class="fas fa-shopping-bag"></i><span data-i18n="nav_purchases">خرید</span></a>
+  <a class="nav-item" onclick="showSection('sec-customers', this)"><i class="fas fa-users"></i><span data-i18n="nav_customers">مشتریان</span></a>
+  <a class="nav-item" onclick="showSection('sec-suppliers', this)"><i class="fas fa-truck"></i><span data-i18n="nav_suppliers">تأمین</span></a>
+</div>
+
+<script>
+  var JalaaliHelper = {
+    toJalaali: function(gy, gm, gd) {
+      var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+      var jy = (gy <= 1600) ? 0 : 979;
+      gy -= (gy <= 1600) ? 621 : 1600;
+      var gy2 = (gm > 2) ? (gy + 1) : gy;
+      var days = (365 * gy) + parseInt((gy2 + 3) / 4) - parseInt((gy2 + 99) / 100) + parseInt((gy2 + 399) / 400) - 80 + gd + g_d_m[gm - 1];
+      jy += 33 * parseInt(days / 12053);
+      days %= 12053;
+      jy += 4 * parseInt(days / 1461);
+      days %= 1461;
+      if (days > 365) {
+        jy += parseInt((days - 1) / 365);
+        days = (days - 1) % 365;
+      }
+      var jm = (days < 186) ? 1 + parseInt(days / 31) : 7 + parseInt((days - 186) / 30);
+      var jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
+      return { jy: jy, jm: jm, jd: jd };
+    },
+    monthLength: function(jy, jm) {
+      if (jm <= 6) return 31;
+      if (jm <= 11) return 30;
+      var res = jy % 33;
+      var isLeap = (res===1||res===5||res===9||res===13||res===17||res===22||res===26||res===30);
+      return isLeap ? 30 : 29;
+    }
+  };
+
+  const translations = {
+    fa: {
+      subtitle: "سیستم جامع حسابداری فروشگاهی",
+      ai_assistant: "دستیار هوش مصنوعی",
+      contact_us: "تماس با ما",
+      help: "راهنما",
+      language: "زبان",
+      sale_invoice: "فاکتور فروش",
+      purchase_invoice: "فاکتور خرید",
+      new_product: "کالا جدید",
+      expenses: "هزینه‌ها",
+      calendar: "تقویم",
+      total_sales: "فروش کل (محاسبه‌شده)",
+      total_profit: "سود کل",
+      stock_items: "موجودی اقلام انبار",
+      total_expenses: "مجموع هزینه‌ها",
+      quick_access: "دسترسی سریع",
+      manage_expenses: "ثبت و مدیریت هزینه‌ها",
+      reports: "گزارشات جامع",
+      debtor_customers: "مشتریان بدهکار",
+      creditor_suppliers: "تأمین‌کنندگان بستانکار",
+      debtors_list: "لیست مشتریان بدهکار",
+      creditors_list: "لیست تأمین‌کنندگان بستانکار",
+      global_profit_title: "اعمال سود درصدی کلی بر تمام کالاها",
+      global_profit_toggle: "فعال‌سازی محاسبه سود درصدی انبار",
+      calc_stock: "محاسبه انبار",
+      manage_products: "مدیریت کالاها",
+      stock_kardex: "موجودی انبار و کاردکس",
+      sales_invoices: "فاکتورهای فروش",
+      new_invoice: "فاکتور جدید",
+      purchase_invoices: "فاکتورهای خرید",
+      new_purchase_invoice: "فاکتور خرید جدید",
+      customers: "مشتریان",
+      suppliers: "تأمین‌کنندگان",
+      pick_contacts: "انتخاب مخاطبین",
+      btn_new: "جدید",
+      store_settings: "تنظیمات عمومی فروشگاه",
+      store_name: "نام فروشگاه / عنوان",
+      invoice_subtitle: "زیرعنوان فاکتور",
+      default_language: "زبان پیش‌فرض برنامه",
+      store_logo: "لوگوی فروشگاه",
+      manage_addresses: "مدیریت شماره‌های تماس و آدرس‌ها",
+      add_address: "افزودن آدرس / تلفن جدید",
+      manage_socials: "مدیریت وب‌سایت و شبکه‌های اجتماعی",
+      add_social: "افزودن شبکه اجتماعی جدید",
+      manage_banks: "مدیریت کارت‌های بانکی",
+      add_bank: "افزودن حساب بانکی جدید",
+      save_all_settings: "ذخیره تمام تنظیمات",
+      backup_restore: "پشتیبان‌گیری و بازیابی",
+      export_backup: "ذخیره فایل پشتیبان (Backup)",
+      select_backup: "انتخاب فایل پشتیبان (JSON)",
+      choose_file: "فایل پشتیبان را انتخاب کنید",
+      reset_app: "بازنشانی کامل اطلاعات برنامه",
+      select_period: "تعیین بازه زمانی جهت گزارش‌گیری",
+      period_today: "امروز",
+      period_7days: "۷ روز اخیر",
+      period_30days: "۳۰ روز اخیر",
+      period_all: "کل دوره‌ها (همه‌زمان)",
+      back_to_home: "بازگشت به صفحه اصلی",
+      contact_creator: "تماس با سازنده نرم‌افزار",
+      creator_desc: "طراح، معمار نرم‌افزار و توسعه‌دهنده سیستم جامع فروش‌یار",
+      telegram_support: "پشتیبانی تلگرام",
+      email_support: "جمیل پشتیبانی",
+      back: "بازگشت",
+      ai_assistant_title: "دستیار هوشمند فروش‌یا‌ر (AI)",
+      ledger_account: "دفتر حساب مخاطب",
+      ledger_total_bal: "مجموع مانده حساب:",
+      trans_desc: "شرح تراکنش",
+      save_in_ledger: "ثبت در دفتر حساب",
+      share_text: "ارسال متنی صورت‌حساب",
+      share_image: "ارسال تصویری صورت‌حساب",
+      help_guide_title: "راهنمای جامع فروش‌یار",
+      help_item_1_title: "۱. مدیریت کالاها و انبار",
+      help_item_1_desc: "محصولات را همراه با قیمت خرید، فروش، موجودی و دسته‌بندی ثبت کنید.",
+      help_item_2_title: "۲. صدور فاکتور فروش",
+      help_item_2_desc: "فاکتور فروش صادر کرده و مبالغ و تخفیف‌ها را مدیریت کنید.",
+      got_it: "متوجه شدم",
+      expense_management: "مدیریت کامل هزینه‌ها",
+      add_new_expense: "ثبت هزینه جدید",
+      expense_title: "شرح / عنوان هزینه *",
+      amount: "مبلغ (تومان) *",
+      category: "دسته‌بندی",
+      save_expense: "ثبت هزینه",
+      edit_add_product: "افزودن / ویرایش کالا",
+      product_name: "نام کالا *",
+      product_barcode: "کد کالا / بارکد",
+      stock_qty: "موجودی انبار",
+      buy_price: "قیمت خرید (تومان)",
+      auto_calc_margin: "محاسبه خودکار قیمت فروش با درصد سود",
+      profit_margin: "درصد سود (٪)",
+      sell_price: "قیمت فروش (تومان)",
+      save_product: "ذخیره کالا",
+      customer_file: "پرونده مشتری",
+      contact_avatar: "تصویر مخاطب",
+      customer_name: "نام و نام خانوادگی مشتری",
+      phone_numbers: "شماره‌های تماس",
+      add_phone: "افزودن شماره",
+      full_address: "آدرس کامل",
+      save_file: "ذخیره پرونده",
+      supplier_file: "پرونده تأمین‌کننده",
+      supplier_name: "نام شرکت / تأمین‌کننده",
+      issue_sale_invoice: "صدور فاکتور فروش",
+      clear_form: "پاکسازی",
+      select_customer: "انتخاب مشتری",
+      invoice_date: "تاریخ فاکتور",
+      add_product_item: "افزودن قلم کالا",
+      select_product: "انتخاب کالا",
+      quantity: "تعداد",
+      unit_price: "قیمت واحد (تومان)",
+      add_to_list: "افزودن به لیست",
+      registered_items: "اقلام ثبت‌شده در فاکتور",
+      total_discount: "تخفیف کل (تومان)",
+      invoice_subtotal: "جمع کل فاکتور جاری (تومان)",
+      amount_received: "مبلغ دریافتی نقدی / کارت (تومان)",
+      excess_amount: "مازاد دریافت (تومان)",
+      new_debt_rem: "مانده حساب / بدهی جدید مشتری (تومان)",
+      select_bank_accounts: "انتخاب حساب‌های بانکی جهت درج در فاکتور",
+      save_and_issue: "ذخیره و صدور",
+      record_purchase_invoice: "ثبت فاکتور خرید",
+      supplier: "تأمین‌کننده",
+      purchase_date: "تاریخ فاکتور خرید",
+      add_pur_product_item: "افزودن قلم کالا خرید",
+      buy_unit_price: "قیمت خرید واحد (تومان)",
+      add_to_pur_list: "افزودن به لیست خرید",
+      registered_pur_items: "اقلام ثبت‌شده در فاکتور خرید",
+      pur_subtotal: "مبلغ خرید فاکتور جاری (تومان)",
+      amount_paid: "مبلغ پرداختی (تومان)",
+      excess_paid: "مازاد پرداخت (تومان)",
+      pur_rem_debt: "مانده بدهی ما به تأمین‌کننده (تومان)",
+      record_purchase: "ثبت خرید",
+      invoice_preview: "پیش‌نمایش فاکتور رسمی",
+      daily_calendar_report: "تقویم گزارش‌گیری روزانه",
+      prev_month: "ماه قبل",
+      next_month: "ماه بعد",
+      day_sat: "ش", day_sun: "ی", day_mon: "د", day_tue: "س", day_wed: "چ", day_thu: "پ", day_fri: "ج",
+      daily_report: "گزارش روز",
+      select_language: "انتخاب زبان / Language",
+      nav_home: "خانه", nav_products: "کالاها", nav_stock: "انبار", nav_sales: "فروش", nav_purchases: "خرید", nav_customers: "مشتریان", nav_suppliers: "تأمین", nav_more: "بیشتر",
+      search_product_ph: "جستجوی نام کالا...",
+      search_stock_ph: "جستجو در انبار...",
+      search_sale_ph: "جستجوی فاکتور فروش...",
+      search_purchase_ph: "جستجوی فاکتور خرید...",
+      search_customer_ph: "جستجوی مشتری...",
+      search_supplier_ph: "جستجوی تأمین‌کننده...",
+      search_expense_ph: "جستجو در هزینه‌ها...",
+      cat_general: "عمومی",
+      cat_rent: "اجاره",
+      cat_utilities: "قبوض",
+      cat_salaries: "حقوق"
+    },
+    en: {
+      subtitle: "Comprehensive Store Accounting System",
+      ai_assistant: "AI Assistant",
+      contact_us: "Contact Us",
+      help: "Help",
+      language: "Language",
+      sale_invoice: "Sales Invoice",
+      purchase_invoice: "Purchase Invoice",
+      new_product: "New Product",
+      expenses: "Expenses",
+      calendar: "Calendar",
+      total_sales: "Total Sales",
+      total_profit: "Total Profit",
+      stock_items: "Stock Items",
+      total_expenses: "Total Expenses",
+      quick_access: "Quick Access",
+      manage_expenses: "Manage Expenses",
+      reports: "Reports",
+      debtor_customers: "Debtor Customers",
+      creditor_suppliers: "Creditor Suppliers",
+      debtors_list: "Debtors List",
+      creditors_list: "Creditors List",
+      global_profit_title: "Apply Global Profit Margin",
+      global_profit_toggle: "Enable Global Profit Margin",
+      calc_stock: "Calculate Stock",
+      manage_products: "Products Management",
+      stock_kardex: "Stock & Inventory",
+      sales_invoices: "Sales Invoices",
+      new_invoice: "New Invoice",
+      purchase_invoices: "Purchase Invoices",
+      new_purchase_invoice: "New Purchase Invoice",
+      customers: "Customers",
+      suppliers: "Suppliers",
+      pick_contacts: "Pick Contacts",
+      btn_new: "New",
+      store_settings: "General Store Settings",
+      store_name: "Store Name / Title",
+      invoice_subtitle: "Invoice Subtitle",
+      default_language: "Default Language",
+      store_logo: "Store Logo",
+      manage_addresses: "Manage Phone & Addresses",
+      add_address: "Add New Address / Phone",
+      manage_socials: "Manage Social Networks",
+      add_social: "Add Social Network",
+      manage_banks: "Manage Bank Accounts",
+      add_bank: "Add Bank Account",
+      save_all_settings: "Save All Settings",
+      backup_restore: "Backup & Restore",
+      export_backup: "Export Backup File",
+      select_backup: "Select Backup File (JSON)",
+      choose_file: "Choose Backup File",
+      reset_app: "Reset Application Data",
+      select_period: "Select Time Period for Report",
+      period_today: "Today",
+      period_7days: "Last 7 Days",
+      period_30days: "Last 30 Days",
+      period_all: "All Time",
+      back_to_home: "Back to Home",
+      contact_creator: "Contact Developer",
+      creator_desc: "Architect & Lead Developer of Forooshyar System",
+      telegram_support: "Telegram Support",
+      email_support: "Email Support",
+      back: "Back",
+      ai_assistant_title: "Forooshyar Smart AI Assistant",
+      ledger_account: "Contact Ledger Account",
+      ledger_total_bal: "Total Balance:",
+      trans_desc: "Transaction Note",
+      save_in_ledger: "Save to Ledger",
+      share_text: "Share as Text",
+      share_image: "Share as Image",
+      help_guide_title: "Forooshyar User Guide",
+      help_item_1_title: "1. Inventory & Products",
+      help_item_1_desc: "Register products with cost, selling price, quantity, and category.",
+      help_item_2_title: "2. Sales Invoices",
+      help_item_2_desc: "Issue sales invoices, manage discounts and remaining balances.",
+      got_it: "Got It",
+      expense_management: "Expense Management",
+      add_new_expense: "Add New Expense",
+      expense_title: "Expense Title / Description *",
+      amount: "Amount *",
+      category: "Category",
+      save_expense: "Save Expense",
+      edit_add_product: "Add / Edit Product",
+      product_name: "Product Name *",
+      product_barcode: "Barcode / Code",
+      stock_qty: "Stock Quantity",
+      buy_price: "Cost Price",
+      auto_calc_margin: "Auto-calculate sell price with profit margin",
+      profit_margin: "Profit Margin (%)",
+      sell_price: "Selling Price",
+      save_product: "Save Product",
+      customer_file: "Customer File",
+      contact_avatar: "Contact Avatar",
+      customer_name: "Customer Full Name",
+      phone_numbers: "Phone Numbers",
+      add_phone: "Add Phone",
+      full_address: "Full Address",
+      save_file: "Save File",
+      supplier_file: "Supplier / Company Name",
+      issue_sale_invoice: "Issue Sales Invoice",
+      clear_form: "Clear",
+      select_customer: "Select Customer",
+      invoice_date: "Invoice Date",
+      add_product_item: "Add Item",
+      select_product: "Select Product",
+      quantity: "Quantity",
+      unit_price: "Unit Price",
+      add_to_list: "Add to List",
+      registered_items: "Items in Invoice",
+      total_discount: "Total Discount",
+      invoice_subtotal: "Invoice Total Amount",
+      amount_received: "Amount Received",
+      excess_amount: "Excess Received",
+      new_debt_rem: "Remaining Balance / Debt",
+      select_bank_accounts: "Select Bank Accounts for Invoice",
+      save_and_issue: "Save & Issue",
+      record_purchase_invoice: "Record Purchase Invoice",
+      supplier: "Supplier",
+      purchase_date: "Purchase Date",
+      add_pur_product_item: "Add Purchase Item",
+      buy_unit_price: "Unit Purchase Price",
+      add_to_pur_list: "Add to Purchase List",
+      registered_pur_items: "Items in Purchase Invoice",
+      pur_subtotal: "Total Purchase Amount",
+      amount_paid: "Amount Paid",
+      excess_paid: "Excess Paid",
+      pur_rem_debt: "Remaining Debt to Supplier",
+      record_purchase: "Record Purchase",
+      invoice_preview: "Invoice Preview",
+      daily_calendar_report: "Daily Calendar Report",
+      prev_month: "Prev Month",
+      next_month: "Next Month",
+      day_sat: "Sat", day_sun: "Sun", day_mon: "Mon", day_tue: "Tue", day_wed: "Wed", day_thu: "Thu", day_fri: "Fri",
+      daily_report: "Daily Report",
+      select_language: "Select Language",
+      nav_home: "Home", nav_products: "Products", nav_stock: "Stock", nav_sales: "Sales", nav_purchases: "Purchases", nav_customers: "Customers", nav_suppliers: "Suppliers", nav_more: "More",
+      search_product_ph: "Search product name...",
+      search_stock_ph: "Search inventory...",
+      search_sale_ph: "Search sales invoice...",
+      search_purchase_ph: "Search purchase invoice...",
+      search_customer_ph: "Search customer...",
+      search_supplier_ph: "Search supplier...",
+      search_expense_ph: "Search expenses...",
+      cat_general: "General",
+      cat_rent: "Rent",
+      cat_utilities: "Utilities",
+      cat_salaries: "Salaries"
+    }
+  };
+
+  var currentLang = localStorage.getItem('forooshyar_lang') || 'fa';
+
+  function applyLanguage() {
+    try {
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = (currentLang === 'en') ? 'ltr' : 'rtl';
+      
+      var btnInd = document.getElementById('current-lang-btn');
+      if(btnInd) btnInd.innerText = currentLang.toUpperCase();
+      
+      document.querySelectorAll('.lang-option').forEach(el => el.classList.remove('active'));
+      var activeOpt = document.getElementById('lang-opt-' + currentLang);
+      if(activeOpt) activeOpt.classList.add('active');
+
+      var activeCfgOpt = document.getElementById('cfg-lang-' + currentLang);
+      if(activeCfgOpt) activeCfgOpt.classList.add('active');
+
+      const dict = translations[currentLang] || translations.fa;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+          el.innerText = dict[key];
+        }
+      });
+
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (dict[key]) {
+          el.placeholder = dict[key];
+        }
+      });
+
+      localStorage.setItem('forooshyar_lang', currentLang);
+    } catch(e) {}
+  }
+
+  function setLanguage(lang) { 
+    currentLang = lang; 
+    applyLanguage(); 
+    closeModal('modal-lang'); 
+  }
+
+  var defaultDb = {
+    settings: { 
+      title: "فروش‌یار", 
+      subtitle: "سیستم جامع حسابداری فروشگاهی", 
+      logo: "",
+      addresses: [{ id: 1, phoneLabel: "", phoneNum: "", addressText: "" }],
+      socials: [{ id: 1, platform: "instagram", link: "" }],
+      banks: [{ id: 1, bankName: "", cardNumber: "" }]
+    },
+    products: [],
+    sales: [],
+    purchases: [],
+    expenses: [],
+    customers: [],
+    suppliers: [],
+    ledgerTransactions: []
+  };
+
+  var db = defaultDb;
+  try {
+    var raw = localStorage.getItem('forooshyar_db_v15');
+    if (raw) { var parsed = JSON.parse(raw); if (parsed) db = parsed; }
+  } catch(e) { db = defaultDb; }
+
+  if(!db.products) db.products = [];
+  if(!db.sales) db.sales = [];
+  if(!db.purchases) db.purchases = [];
+  if(!db.expenses) db.expenses = [];
+  if(!db.customers) db.customers = [];
+  if(!db.suppliers) db.suppliers = [];
+  if(!db.ledgerTransactions) db.ledgerTransactions = [];
+  if(!db.settings) db.settings = defaultDb.settings;
+  if(!db.settings.addresses) db.settings.addresses = defaultDb.settings.addresses;
+  if(!db.settings.socials) db.settings.socials = defaultDb.settings.socials;
+  if(!db.settings.banks) db.settings.banks = defaultDb.settings.banks;
+
+  var activeSaleItems = [];
+  var activePurItems = [];
+  var currentPreviewInvoice = null;
+  var currentPreviewType = 'sale';
+  var selectedCalDateStr = '';
+  var tempCustAvatar = '';
+  var tempSuppAvatar = '';
+  var currentCalJalaali = { jYear: 1405, jMonth: 1 };
+  var monthNamesList = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
+
+  try {
+    var todayG = new Date();
+    var todayJ = JalaaliHelper.toJalaali(todayG.getFullYear(), todayG.getMonth() + 1, todayG.getDate());
+    currentCalJalaali.jYear = todayJ.jy;
+    currentCalJalaali.jMonth = todayJ.jm;
+  } catch(e) {}
+
+  function handleRestoreFileChange(e) {
+    var file = e.target.files[0];
+    var labelEl = document.getElementById('restore-file-label');
+    var statusEl = document.getElementById('restore-file-status');
+    if (file) {
+      if(labelEl) labelEl.innerText = file.name;
+      if(statusEl) {
+        statusEl.innerHTML = '<i class="fas fa-check-circle text-success"></i> فایل پشتیبان با موفقیت بارگذاری شد.';
+        statusEl.style.color = 'var(--success)';
+      }
+      importBackup(e);
+    } else {
+      if(labelEl) labelEl.innerText = 'فایل پشتیبان را انتخاب کنید';
+      if(statusEl) statusEl.innerText = '';
+    }
+  }
+
+  function shareLedgerAsText() {
+    var name = document.getElementById('ledger-party-name').value;
+    var type = document.getElementById('ledger-party-type').value;
+    var isCust = (type === 'customer');
+    
+    recalculateAllBalances();
+    var partyObj = isCust ? db.customers.find(x => x.name === name) : db.suppliers.find(x => x.name === name);
+    var currentBalance = partyObj ? partyObj.debt : 0;
+    
+    var text = '📋 صورت‌حساب دفتر حساب - ' + (db.settings.title || 'فروش‌یار') + '\n';
+    text += (isCust ? 'مشتری: ' : 'تأمین‌کننده: ') + name + '\n';
+    text += 'تاریخ گزارش: ' + getTodayJalaaliStr() + '\n';
+    text += '----------------------------------\n';
+    
+    if (isCust) {
+      text += 'وضعیت مانده حساب: ' + (currentBalance > 0 ? fmt(currentBalance) + ' تومان (بدهکار)' : (currentBalance < 0 ? fmt(Math.abs(currentBalance)) + ' تومان (بستانکار)' : 'تسویه کامل')) + '\n';
+    } else {
+      text += 'وضعیت مانده حساب: ' + (currentBalance > 0 ? fmt(currentBalance) + ' تومان (طلبکار)' : (currentBalance < 0 ? fmt(Math.abs(currentBalance)) + ' تومان (پیش‌پرداخت)' : 'تسویه کامل')) + '\n';
+    }
+    
+    text += '----------------------------------\n';
+    text += 'جهت هماهنگی و تسویه حساب با فروشگاه تماس بگیرید.\n';
+    text += (db.settings.title || 'فروش‌یار');
+
+    if (navigator.share) {
+      navigator.share({ text: text });
+    } else {
+      navigator.clipboard.writeText(text);
+      alert('صورت‌حساب دفتر حساب به‌صورت متنی کپی شد!');
+    }
+  }
+
+  function shareLedgerAsImage() {
+    var area = document.getElementById('ledger-printable-area');
+    if (!area) return;
+    
+    var elementsToHide = area.querySelectorAll('.hide-on-capture');
+    elementsToHide.forEach(el => el.style.display = 'none');
+    
+    html2canvas(area, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
+      elementsToHide.forEach(el => el.style.display = '');
+
+      canvas.toBlob(blob => {
+        var file = new File([blob], "ledger_statement.png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({ files: [file] });
+        } else {
+          var a = document.createElement('a');
+          a.download = 'ledger_statement.png';
+          a.href = canvas.toDataURL();
+          a.click();
+        }
+      });
+    });
+  }
+
+  function saveDb() {
+    try { localStorage.setItem('forooshyar_db_v15', JSON.stringify(db)); } catch(e) {}
+    renderAll();
+  }
+
+  function fmt(n) { return Number(n || 0).toLocaleString(currentLang === 'en' ? 'en-US' : 'fa-IR'); }
+  function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function initDateDropdowns(yearId, monthId, dayId, defaultJalaali) {
+    try {
+      var ySelect = document.getElementById(yearId);
+      var mSelect = document.getElementById(monthId);
+      var dSelect = document.getElementById(dayId);
+      if(!ySelect || !mSelect || !dSelect) return;
+      var currentY = defaultJalaali ? defaultJalaali.jy : 1405;
+      var currentM = defaultJalaali ? defaultJalaali.jm : 1;
+      var currentD = defaultJalaali ? defaultJalaali.jd : 1;
+      var yHtml = ''; for(var y = 1400; y <= 1415; y++) { yHtml += '<option value="'+y+'" '+(y === currentY ? 'selected':'')+'>'+y+'</option>'; } ySelect.innerHTML = yHtml;
+      var mHtml = ''; for(var m = 1; m <= 12; m++) { mHtml += '<option value="'+pad2(m)+'" '+(m === currentM ? 'selected':'')+'>'+monthNamesList[m-1]+'</option>'; } mSelect.innerHTML = mHtml;
+      var dHtml = ''; for(var d = 1; d <= 31; d++) { dHtml += '<option value="'+pad2(d)+'" '+(d === currentD ? 'selected':'')+'>'+d+'</option>'; } dSelect.innerHTML = dHtml;
+    } catch(e) {}
+  }
+
+  function getDateFromDropdowns(yearId, monthId, dayId) {
+    return document.getElementById(yearId).value + '/' + document.getElementById(monthId).value + '/' + document.getElementById(dayId).value;
+  }
+
+  function setDropdownsFromDateStr(yearId, monthId, dayId, dateStr) {
+    try {
+      if(!dateStr) return;
+      var parts = dateStr.split('/');
+      if(parts.length === 3) {
+        document.getElementById(yearId).value = parts[0];
+        document.getElementById(monthId).value = pad2(parseInt(parts[1]));
+        document.getElementById(dayId).value = pad2(parseInt(parts[2]));
+      }
+    } catch(e) {}
+  }
+
+  function showSection(id, el) {
+    try {
+      document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+      var sec = document.getElementById(id);
+      if(sec) sec.classList.add('active');
+      if(el && el.classList.contains('nav-item')) {
+        document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+        el.classList.add('active');
+      }
+      renderAll();
+    } catch(err) {}
+  }
+
+  function openModal(id) { 
+    var m = document.getElementById(id);
+    if(m) { m.style.display = 'flex'; m.classList.add('active'); }
+    if(id === 'modal-calendar') renderCalendarGrid();
+    if(id === 'modal-ai') renderAIAnalysis();
+  }
+  function closeModal(id) { 
+    var m = document.getElementById(id);
+    if(m) { m.style.display = 'none'; m.classList.remove('active'); }
+  }
+  function toggleHomeSection(id) {
+    var el = document.getElementById(id);
+    if(el) { el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none'; }
+  }
+  function getTodayJalaali() {
+    var todayG = new Date();
+    return JalaaliHelper.toJalaali(todayG.getFullYear(), todayG.getMonth() + 1, todayG.getDate());
+  }
+  function getTodayJalaaliStr() {
+    var j = getTodayJalaali();
+    return j.jy + '/' + pad2(j.jm) + '/' + pad2(j.jd);
+  }
+
+  async function pickContact(targetType) {
+    try {
+      if ('contacts' in navigator && 'select' in navigator.contacts) {
+        const contacts = await navigator.contacts.select(['name', 'tel'], { multiple: true });
+        if (contacts && contacts.length > 0) {
+          contacts.forEach(c => {
+            const name = (c.name && c.name.length > 0) ? c.name[0] : 'مخاطب جدید';
+            const phone = (c.tel && c.tel.length > 0) ? c.tel[0].replace(/\s+/g, '') : '';
+            if (targetType === 'customer') {
+              if(!db.customers.some(x => x.name === name)) {
+                db.customers.push({ id: Date.now() + Math.random(), name: name, address: '', phones: [{ label: 'همراه', number: phone }], avatar: '', debt: 0 });
+              }
+            } else {
+              if(!db.suppliers.some(x => x.name === name)) {
+                db.suppliers.push({ id: Date.now() + Math.random(), name: name, address: '', phones: [{ label: 'دفتر', number: phone }], avatar: '', debt: 0 });
+              }
+            }
+          });
+          saveDb();
+          alert('مخاطبین با موفقیت انتخاب و اضافه شدند.');
+        }
+      } else {
+        var manualName = prompt('نام مخاطب مورد نظر را وارد کنید:');
+        if(manualName) {
+          if (targetType === 'customer') {
+            db.customers.push({ id: Date.now(), name: manualName, address: '', phones: [{ label: 'همراه', number: '' }], avatar: '', debt: 0 });
+          } else {
+            db.suppliers.push({ id: Date.now(), name: manualName, address: '', phones: [{ label: 'دفتر', number: '' }], avatar: '', debt: 0 });
+          }
+          saveDb();
+          alert('مخاطب ثبت شد.');
+        }
+      }
+    } catch (err) { alert('خطا در دسترسی به مخاطبین دستگاه.'); }
+  }
+
+  function toggleGlobalProfitInput() { 
+    document.getElementById('global-profit-panel').style.display = document.getElementById('global-profit-switch').checked ? 'block' : 'none'; 
+  }
+
+  function applyGlobalProfitMargin() {
+    var pct = Number(document.getElementById('global-profit-percent').value);
+    if (isNaN(pct) || pct <= 0) return alert('درصد سود نامعتبر است');
+    if (confirm('اعمال سود ' + pct + '٪ بر روی تمام کالاهای انبار؟')) {
+      (db.products || []).forEach(p => { if (p.buyPrice > 0) { p.price = Math.round(p.buyPrice + (p.buyPrice * (pct / 100))); p.profitMargin = pct; } });
+      saveDb(); alert('بروزرسانی شد.');
+    }
+  }
+
+  function recalculateAllBalances() {
+    (db.customers || []).forEach(c => {
+      var customerSales = (db.sales || []).filter(s => s.customer === c.name);
+      var totalNetInvoices = customerSales.reduce((acc, s) => {
+        var sub = Number(s.subtotal || s.total || 0);
+        var rec = Number(s.received || 0);
+        return acc + (sub - rec);
+      }, 0);
+
+      var transList = (db.ledgerTransactions || []).filter(t => t.partyName === c.name && t.partyType === 'customer');
+      var totalTransPaid = transList.reduce((acc, t) => acc + Number(t.amount || 0), 0);
+
+      c.debt = totalNetInvoices - totalTransPaid;
+    });
+
+    (db.suppliers || []).forEach(s => {
+      var supplierPurchases = (db.purchases || []).filter(p => p.supplier === s.name);
+      var totalNetPurchases = supplierPurchases.reduce((acc, p) => {
+        var sub = Number(p.subtotal || p.total || 0);
+        var paid = Number(p.paid || 0);
+        return acc + (sub - paid);
+      }, 0);
+
+      var transList = (db.ledgerTransactions || []).filter(t => t.partyName === s.name && t.partyType === 'supplier');
+      var totalTransPaid = transList.reduce((acc, t) => acc + Number(t.amount || 0), 0);
+
+      s.debt = totalNetPurchases - totalTransPaid;
+    });
+  }
+
+  function renderAll() {
+    try {
+      recalculateAllBalances();
+      applyLanguage();
+      if(document.getElementById('header-title')) document.getElementById('header-title').innerHTML = '<i class="fas fa-shopping-bag"></i> ' + (db.settings.title || 'فروش‌یار');
+      if(document.getElementById('header-subtitle')) document.getElementById('header-subtitle').innerText = db.settings.subtitle || (translations[currentLang] ? translations[currentLang].subtitle : '');
+      if(document.getElementById('cfg-title')) document.getElementById('cfg-title').value = db.settings.title || '';
+      if(document.getElementById('cfg-subtitle')) document.getElementById('cfg-subtitle').value = db.settings.subtitle || '';
+
+      var img = document.getElementById('header-logo');
+      if(db.settings.logo && img) { img.src = db.settings.logo; img.style.display = 'inline-block'; }
+      else if(img) { img.style.display = 'none'; }
+
+      var period = document.getElementById('report-period') ? document.getElementById('report-period').value : 'all';
+      var filteredSales = db.sales || [], filteredExpenses = db.expenses || [];
+      if(period === 'today') {
+        var todayStr = getTodayJalaaliStr();
+        filteredSales = (db.sales || []).filter(s => s.date === todayStr);
+        filteredExpenses = (db.expenses || []).filter(e => e.date === todayStr);
+      }
+
+      var totSales = filteredSales.reduce((a,b) => a + Number(b.subtotal||b.total||b.price||0), 0);
+      var totProfit = filteredSales.reduce((a,b) => a + Number(b.profit||0), 0);
+      var totExpense = filteredExpenses.reduce((a,b) => a + Number(b.amount||0), 0);
+      var totStock = (db.products || []).reduce((a,b) => a + Number(b.qty||0), 0);
+
+      var unit = currentLang === 'en' ? ' Tomans' : ' تومان';
+      var unitQty = currentLang === 'en' ? ' Pcs' : ' عدد';
+
+      if(document.getElementById('dash-sales')) document.getElementById('dash-sales').innerText = fmt(totSales) + unit;
+      if(document.getElementById('dash-profit')) document.getElementById('dash-profit').innerText = fmt(totProfit) + unit;
+      if(document.getElementById('dash-expense')) document.getElementById('dash-expense').innerText = fmt(totExpense) + unit;
+      if(document.getElementById('dash-stock')) document.getElementById('dash-stock').innerText = fmt(totStock) + unitQty;
+
+      renderDashDebtorsAndCreditors();
+      renderProducts();
+      renderStock();
+      renderSales();
+      renderPurchases();
+      renderCustomers();
+      renderSuppliers();
+      renderReports();
+      renderSettingsAccounts();
+      populateSelects();
+    } catch(err) {}
+  }
+
+  function populateSelects() {
+    try {
+      var custSelect = document.getElementById('sale-customer');
+      if(custSelect) {
+        var val = custSelect.value;
+        custSelect.innerHTML = (db.customers || []).map(c => '<option value="'+c.name+'">'+c.name+' ('+fmt(c.debt||0)+' rem)</option>').join('');
+        if(val) custSelect.value = val;
+      }
+
+      var suppSelect = document.getElementById('pur-supplier');
+      if(suppSelect) {
+        var valS = suppSelect.value;
+        suppSelect.innerHTML = (db.suppliers || []).map(s => '<option value="'+s.name+'">'+s.name+' ('+fmt(s.debt||0)+' rem)</option>').join('');
+        if(valS) suppSelect.value = valS;
+      }
+
+      var prodSelect = document.getElementById('sale-input-prod');
+      if(prodSelect) {
+        prodSelect.innerHTML = (db.products || []).map(p => '<option value="'+p.id+'">'+p.name+' (Stock: '+p.qty+')</option>').join('');
+        onSaleInputProdChange();
+      }
+
+      var cats = [...new Set((db.products || []).map(p => p.category).filter(Boolean))];
+      var catOpt = '<option value="">All Categories</option>' + cats.map(c => '<option value="'+c+'">'+c+'</option>').join('');
+      if(document.getElementById('filter-product-cat')) document.getElementById('filter-product-cat').innerHTML = catOpt;
+      if(document.getElementById('filter-stock-cat')) document.getElementById('filter-stock-cat').innerHTML = catOpt;
+      if(document.getElementById('categories-list')) document.getElementById('categories-list').innerHTML = cats.map(c => '<option value="'+c+'">').join('');
+
+      var accSelector = document.getElementById('sale-accounts-selector');
+      if(accSelector) {
+        accSelector.innerHTML = (db.settings.banks || []).map(b => '<label class="checkbox-item"><input type="checkbox" class="sale-acc-cb" data-type="bank" data-id="'+b.id+'" checked> <span>Bank '+(b.bankName||'')+': '+b.cardNumber+'</span></label>').join('') || '<span style="font-size:0.75rem; color:#888;">No cards registered</span>';
+      }
+    } catch(e) {}
+  }
+
+  function renderSettingsAccounts() {
+    try {
+      var addrList = document.getElementById('store-addresses-list');
+      if(addrList) {
+        addrList.innerHTML = (db.settings.addresses || []).map((a, i) => '<div style="background:#f8f9fa; border:1px solid #e0e0e0; padding:10px; border-radius:12px; margin-bottom:8px;"><div class="input-row-group"><div style="display:flex; align-items:center; gap:6px; flex:1;"><i class="fas fa-tag" style="color:var(--primary); font-size:0.85rem;" title="Title"></i><input type="text" class="form-input store-phone-lbl" value="'+(a.phoneLabel||'')+'" placeholder="" style="flex:1;"></div><div style="display:flex; align-items:center; gap:6px; flex:1;"><i class="fas fa-phone" style="color:var(--primary); font-size:0.85rem;" title="Phone"></i><input type="text" class="form-input store-phone-num" value="'+(a.phoneNum||'')+'" placeholder="" style="flex:1;"></div><button class="btn btn-danger btn-sm" type="button" onclick="db.settings.addresses.splice('+i+',1); renderSettingsAccounts();"><i class="fas fa-trash"></i></button></div><div class="form-group" style="margin:6px 0 0; display:flex; align-items:center; gap:8px;"><i class="fas fa-map-marker-alt" style="color:var(--primary);" title="Address"></i><input type="text" class="form-input store-address-text" value="'+(a.addressText||'')+'" placeholder="" style="flex:1;"></div></div>').join('');
+      }
+
+      var socList = document.getElementById('store-socials-list');
+      if(socList) {
+        socList.innerHTML = (db.settings.socials || []).map((s, i) => '<div class="social-card-item social-bg-'+(s.platform||'instagram')+'"><div style="display:flex; align-items:center; gap:6px; flex:1;"><select class="form-select store-soc-platform" style="width:105px; background:transparent; color:white; border:none; font-weight:bold;"><option value="instagram" '+(s.platform==='instagram'?'selected':'')+'>Instagram</option><option value="telegram" '+(s.platform==='telegram'?'selected':'')+'>Telegram</option><option value="eitaa" '+(s.platform==='eitaa'?'selected':'')+'>Eitaa</option></select><input type="text" class="form-input store-soc-link" value="'+(s.link||'')+'" placeholder="" style="border:none; background:rgba(255,255,255,0.15); color:white; flex:1;"></div><button class="btn btn-danger btn-sm" type="button" onclick="db.settings.socials.splice('+i+',1); renderSettingsAccounts();"><i class="fas fa-trash"></i></button></div>').join('');
+      }
+
+      var bList = document.getElementById('bank-accounts-list');
+      if(bList) {
+        bList.innerHTML = (db.settings.banks || []).map((b, i) => '<div class="input-row-group"><div style="display:flex; align-items:center; gap:6px; flex:1;"><i class="fas fa-university" style="color:var(--primary); font-size:0.85rem;" title="Bank"></i><input type="text" class="form-input bank-name-inp" value="'+(b.bankName||'')+'" placeholder="" style="flex:1;"></div><div style="display:flex; align-items:center; gap:6px; flex:2;"><i class="fas fa-credit-card" style="color:var(--primary); font-size:0.85rem;" title="Card"></i><input type="text" class="form-input bank-card-inp" value="'+(b.cardNumber||'')+'" placeholder="" style="flex:1;"></div><button class="btn btn-danger btn-sm" type="button" onclick="db.settings.banks.splice('+i+',1); renderSettingsAccounts();"><i class="fas fa-trash"></i></button></div>').join('');
+      }
+    } catch(e) {}
+  }
+
+  function addStoreAddressRow() { db.settings.addresses.push({ id: Date.now(), phoneLabel: "", phoneNum: "", addressText: "" }); renderSettingsAccounts(); }
+  function addStoreSocialRow() { db.settings.socials.push({ id: Date.now(), platform: "instagram", link: "" }); renderSettingsAccounts(); }
+  function addBankInputRow() { db.settings.banks.push({ id: Date.now(), bankName: "", cardNumber: "" }); renderSettingsAccounts(); }
+
+  function renderProducts() {
+    var q = (document.getElementById('search-product') ? document.getElementById('search-product').value : '').toLowerCase();
+    var cat = document.getElementById('filter-product-cat') ? document.getElementById('filter-product-cat').value : '';
+    var html = '';
+    (db.products || []).filter(p => (p.name.toLowerCase().includes(q) || (p.barcode && p.barcode.includes(q))) && (!cat || p.category === cat)).forEach(p => {
+      html += '<div class="list-row"><div><b>'+p.name+'</b> '+(p.category?'<span class="badge badge-info">'+p.category+'</span>':'')+'<small style="display:block; color:var(--text-secondary);">Buy: '+fmt(p.buyPrice)+' | Sell: '+fmt(p.price)+'</small></div><div style="display:flex; align-items:center; gap:6px;"><span>Stock: <b>'+p.qty+'</b></span><button class="btn btn-primary btn-sm" onclick="editProduct('+p.id+')"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm" onclick="deleteProduct('+p.id+')"><i class="fas fa-trash"></i></button></div></div>';
+    });
+    document.getElementById('products-list').innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">No products found</div>';
+  }
+
+  function renderStock() {
+    var q = (document.getElementById('search-stock') ? document.getElementById('search-stock').value : '').toLowerCase();
+    var cat = document.getElementById('filter-stock-cat') ? document.getElementById('filter-stock-cat').value : '';
+    var html = '', idx = 1;
+    (db.products || []).filter(p => p.name.toLowerCase().includes(q) && (!cat || p.category === cat)).forEach(p => {
+      html += '<div class="list-row"><span><b>'+(idx++)+'. '+p.name+'</b></span><span style="color:'+(p.qty>5?'var(--success)':'var(--danger)')+'; font-weight:700;">Stock: '+p.qty+'</span></div>';
+    });
+    document.getElementById('stock-list').innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">No items</div>';
+  }
+
+  function saveProduct() {
+    var id = document.getElementById('prod-edit-id').value;
+    var name = document.getElementById('prod-name').value.trim();
+    if(!name) return alert('Name is required');
+    var pObj = {
+      id: id ? Number(id) : Date.now(),
+      name: name,
+      barcode: document.getElementById('prod-barcode').value.trim(),
+      category: document.getElementById('prod-category').value.trim(),
+      qty: Number(document.getElementById('prod-qty').value) || 0,
+      buyPrice: Number(document.getElementById('prod-buy-price').value) || 0,
+      price: Number(document.getElementById('prod-price').value) || 0
+    };
+    if(id) {
+      db.products = db.products.map(p => p.id == id ? pObj : p);
+    } else {
+      db.products.push(pObj);
+    }
+    saveDb(); closeModal('modal-product');
+  }
+
+  function addCustPhoneRow(lbl, num) {
+    var div = document.createElement('div'); div.className = 'input-row-group';
+    div.innerHTML = '<input type="text" class="form-input cust-phone-lbl" value="'+(lbl||'Mobile')+'" placeholder="" style="flex:1;"><input type="text" class="form-input cust-phone-num" value="'+(num||'')+'" placeholder="" style="flex:2;"><button class="btn btn-danger btn-sm" type="button" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>';
+    document.getElementById('cust-phones-list').appendChild(div);
+  }
+  function addSuppPhoneRow(lbl, num) {
+    var div = document.createElement('div'); div.className = 'input-row-group';
+    div.innerHTML = '<input type="text" class="form-input supp-phone-lbl" value="'+(lbl||'Office')+'" placeholder="" style="flex:1;"><input type="text" class="form-input supp-phone-num" value="'+(num||'')+'" placeholder="" style="flex:2;"><button class="btn btn-danger btn-sm" type="button" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>';
+    document.getElementById('supp-phones-list').appendChild(div);
+  }
+
+  function saveCustomerModal() {
+    var id = document.getElementById('cust-edit-id').value;
+    var name = document.getElementById('cust-name').value.trim();
+    if(!name) return alert('Customer Name is required');
+    var phones = [];
+    document.querySelectorAll('#cust-phones-list .input-row-group').forEach(r => {
+      var num = r.querySelector('.cust-phone-num').value.trim();
+      if(num) phones.push({ label: r.querySelector('.cust-phone-lbl').value, number: num });
+    });
+    var cObj = {
+      id: id ? Number(id) : Date.now(),
+      name: name,
+      address: document.getElementById('cust-address').value,
+      phones: phones,
+      avatar: tempCustAvatar || '',
+      debt: 0
+    };
+    if(id) {
+      var old = db.customers.find(x => x.id == id);
+      if(old) cObj.debt = old.debt || 0;
+      db.customers = db.customers.map(c => c.id == id ? cObj : c);
+    } else {
+      db.customers.push(cObj);
+    }
+    saveDb(); closeModal('modal-customer');
+  }
+
+  function saveSupplierModal() {
+    var id = document.getElementById('supp-edit-id').value;
+    var name = document.getElementById('supp-name').value.trim();
+    if(!name) return alert('Supplier Name is required');
+    var phones = [];
+    document.querySelectorAll('#supp-phones-list .input-row-group').forEach(r => {
+      var num = r.querySelector('.supp-phone-num').value.trim();
+      if(num) phones.push({ label: r.querySelector('.supp-phone-lbl').value, number: num });
+    });
+    var sObj = {
+      id: id ? Number(id) : Date.now(),
+      name: name,
+      address: document.getElementById('supp-address').value,
+      phones: phones,
+      avatar: tempSuppAvatar || '',
+      debt: 0
+    };
+    if(id) {
+      var old = db.suppliers.find(x => x.id == id);
+      if(old) sObj.debt = old.debt || 0;
+      db.suppliers = db.suppliers.map(s => s.id == id ? sObj : s);
+    } else {
+      db.suppliers.push(sObj);
+    }
+    saveDb(); closeModal('modal-supplier');
+  }
+
+  function shareInvoiceAsText() {
+    if(!currentPreviewInvoice) return;
+    var obj = currentPreviewInvoice;
+    var isSale = (currentPreviewType === 'sale');
+    var partyTitle = isSale ? 'Customer' : 'Supplier';
+    var partyName = isSale ? obj.customer : obj.supplier;
+    var subtotalAmount = Number(obj.subtotal || obj.total || 0);
+
+    var text = '🛒 ' + (db.settings.title || 'Forooshyar') + '\n';
+    text += (isSale ? 'Sales Invoice' : 'Purchase Invoice') + ' - Date: ' + obj.date + '\n';
+    text += partyTitle + ': ' + partyName + '\n------------------\n';
+    
+    if(obj.items) {
+      obj.items.forEach(it => {
+        text += '• ' + it.name + ' (' + it.qty + ' pcs) - ' + fmt(it.qty * it.unitPrice) + '\n';
+      });
+    }
+    
+    text += '------------------\n';
+    text += 'Total Amount: ' + fmt(subtotalAmount) + '\n';
+
+    if(navigator.share) {
+      navigator.share({ text: text });
+    } else {
+      navigator.clipboard.writeText(text);
+      alert('Invoice text copied!');
+    }
+  }
+
+  function showInvoicePreview(obj, type) {
+    currentPreviewInvoice = obj; currentPreviewType = type; var area = document.getElementById('invoice-print-area'); if(!area) return;
+    var isSale = (type === 'sale'), partyLabel = isSale ? 'Customer' : 'Supplier', partyName = isSale ? obj.customer : obj.supplier;
+    var itemsHtml = '';
+    var invoiceAmount = Number(obj.subtotal || obj.total || 0);
+    if(obj.items) obj.items.forEach((it, i) => itemsHtml += '<div class="invoice-row"><span>'+(i+1)+'. '+it.name+' ('+it.qty+')</span><span>'+fmt(it.qty*it.unitPrice)+'</span></div>');
+
+    area.innerHTML = '<div class="invoice-header"><h3 style="margin:4px 0;">'+(db.settings.title||'Forooshyar')+'</h3><p style="margin:0; font-size:0.75rem;">'+(isSale?'Sales Invoice':'Purchase Invoice')+'</p></div><div class="invoice-row"><span>Date: <b>'+obj.date+'</b></span><span>#: #'+String(obj.id).slice(-6)+'</span></div><div class="invoice-row"><span>'+partyLabel+': <b>'+partyName+'</b></span></div><div style="margin:10px 0;">'+itemsHtml+'</div><div class="invoice-row" style="font-weight:bold; border-top:1px solid #333; padding-top:6px;"><span>Total:</span><span>'+fmt(invoiceAmount)+'</span></div>';
+    openModal('modal-invoice-preview');
+  }
+
+  function openLedgerModal(name, type) {
+    document.getElementById('ledger-modal-title').innerText = 'Ledger: ' + name;
+    document.getElementById('ledger-party-name').value = name;
+    document.getElementById('ledger-party-type').value = type;
+
+    var isCust = (type === 'customer');
+    document.getElementById('ledger-total-label').innerText = isCust ? 'Customer Debt:' : 'Supplier Balance:';
+    document.getElementById('ledger-trans-title').innerText = isCust ? 'Record Payment & Excess Received' : 'Record Payment & Excess Paid';
+    document.getElementById('ledger-amount-label').innerText = isCust ? 'Amount Received' : 'Amount Paid';
+    document.getElementById('ledger-excess-label').innerText = isCust ? 'Excess Amount' : 'Excess Paid';
+
+    var totalUnsettledExcess = 0;
+    var html = '', count = 0;
+
+    if(isCust) {
+      (db.sales || []).filter(s => s.customer === name && !s.excessSettled).forEach(s => {
+        if (s.excess && Number(s.excess) > 0) {
+          totalUnsettledExcess += Number(s.excess);
+        }
+      });
+
+      (db.sales || []).filter(s => s.customer === name).forEach(s => {
+        count++; 
+        var netSaleRem = Number(s.subtotal || s.total || 0) - Number(s.received || 0);
+        var isSettled = netSaleRem <= 0;
+        var excessText = (s.excess && s.excess > 0) ? ' | Excess: ' + fmt(s.excess) + (s.excessSettled ? ' (Saved)' : '') : '';
+        html += '<div class="list-row"><div><b>Invoice #'+String(s.id).slice(-6)+'</b><small style="display:block; color:var(--text-secondary);">'+s.date+excessText+'</small></div><div><b>'+fmt(s.subtotal)+'</b><small style="display:block; color:'+(isSettled?'var(--success)':'var(--danger)')+';">Rem: '+fmt(netSaleRem>0?netSaleRem:0)+'</small></div></div>';
+      });
+    } else {
+      (db.purchases || []).filter(p => p.supplier === name && !p.excessSettled).forEach(p => {
+        if (p.excess && Number(p.excess) > 0) {
+          totalUnsettledExcess += Number(p.excess);
+        }
+      });
+
+      (db.purchases || []).filter(p => p.supplier === name).forEach(p => {
+        count++; 
+        var netPurRem = Number(p.subtotal || p.total || 0) - Number(p.paid || 0);
+        var isSettled = netPurRem <= 0;
+        var excessText = (p.excess && p.excess > 0) ? ' | Excess: ' + fmt(p.excess) + (p.excessSettled ? ' (Saved)' : '') : '';
+        html += '<div class="list-row"><div><b>Purchase #'+String(p.id).slice(-6)+'</b><small style="display:block; color:var(--text-secondary);">'+p.date+excessText+'</small></div><div><b>'+fmt(p.subtotal)+'</b><small style="display:block; color:'+(isSettled?'var(--success)':'var(--warning)')+';">Rem: '+fmt(netPurRem>0?netPurRem:0)+'</small></div></div>';
+      });
+    }
+
+    document.getElementById('ledger-trans-amount').value = '';
+    var excessInp = document.getElementById('ledger-trans-excess');
+    excessInp.value = totalUnsettledExcess > 0 ? totalUnsettledExcess : '';
+
+    onLedgerExcessChange();
+
+    (db.ledgerTransactions || []).filter(t => t.partyName === name && t.partyType === type).forEach(t => {
+      count++;
+      var excessDesc = (t.excess && t.excess > 0) ? ' + Excess: ' + fmt(t.excess) : '';
+      html += '<div class="list-row" style="background:#e8f5e9;"><div><b>Trans: '+t.desc+'</b><small style="display:block; color:var(--text-secondary);">'+t.date+'</small></div><div><b style="color:var(--success);">'+fmt(t.amount)+excessDesc+'</b><small style="display:block; color:var(--success);">Saved</small></div></div>';
+    });
+
+    recalculateAllBalances();
+    var partyObj = isCust ? db.customers.find(x => x.name === name) : db.suppliers.find(x => x.name === name);
+    var currentBalance = partyObj ? partyObj.debt : 0;
+
+    document.getElementById('ledger-summary-total').innerText = fmt(currentBalance);
+    document.getElementById('ledger-summary-count').innerText = 'Transactions: ' + count;
+
+    var statusElem = document.getElementById('ledger-summary-status');
+    if(statusElem) {
+      if(currentBalance <= 0) {
+        statusElem.innerText = currentBalance < 0 ? (isCust ? 'Status: Creditor' : 'Status: Prepaid') : 'Status: Settled';
+        statusElem.className = 'badge badge-success';
+      } else {
+        statusElem.innerText = isCust ? 'Status: Debtor' : 'Status: Debt';
+        statusElem.className = 'badge badge-danger';
+      }
+    }
+
+    document.getElementById('ledger-content').innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">No transactions</div>';
+    openModal('modal-ledger');
+  }
+
+  function onLedgerExcessChange() {
+    var excessVal = Number(document.getElementById('ledger-trans-excess').value) || 0;
+    var amountInp = document.getElementById('ledger-trans-amount');
+    if (excessVal > 0) {
+      amountInp.disabled = true;
+      amountInp.style.backgroundColor = '#f5f5f5';
+      amountInp.placeholder = '';
+      amountInp.value = '';
+    } else {
+      amountInp.disabled = false;
+      amountInp.style.backgroundColor = '#ffffff';
+      amountInp.placeholder = '';
+    }
+  }
+
+  function checkLedgerInputRule() {
+    var excessVal = Number(document.getElementById('ledger-trans-excess').value) || 0;
+    if (excessVal > 0) {
+      alert('⚠️ System Message:\nPlease process or save excess amount first.');
+      document.getElementById('ledger-trans-amount').value = '';
+    }
+  }
+
+  function saveLedgerTransaction() {
+    var name = document.getElementById('ledger-party-name').value;
+    var type = document.getElementById('ledger-party-type').value;
+    var amount = Number(document.getElementById('ledger-trans-amount').value) || 0;
+    var excess = Number(document.getElementById('ledger-trans-excess').value) || 0;
+    var desc = document.getElementById('ledger-trans-desc').value.trim() || 'Settlement / Saved';
+
+    if(amount <= 0 && excess <= 0) return alert('Enter valid amount');
+
+    db.ledgerTransactions.push({
+      id: Date.now(),
+      partyName: name,
+      partyType: type,
+      amount: amount,
+      excess: excess,
+      desc: desc,
+      date: getTodayJalaaliStr()
+    });
+
+    if(excess > 0) {
+      if(type === 'customer') {
+        (db.sales || []).filter(s => s.customer === name && !s.excessSettled).forEach(s => {
+          s.excessSettled = true;
+        });
+      } else {
+        (db.purchases || []).filter(p => p.supplier === name && !p.excessSettled).forEach(p => {
+          p.excessSettled = true;
+        });
+      }
+    }
+
+    document.getElementById('ledger-trans-amount').value = '';
+    document.getElementById('ledger-trans-excess').value = '';
+    
+    saveDb();
+    openLedgerModal(name, type);
+    alert('Transaction saved successfully.');
+  }
+
+  function openExpenseManagerModal() { renderExpensesList(); openModal('modal-expense-manager'); }
+  function saveNewExpenseFromManager() {
+    var title = document.getElementById('exp-new-title').value.trim();
+    var amount = Number(document.getElementById('exp-new-amount').value);
+    if(!title || !amount) return alert('Title and Amount are required');
+    if(!db.expenses) db.expenses = [];
+    db.expenses.unshift({ id: Date.now(), title: title, amount: amount, category: document.getElementById('exp-new-cat').value, date: getTodayJalaaliStr() });
+    document.getElementById('exp-new-title').value = ''; document.getElementById('exp-new-amount').value = '';
+    saveDb(); renderExpensesList(); alert('Expense saved.');
+  }
+  function renderExpensesList() {
+    var q = (document.getElementById('search-expense')?document.getElementById('search-expense').value:'').toLowerCase();
+    var html = '';
+    (db.expenses || []).filter(e => e.title.toLowerCase().includes(q)).forEach(e => {
+      html += '<div class="list-row"><div><b>'+e.title+'</b><small style="display:block; color:var(--text-secondary);">'+e.category+' | '+e.date+'</small></div><div style="display:flex; gap:6px;"><b style="color:var(--danger);">'+fmt(e.amount)+'</b><button class="btn btn-danger btn-sm" onclick="db.expenses=db.expenses.filter(x=>x.id!='+e.id+'); saveDb(); renderExpensesList();"><i class="fas fa-trash"></i></button></div></div>';
+    });
+    document.getElementById('expenses-list').innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">No expenses recorded</div>';
+  }
+
+  function renderAIAnalysis() {
+    var ts = (db.sales||[]).reduce((a,b)=>a+Number(b.subtotal||b.total||0),0);
+    var tp = (db.sales||[]).reduce((a,b)=>a+Number(b.profit||0),0);
+    document.getElementById('ai-content-body').innerHTML = '<div class="list-row"><span>Total Sales:</span><b>'+fmt(ts)+'</b></div><div class="list-row"><span>Estimated Net Profit:</span><b style="color:var(--success);">'+fmt(tp)+'</b></div>';
+  }
+
+  function saveSettings() {
+    db.settings.title = document.getElementById('cfg-title').value || db.settings.title;
+    db.settings.subtitle = document.getElementById('cfg-subtitle').value || db.settings.subtitle;
+    saveDb(); alert('Settings saved.');
+  }
+
+  function openProductModal() {
+    document.getElementById('prod-edit-id').value = ''; document.getElementById('prod-name').value = '';
+    document.getElementById('prod-barcode').value = ''; document.getElementById('prod-category').value = '';
+    document.getElementById('prod-qty').value = ''; document.getElementById('prod-buy-price').value = '';
+    document.getElementById('prod-price').value = ''; openModal('modal-product');
+  }
+  function editProduct(id) {
+    var p = (db.products || []).find(x => x.id === id); if(!p) return;
+    document.getElementById('prod-edit-id').value = p.id; document.getElementById('prod-name').value = p.name;
+    document.getElementById('prod-barcode').value = p.barcode||''; document.getElementById('prod-category').value = p.category||'';
+    document.getElementById('prod-qty').value = p.qty; document.getElementById('prod-buy-price').value = p.buyPrice||'';
+    document.getElementById('prod-price').value = p.price||''; openModal('modal-product');
+  }
+  function deleteProduct(id) { if(confirm('Delete?')) { db.products = db.products.filter(x => x.id !== id); saveDb(); } }
+  function toggleProdProfitInput() { document.getElementById('prod-margin-wrap').style.display = document.getElementById('prod-auto-profit-toggle').checked ? 'block' : 'none'; }
+  function calcProdPriceFromMargin() {
+    if(!document.getElementById('prod-auto-profit-toggle').checked) return;
+    var b = Number(document.getElementById('prod-buy-price').value)||0, m = Number(document.getElementById('prod-profit-margin').value)||0;
+    if(b>0 && m>0) document.getElementById('prod-price').value = Math.round(b + (b*(m/100)));
+  }
+
+  function renderDashDebtorsAndCreditors() {
+    var htmlD = ''; (db.customers || []).filter(c => c.debt > 0).forEach(c => htmlD += '<div class="list-row"><span><b>'+c.name+'</b></span><span style="color:var(--danger); font-weight:bold;">'+fmt(c.debt)+' Debt</span></div>');
+    document.getElementById('dash-debtors').innerHTML = htmlD || '<div style="text-align:center; color:#888; padding:12px;">No debtors</div>';
+    var htmlC = ''; (db.suppliers || []).filter(s => s.debt > 0).forEach(s => htmlC += '<div class="list-row"><span><b>'+s.name+'</b></span><span style="color:var(--warning); font-weight:bold;">'+fmt(s.debt)+' Creditor</span></div>');
+    document.getElementById('dash-creditors').innerHTML = htmlC || '<div style="text-align:center; color:#888; padding:12px;">No creditors</div>';
+  }
+
+  function renderCustomers() {
+    var q = (document.getElementById('search-customer')?document.getElementById('search-customer').value:'').toLowerCase(), html = '';
+    (db.customers || []).filter(c => c.name.toLowerCase().includes(q)).forEach(c => {
+      var av = c.avatar ? '<img src="'+c.avatar+'" style="width:34px; height:34px; border-radius:50%; object-fit:cover; margin-left:8px;">' : '';
+      var debtText = c.debt < 0 ? 'Creditor: ' + fmt(Math.abs(c.debt)) : 'Debt: ' + fmt(c.debt);
+      html += '<div class="list-row"><div style="display:flex; align-items:center;">'+av+'<div><b>'+c.name+'</b><small style="display:block; color:var(--text-secondary);">'+debtText+'</small></div></div><div style="display:flex; gap:4px;"><button class="btn btn-warning btn-sm" onclick=\'openLedgerModal("'+c.name+'", "customer")\'><i class="fas fa-book"></i> Ledger</button><button class="btn btn-primary btn-sm" onclick="editCustomer('+c.id+')"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm" onclick="db.customers=db.customers.filter(x=>x.id!='+c.id+'); saveDb();"><i class="fas fa-trash"></i></button></div></div>';
+    });
+    document.getElementById('customers-list').innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">No customers found</div>';
+  }
+  function openCustomerModal() { tempCustAvatar=''; document.getElementById('cust-edit-id').value=''; document.getElementById('cust-name').value=''; document.getElementById('cust-address').value=''; document.getElementById('cust-avatar-preview').style.display='none'; document.getElementById('cust-phones-list').innerHTML=''; addCustPhoneRow('Mobile',''); openModal('modal-customer'); }
+  function editCustomer(id) {
+    var c = db.customers.find(x => x.id === id); if(!c) return;
+    document.getElementById('cust-edit-id').value = c.id; document.getElementById('cust-name').value = c.name;
+    document.getElementById('cust-address').value = c.address||''; tempCustAvatar = c.avatar||'';
+    var img = document.getElementById('cust-avatar-preview'); if(tempCustAvatar) { img.src = tempCustAvatar; img.style.display = 'inline-block'; } else img.style.display = 'none';
+    var list = document.getElementById('cust-phones-list'); list.innerHTML = ''; (c.phones||[]).forEach(p => addCustPhoneRow(p.label, p.number));
+    openModal('modal-customer');
+  }
+  function uploadCustomerAvatar(e) { var f = e.target.files[0]; if(!f) return; var r = new FileReader(); r.onload = function(evt) { tempCustAvatar = evt.target.result; var img = document.getElementById('cust-avatar-preview'); img.src = tempCustAvatar; img.style.display = 'inline-block'; }; r.readAsDataURL(f); }
+
+  function renderSuppliers() {
+    var q = (document.getElementById('search-supplier')?document.getElementById('search-supplier').value:'').toLowerCase(), html = '';
+    (db.suppliers || []).filter(s => s.name.toLowerCase().includes(q)).forEach(s => {
+      var av = s.avatar ? '<img src="'+s.avatar+'" style="width:34px; height:34px; border-radius:50%; object-fit:cover; margin-left:8px;">' : '';
+      var debtText = s.debt < 0 ? 'Prepaid: ' + fmt(Math.abs(s.debt)) : 'Creditor: ' + fmt(s.debt);
+      html += '<div class="list-row"><div style="display:flex; align-items:center;">'+av+'<div><b>'+s.name+'</b><small style="display:block; color:var(--text-secondary);">'+debtText+'</small></div></div><div style="display:flex; gap:4px;"><button class="btn btn-warning btn-sm" onclick=\'openLedgerModal("'+s.name+'", "supplier")\'><i class="fas fa-book"></i> Ledger</button><button class="btn btn-primary btn-sm" onclick="editSupplier('+s.id+')"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm" onclick="db.suppliers=db.suppliers.filter(x=>x.id!='+s.id+'); saveDb();"><i class="fas fa-trash"></i></button></div></div>';
+    });
+    document.getElementById('suppliers-list').innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">No suppliers found</div>';
+  }
+  function openSupplierModal() { tempSuppAvatar=''; document.getElementById('supp-edit-id').value=''; document.getElementById('supp-name').value=''; document.getElementById('supp-address').value=''; document.getElementById('supp-avatar-preview').style.display='none'; document.getElementById('supp-phones-list').innerHTML=''; addSuppPhoneRow('Office',''); openModal('modal-supplier'); }
+  function editSupplier(id) {
+    var s = db.suppliers.find(x => x.id === id); if(!s) return;
+    document.getElementById('supp-edit-id').value = s.id; document.getElementById('supp-name').value = s.name;
+    document.getElementById('supp-address').value = s.address||''; tempSuppAvatar = s.avatar||'';
+    var img = document.getElementById('supp-avatar-preview'); if(tempSuppAvatar) { img.src = tempSuppAvatar; img.style.display = 'inline-block'; } else img.style.display = 'none';
+    var list = document.getElementById('supp-phones-list'); list.innerHTML = ''; (s.phones||[]).forEach(p => addSuppPhoneRow(p.label, p.number));
+    openModal('modal-supplier');
+  }
+  function uploadSupplierAvatar(e) { var f = e.target.files[0]; if(!f) return; var r = new FileReader(); r.onload = function(evt) { tempSuppAvatar = evt.target.result; var img = document.getElementById('supp-avatar-preview'); img.src = tempSuppAvatar; img.style.display = 'inline-block'; }; r.readAsDataURL(f); }
+
+  function onSaleInputProdChange() {
+    var pId = document.getElementById('sale-input-prod').value;
+    var p = (db.products || []).find(x => x.id == pId);
+    if(p) document.getElementById('sale-input-price').value = p.price;
+  }
+  function addSaleItemFromInput() {
+    var pId = document.getElementById('sale-input-prod').value;
+    var q = Number(document.getElementById('sale-input-qty').value)||1;
+    var pr = Number(document.getElementById('sale-input-price').value)||0;
+    var p = (db.products || []).find(x => x.id == pId);
+    if(!p) return alert('Select product');
+    activeSaleItems.push({ productId: p.id, name: p.name, qty: q, unitPrice: pr, buyPrice: p.buyPrice||0 });
+    renderSaleItemsList();
+  }
+  function renderSaleItemsList() {
+    var html = '';
+    activeSaleItems.forEach((it, i) => html += '<div class="dynamic-item-card"><div><div class="dynamic-item-title">'+it.name+'</div><div class="dynamic-item-sub">'+it.qty+' × '+fmt(it.unitPrice)+' = <b>'+fmt(it.qty*it.unitPrice)+'</b></div></div><button class="btn btn-danger btn-sm" onclick="activeSaleItems.splice('+i+',1); renderSaleItemsList();"><i class="fas fa-trash"></i></button></div>');
+    document.getElementById('sale-items-list').innerHTML = html || '<div style="text-align:center; color:#888; font-size:0.8rem; padding:6px;">No items added</div>';
+    calcSaleTotals();
+  }
+  function clearSaleForm() { activeSaleItems=[]; initDateDropdowns('sale-year', 'sale-month', 'sale-day', getTodayJalaali()); document.getElementById('sale-discount').value=''; document.getElementById('sale-received').value=''; document.getElementById('sale-input-qty').value=''; renderSaleItemsList(); }
+
+  function checkCustomerUnsettledExcess() {
+    var custName = document.getElementById('sale-customer').value;
+    if(!custName) return false;
+    var hasUnsettled = (db.sales || []).some(s => s.customer === custName && s.excess > 0 && !s.excessSettled);
+    if (hasUnsettled) {
+      alert('⚠️ System Warning:\nSelected customer has unsettled excess amount. Please visit customer ledger and save excess first.');
+      return true;
+    }
+    return false;
+  }
+
+  function checkSupplierUnsettledExcess() {
+    var suppName = document.getElementById('pur-supplier').value;
+    if(!suppName) return false;
+    var hasUnsettled = (db.purchases || []).some(p => p.supplier === suppName && p.excess > 0 && !p.excessSettled);
+    if (hasUnsettled) {
+      alert('⚠️ System Warning:\nSelected supplier has unsettled excess paid amount. Please visit supplier ledger and save excess first.');
+      return true;
+    }
+    return false;
+  }
+
+  function onSaleCustomerChange() { 
+    checkCustomerUnsettledExcess();
+  }
+
+  function calcSaleTotals() {
+    var sub = 0, prof = 0;
+    activeSaleItems.forEach(it => { sub += (it.qty * it.unitPrice); prof += (it.qty * (it.unitPrice - it.buyPrice)); });
+    var disc = Number(document.getElementById('sale-discount').value)||0;
+    var subtotal = sub - disc; if(subtotal < 0) subtotal = 0;
+    document.getElementById('sale-subtotal').value = subtotal;
+
+    var rec = Number(document.getElementById('sale-received').value)||0;
+    var diff = rec - subtotal;
+    var excess = diff > 0 ? diff : 0;
+    var remaining = diff < 0 ? Math.abs(diff) : 0;
+
+    document.getElementById('sale-excess').value = excess;
+    document.getElementById('sale-remaining').value = remaining;
+    document.getElementById('sale-profit').value = prof;
+  }
+
+  function openSaleModal(editId) {
+    populateSelects(); activeSaleItems = [];
+    if(editId) {
+      var s = db.sales.find(x => x.id === editId); if(!s) return;
+      document.getElementById('sale-edit-id').value = s.id;
+      document.getElementById('sale-customer').value = s.customer;
+      setDropdownsFromDateStr('sale-year', 'sale-month', 'sale-day', s.date);
+      document.getElementById('sale-discount').value = s.discount||'';
+      document.getElementById('sale-received').value = s.received||'';
+      activeSaleItems = JSON.parse(JSON.stringify(s.items||[]));
+    } else { 
+      clearSaleForm(); 
+    }
+    renderSaleItemsList(); openModal('modal-sale');
+    if(!editId) checkCustomerUnsettledExcess();
+  }
+
+  function saveSale() {
+    if(checkCustomerUnsettledExcess()) {
+      return;
+    }
+
+    var editId = document.getElementById('sale-edit-id').value;
+    var customer = document.getElementById('sale-customer').value || 'General Customer';
+    var date = getDateFromDropdowns('sale-year', 'sale-month', 'sale-day');
+    var subtotal = Number(document.getElementById('sale-subtotal').value)||0;
+    var received = Number(document.getElementById('sale-received').value)||0;
+    var excess = Number(document.getElementById('sale-excess').value)||0;
+    var remaining = Number(document.getElementById('sale-remaining').value)||0;
+
+    if(activeSaleItems.length === 0) return alert('Add items to invoice');
+
+    var selectedBanks = [];
+    document.querySelectorAll('.sale-acc-cb:checked').forEach(cb => {
+      var b = db.settings.banks.find(x => x.id == cb.getAttribute('data-id')); if(b) selectedBanks.push(b);
+    });
+
+    if(!editId) { activeSaleItems.forEach(it => { var p = db.products.find(x => x.id == it.productId); if(p) p.qty -= it.qty; }); }
+
+    var sObj = {
+      id: editId ? Number(editId) : Date.now(),
+      customer: customer,
+      date: date,
+      items: JSON.parse(JSON.stringify(activeSaleItems)),
+      item: activeSaleItems.map(i => i.name+'×'+i.qty).join(', '),
+      discount: Number(document.getElementById('sale-discount').value)||0,
+      subtotal: subtotal,
+      total: subtotal,
+      received: received,
+      excess: excess,
+      excessSettled: false,
+      remaining: remaining,
+      profit: Number(document.getElementById('sale-profit').value)||0,
+      selectedBanks: selectedBanks
+    };
+
+    if(editId) {
+      db.sales = db.sales.map(s => s.id == editId ? sObj : s);
+    } else {
+      db.sales.unshift(sObj);
+    }
+    saveDb(); closeModal('modal-sale');
+    if(!editId) showInvoicePreview(sObj, 'sale');
+  }
+
+  function renderSales() {
+    var q = (document.getElementById('search-sale')?document.getElementById('search-sale').value:'').toLowerCase(), html = '', list = db.sales || [];
+    list.filter(s => s.customer.toLowerCase().includes(q) || s.item.toLowerCase().includes(q)).forEach((s, idx) => {
+      var settled = Number(s.remaining||0) <= 0;
+      html += '<div class="list-row"><div><b>Invoice #'+(list.length-idx)+'</b> <span class="badge '+(settled?'badge-success':'badge-danger')+'">'+(settled?'Settled':'Debt')+'</span><small style="display:block; color:var(--text-secondary);">'+s.customer+' | '+s.date+'</small></div><div style="display:flex; gap:4px;"><b style="color:var(--success);">'+fmt(s.subtotal)+'</b><button class="btn btn-info btn-sm" onclick=\'showInvoicePreview('+JSON.stringify(s)+', "sale")\'><i class="fas fa-eye"></i></button><button class="btn btn-primary btn-sm" onclick="openSaleModal('+s.id+')"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm" onclick="db.sales=db.sales.filter(x=>x.id!='+s.id+'); saveDb();"><i class="fas fa-trash"></i></button></div></div>';
+    });
+    document.getElementById('sales-list').innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">No sales invoices</div>';
+  }
+
+  function openPurchaseModal(editId) {
+    populateSelects(); activePurItems = [];
+    if(editId) {
+      var p = db.purchases.find(x => x.id === editId); if(!p) return;
+      document.getElementById('pur-edit-id').value = p.id;
+      document.getElementById('pur-supplier').value = p.supplier;
+      setDropdownsFromDateStr('pur-year', 'pur-month', 'pur-day', p.date);
+      document.getElementById('pur-discount').value = p.discount||'';
+      document.getElementById('pur-paid').value = p.paid||'';
+      activePurItems = JSON.parse(JSON.stringify(p.items||[]));
+    } else { clearPurForm(); onPurSupplierChange(); }
+    renderPurItemsList(); openModal('modal-purchase');
+    if(!editId) checkSupplierUnsettledExcess();
+  }
+
+  function addPurItemFromInput() {
+    var n = document.getElementById('pur-input-name').value.trim();
+    var q = Number(document.getElementById('pur-input-qty').value)||1;
+    var pr = Number(document.getElementById('pur-input-price').value)||0;
+    if(!n) return alert('Product Name required');
+    activePurItems.push({ name: n, qty: q, unitPrice: pr });
+    renderPurItemsList();
+    document.getElementById('pur-input-name').value = ''; document.getElementById('pur-input-qty').value = ''; document.getElementById('pur-input-price').value = '';
+  }
+
+  function renderPurItemsList() {
+    var html = ''; activePurItems.forEach((it, i) => html += '<div class="dynamic-item-card"><div><div class="dynamic-item-title">'+it.name+'</div><div class="dynamic-item-sub">'+it.qty+' × '+fmt(it.unitPrice)+'</div></div><button class="btn btn-danger btn-sm" onclick="activePurItems.splice('+i+',1); renderPurItemsList();"><i class="fas fa-trash"></i></button></div>');
+    document.getElementById('pur-items-list').innerHTML = html || '<div style="text-align:center; color:#888; font-size:0.8rem; padding:6px;">No items added</div>';
+    calcPurTotals();
+  }
+
+  function clearPurForm() { activePurItems=[]; initDateDropdowns('pur-year', 'pur-month', 'pur-day', getTodayJalaali()); document.getElementById('pur-discount').value=''; document.getElementById('pur-paid').value=''; document.getElementById('pur-input-qty').value=''; renderPurItemsList(); }
+  function onPurSupplierChange() { checkSupplierUnsettledExcess(); }
+
+  function calcPurTotals() {
+    var sub = 0; activePurItems.forEach(it => sub += (it.qty * it.unitPrice));
+    var disc = Number(document.getElementById('pur-discount').value)||0;
+    var subtotal = sub - disc; if(subtotal < 0) subtotal = 0;
+    document.getElementById('pur-subtotal').value = subtotal;
+
+    var paid = Number(document.getElementById('pur-paid').value)||0;
+    var diff = paid - subtotal;
+    var excess = diff > 0 ? diff : 0;
+    var remaining = diff < 0 ? Math.abs(diff) : 0;
+
+    document.getElementById('pur-excess').value = excess;
+    document.getElementById('pur-remaining').value = remaining;
+  }
+
+  function savePurchase() {
+    if(checkSupplierUnsettledExcess()) {
+      return;
+    }
+
+    var editId = document.getElementById('pur-edit-id').value;
+    var supplier = document.getElementById('pur-supplier').value || 'General Supplier';
+    var date = getDateFromDropdowns('pur-year', 'pur-month', 'pur-day');
+    var subtotal = Number(document.getElementById('pur-subtotal').value)||0;
+    var paid = Number(document.getElementById('pur-paid').value)||0;
+    var excess = Number(document.getElementById('pur-excess').value)||0;
+    var remaining = Number(document.getElementById('pur-remaining').value)||0;
+
+    if(activePurItems.length === 0) return alert('Add purchase items');
+
+    if(!editId) {
+      activePurItems.forEach(it => {
+        var p = db.products.find(x => x.name.toLowerCase() === it.name.toLowerCase());
+        if(p) { p.qty += it.qty; p.buyPrice = it.unitPrice; }
+        else { db.products.push({ id: Date.now()+Math.random(), name: it.name, qty: it.qty, buyPrice: it.unitPrice, price: Math.round(it.unitPrice*1.3) }); }
+      });
+    }
+
+    var pObj = {
+      id: editId ? Number(editId) : Date.now(),
+      supplier: supplier,
+      date: date,
+      items: JSON.parse(JSON.stringify(activePurItems)),
+      item: activePurItems.map(i => i.name+'×'+i.qty).join(', '),
+      discount: Number(document.getElementById('pur-discount').value)||0,
+      subtotal: subtotal,
+      total: subtotal,
+      paid: paid,
+      excess: excess,
+      excessSettled: false,
+      remaining: remaining
+    };
+
+    if(editId) {
+      db.purchases = db.purchases.map(p => p.id == editId ? pObj : p);
+    } else {
+      db.purchases.unshift(pObj);
+    }
+    saveDb(); closeModal('modal-purchase');
+    if(!editId) showInvoicePreview(pObj, 'purchase');
+  }
+
+  function renderPurchases() {
+    var q = (document.getElementById('search-purchase')?document.getElementById('search-purchase').value:'').toLowerCase(), html = '', list = db.purchases || [];
+    list.filter(p => p.supplier.toLowerCase().includes(q) || p.item.toLowerCase().includes(q)).forEach((p, idx) => {
+      html += '<div class="list-row"><div><b>Purchase #'+(list.length-idx)+'</b><small style="display:block; color:var(--text-secondary);">'+p.supplier+' | '+p.date+'</small></div><div style="display:flex; gap:4px;"><b style="color:var(--danger);">'+fmt(p.subtotal)+'</b><button class="btn btn-info btn-sm" onclick=\'showInvoicePreview('+JSON.stringify(p)+', "purchase")\'><i class="fas fa-eye"></i></button><button class="btn btn-primary btn-sm" onclick="openPurchaseModal('+p.id+')"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm" onclick="db.purchases=db.purchases.filter(x=>x.id!='+p.id+'); saveDb();"><i class="fas fa-trash"></i></button></div></div>';
+    });
+    document.getElementById('purchases-list').innerHTML = html || '<div style="text-align:center; color:#888; padding:12px;">No purchase invoices</div>';
+  }
+
+  function shareInvoiceAsImage() {
+    var area = document.getElementById('invoice-print-area'); if(!area) return;
+    html2canvas(area, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
+      canvas.toBlob(blob => {
+        var file = new File([blob], "invoice.png", { type: "image/png" });
+        if(navigator.canShare && navigator.canShare({ files: [file] })) navigator.share({ files: [file] });
+        else { var a = document.createElement('a'); a.download = 'invoice.png'; a.href = canvas.toDataURL(); a.click(); }
+      });
+    });
+  }
+
+  function uploadLogo(e) { var f = e.target.files[0]; if(!f) return; var r = new FileReader(); r.onload = function(evt) { db.settings.logo = evt.target.result; saveDb(); }; r.readAsDataURL(f); }
+  function exportBackup() { var a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); a.download = "backup.json"; a.click(); }
+  function importBackup(e) { var f = e.target.files[0]; if(!f) return; var r = new FileReader(); r.onload = function(evt) { try { db = JSON.parse(evt.target.result); saveDb(); location.reload(); } catch(e) { alert('Invalid file'); } }; r.readAsText(f); }
+  function resetAppData() { if(confirm('Reset all data?')) { localStorage.removeItem('forooshyar_db_v15'); location.reload(); } }
+
+  function renderReports() {
+    var ts = (db.sales||[]).reduce((a,b)=>a+Number(b.subtotal||b.total||0),0);
+    var tp = (db.sales||[]).reduce((a,b)=>a+Number(b.profit||0),0);
+    var te = (db.expenses||[]).reduce((a,b)=>a+Number(b.amount||0),0);
+    document.getElementById('reports-detail').innerHTML = '<div class="list-row"><span>Total Sales:</span><b>'+fmt(ts)+'</b></div><div class="list-row"><span>Gross Profit:</span><b style="color:var(--success);">'+fmt(tp)+'</b></div><div class="list-row"><span>Total Expenses:</span><b style="color:var(--danger);">'+fmt(te)+'</b></div>';
+  }
+
+  function renderCalendarGrid() {
+    document.getElementById('cal-month-title').innerText = monthNamesList[currentCalJalaali.jMonth - 1] + ' ' + currentCalJalaali.jYear;
+    var html = ''; for(var d=1; d<=30; d++) html += '<div class="calendar-day" onclick="selectCalendarDay('+currentCalJalaali.jYear+','+currentCalJalaali.jMonth+','+d+')">'+d+'</div>';
+    document.getElementById('calendar-days-grid').innerHTML = html;
+  }
+  changeCalMonth = function(dir) {
+    currentCalJalaali.jMonth += dir;
+    if(currentCalJalaali.jMonth > 12) { currentCalJalaali.jMonth = 1; currentCalJalaali.jYear++; }
+    else if(currentCalJalaali.jMonth < 1) { currentCalJalaali.jMonth = 12; currentCalJalaali.jYear--; }
+    renderCalendarGrid();
+  };
+  function selectCalendarDay(jy, jm, jd) {
+    selectedCalDateStr = jy + '/' + pad2(jm) + '/' + pad2(jd);
+    document.getElementById('cal-day-details').style.display = 'block';
+    document.getElementById('cal-selected-date-title').innerText = 'Daily Report: ' + selectedCalDateStr;
+    var html = '', ds = (db.sales||[]).filter(s => s.date === selectedCalDateStr);
+    ds.forEach(s => html += '<details class="cal-accordion"><summary>Sales - '+s.customer+' ('+fmt(s.subtotal)+')</summary></details>');
+    document.getElementById('cal-accordion-list').innerHTML = html || '<div style="font-size:0.8rem; color:#888;">No invoices found.</div>';
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+    renderAll();
+  });
+</script>
+</body>
+</html>
