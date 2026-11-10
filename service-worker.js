@@ -1,4 +1,4 @@
-const CACHE_NAME = 'frooshyar-v3';
+const CACHE_NAME = 'frooshyar-v4';
 const urlsToCache = [
   './',
   './index.html',
