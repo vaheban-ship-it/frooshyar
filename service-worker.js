@@ -1,4 +1,4 @@
-const CACHE_NAME = 'frooshyar-v6';
+zconst CACHE_NAME = 'frooshyar-v7';
 const urlsToCache = [
   './',
   './index.html',
